@@ -32,16 +32,77 @@ Maze.prototype.bottom = true;
 Maze.prototype.initMaze = function (descr) {
     var w = g_canvas.width; 
     var h = g_canvas.height;     
-    var t_w = 55; 
-    var t_h = 55; 
+    var t_w = 45 
+    var t_h = 45; 
+    var _tiles = new Array();
+   //0:  Left - Right	
+    //1:  Top - Bottom  
+	//2:  Top - Bottom - Left - Right         
+	//3:  Top - Bottom - Right	    
+	//4:  Top - Bottom - Left	    
+	//5: Top - Right - Left
+	//6: Bottom - Right - Left
+	//7: Top - Left 
+	//8: Top - Right
+	//9: Bottom - Right
+	//10: Bottom - Left	
+
+	_tiles[0] = new Array();
+	_tiles[0][0] = 9;  
+	_tiles[0][1] = 0;  
+	_tiles[0][2] = 0;      
+	_tiles[0][3] = 6;      
+	_tiles[0][4] = 0;      
+	_tiles[0][5] = 0;      
+	_tiles[0][6] = 0;      
+	_tiles[0][7] = 10;      	
+	_tiles[0][8] = 11;   
+	/********************/
+	_tiles[1] = new Array();
+	_tiles[1][0] = 1;   
+	_tiles[1][1] = 11;   
+	_tiles[1][2] = 11;   
+	_tiles[1][3] = 1;   
+	_tiles[1][4] = 11;   
+	_tiles[1][5] = 11;   
+	_tiles[1][6] = 11;   
+	_tiles[1][7] = 1;   
+	_tiles[1][8] = 11;   
+	/***********************/
+	_tiles[2] = new Array();
+	_tiles[2][0] = 3;
+	_tiles[2][1] = 0;
+	_tiles[2][2] = 0;
+	_tiles[2][3] = 2;
+	_tiles[2][4] = 0;
+	_tiles[2][5] = 6;
+	_tiles[2][6] = 0;
+	_tiles[2][7] = 2;
+	_tiles[2][8] = 0;
+	//0:  Left - Right	
+    //1:  Top - Bottom  
+	//2:  Top - Bottom - Left - Right         
+	//3:  Top - Bottom - Right	    
+	//4:  Top - Bottom - Left	    
+	//5: Top - Right - Left
+	//6: Bottom - Right - Left
+	//7: Top - Left 
+	//8: Top - Right
+	//9: Bottom - Right
+	//10: Bottom - Left	
+	      
+	            
+	//alert(_tiles.length + " ---- " + _tiles[0].length);
+	console.dir(_tiles);    
     var levels = 0;         
-    for(var j = 0; j < 8; j++){    	
-    	for(var i = 0; i <= 7; i++){    	
+    for(var j = 0; j < _tiles.length; j++){    	
+    	for(var i = 0; i < _tiles[j].length; i++){    	    		
     		this._tile.push(new Tile({
     			cx : i * t_w,
-    			cy : levels,   
+    			cy : j * t_h,   
     			width : t_w,
-    			height : t_h 	
+    			height : t_h,
+    			type : _tiles[j][i]
     		}));    	
     	}
     	levels = j * t_h;
@@ -57,17 +118,15 @@ Maze.prototype.getsEaten = function () {
 
 
 Maze.prototype.render = function (ctx) {
-    /*if(this.top) util.drawHorrLine(ctx, this.cx, this.cy, this.width, this.height, "black");    
-    if(this.bottom) util.drawVerLine(ctx, this.cx, this.cy, this.width, this.height, "red");*/
-    if(g_renderTilesDebug){
-    	for(var t in this._tile)
+    
+    
+    if(g_renderTilesDebug){    	
+	}
+	for(var t in this._tile)
     	{
     		var tile = this._tile[t];
     		if(tile) tile.render(ctx);
-    	}
-    	ctx.rect(this.cx,this.cy,this.width,this.height);
-		ctx.stroke(); 
-	}
+    	}    	
     
     /*this.sprite.drawWrappedCentredAt(
         ctx, this.cx, this.cy, this.rotation

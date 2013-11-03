@@ -104,25 +104,14 @@ fillBox: function (ctx, x, y, w, h, style) {
     ctx.fillStyle = oldStyle;
 },
 
-drawHorrLine : function (ctx, x, y, w, h, style) {
+drawLine : function (ctx, x, y, x2, y2, style) {
     var oldStyle = ctx.fillStyle;
     ctx.fillStyle = style;
     ctx.beginPath();
     ctx.moveTo(x, y);    
-    ctx.lineTo(x,h)
+    ctx.lineTo(x2,y2)
     ctx.stroke();
     ctx.fillStyle = oldStyle;    
-},
-drawVerLine : function (ctx, x, y, w, h, style) {
-    var oldStyle = ctx.fillStyle;
-    ctx.fillStyle = style;
-    ctx.beginPath();
-    ctx.moveTo(x, y);    
-    ctx.lineTo(w,y);
-    ctx.stroke();
-    ctx.fillStyle = oldStyle;
-    
 }
-
 
 };

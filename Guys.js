@@ -43,25 +43,51 @@ Guy.prototype.cy = 200;
 Guy.prototype.velX = 5;
 Guy.prototype.velY = 5;
 Guy.prototype.directions = { 
-	left : true,
-	right : true,
-	up : true, 
-	down : true
+	left : false,
+	right : false,
+	up : false, 
+	down : false
 }
 // HACKED-IN AUDIO (no preloading)
 /*Guy.prototype.warpSound = new Audio(
     "sounds/GuyWarp.ogg");
 */
 
-
+Guy.prototype.updateDirections = function(){
+	if (eatKey(this.KEY_UP))
+	{
+		this.directions.up = true; 
+		this.directions.down = false; 
+		this.directions.left = false; 
+		this.directions.right = false; 
+	}
+    if (eatKey(this.KEY_DOWN)){
+    	this.directions.down = true;
+    	
+    	this.directions.up = false; 		
+		this.directions.left = false; 
+		this.directions.right = false; 
+    } 
+    if (eatKey(this.KEY_LEFT)){
+    	this.directions.left = true;
+    	this.directions.up = false; 
+		this.directions.down = false; 		
+		this.directions.right = false; 
+    } 
+    if (eatKey(this.KEY_RIGHT)){
+    	this.directions.right = true;
+    	this.directions.up = false; 
+		this.directions.down = false; 
+		this.directions.left = false; 		
+    } 	
+};
     
 Guy.prototype.update = function (du) {
+
      
-    // TODO: MOVE    
-    if (eatKey(this.KEY_UP)) this.directions.up = true; 
-    if (eatKey(this.KEY_DOWN))this.cy += du * this.velY; 
-    if (eatKey(this.KEY_LEFT)) this.cx -= du * this.velX;
-    if (eatKey(this.KEY_RIGHT)) this.cx += du * this.velX;
+    // TODO: MOVE   
+    this.updateDirections();    
+    
     //spatialManager.unregister(this);
 	if(this._isDeadNow) return entityManager.KILL_ME_NOW;         
     this.Move(du);
@@ -72,13 +98,21 @@ Guy.prototype.update = function (du) {
 
 Guy.prototype.Move = function (du) {
 	
+	//Move left
+	if(this.cx - this.radius > 0 && this.directions.left){
+			
+		this.cx -= du * this.velX; 
+	}
+	//Move Right
+	if(this.cx + this.radius <= g_canvas.width && this.directions.right)
+	{
+		this.cx += du * this.velX; 
+	}
+	//Move up
+	if(this.cy - this.radius > 0 && this.directions.up) this.cy -= du * this.velY; 
 	
-	if(this.directions.up) this.cy -= du * this.velY; 
-	
-    /*if (eatKey(this.KEY_UP)) 
-    if (eatKey(this.KEY_DOWN))this.cy += du * this.velY; 
-    if (eatKey(this.KEY_LEFT)) this.cx -= du * this.velX;
-    if (eatKey(this.KEY_RIGHT)) this.cx += du * this.velX;*/
+	//Move Down
+	if(this.cy + this.radius < g_canvas.height && this.directions.down) this.cy += du * this.velY;    
 };
 
 

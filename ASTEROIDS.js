@@ -46,7 +46,7 @@ function updateSimulation(du) {
 // GAME-SPECIFIC DIAGNOSTICS
 
 var g_renderSpatialDebug = false;
-var g_renderTilesDebug = true;
+var g_renderTilesDebug = false;
 
 var KEY_SPATIAL = keyCode('X');
 var KEY_HALT  = keyCode('H');
@@ -61,7 +61,10 @@ var KEY_K = keyCode('K');
 
 function processDiagnostics() {
 
-    if (eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
+    if (eatKey(KEY_SPATIAL)){ 
+    	g_renderSpatialDebug = !g_renderSpatialDebug;
+    	g_renderTilesDebug = !g_renderTilesDebug; 
+    }
 
     if (eatKey(KEY_HALT)) entityManager.haltGuys();
 
