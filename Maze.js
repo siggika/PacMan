@@ -117,6 +117,7 @@ Maze.prototype.initMaze = function (descr) {
     
     this.drawHorrLane(12,0,2);
     this.drawHorrLane(12,14,16);
+    this.drawHorrLane(12,6,10);
 
     this.drawHorrLane(14,1,2);
     this.drawHorrLane(14,4,6);
@@ -147,8 +148,16 @@ Maze.prototype.initMaze = function (descr) {
 
     this.drawVertLane(4,16,17);
     this.drawVertLane(12,16,17);
-    
-    
+
+    this.drawVertLane(8,13,14);
+
+    //draw middle box
+
+    this.drawVertLane(6,8,10);
+    this.drawVertLane(10,8,10);
+    this.drawHorrLane(8,7,7);
+    this.drawHorrLane(8,9,9);
+    this.drawHorrLane(10,6,9);
 
 	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	    
     for(var j = 0; j < this._tiles.length; j++){    	
