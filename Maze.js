@@ -50,8 +50,8 @@ Maze.prototype.drawVertLane = function(x, startY, len){
 		if(!this._tiles[i]) this._tiles[i] = new Array();
 		
 		this._tiles[i][x] = new Tile({
-    		cx : i * this.width,
-    		cy : j * this.height,   
+    		cx : x * this.width,
+    		cy : i * this.height,   
     		width : this.width,
     		height : this.height,
     		type : 1
