@@ -85,11 +85,68 @@ Maze.prototype.initMaze = function (descr) {
     this.prepArray(30,30);
     //Draw Bricks    
     this.drawHorrLane(1,1,2);
+    this.drawHorrLane(1,4,6);
+    this.drawHorrLane(1,10,12);
+    this.drawHorrLane(1,14,15);
+    
     this.drawHorrLane(2,1,2);
-    this.drawHorrLane(1,4,4+2);
-    this.drawHorrLane(2,4,4+2);
-    this.drawHorrLane(0,8,8);
-    this.drawHorrLane(1,8,8);
+    this.drawHorrLane(2,4,6);
+    this.drawHorrLane(2,10,12);
+    this.drawHorrLane(2,14,15);
+
+    this.drawHorrLane(4,1,2);
+    this.drawHorrLane(4,6,10);
+    this.drawHorrLane(4,14,15);
+    
+    this.drawHorrLane(6,0,2);
+    this.drawHorrLane(6,5,6);
+    this.drawHorrLane(6,10,11);
+    this.drawHorrLane(6,14,16);
+    
+    this.drawHorrLane(7,0,2);
+    this.drawHorrLane(7,14,16);
+    
+    this.drawHorrLane(8,0,2);
+    this.drawHorrLane(8,14,16);
+
+    this.drawHorrLane(10,0,2);
+    this.drawHorrLane(10,14,16);
+    
+    this.drawHorrLane(11,0,2);
+    this.drawHorrLane(11,14,16);
+    
+    this.drawHorrLane(12,0,2);
+    this.drawHorrLane(12,14,16);
+
+    this.drawHorrLane(14,1,2);
+    this.drawHorrLane(14,4,6);
+    this.drawHorrLane(14,10,12);
+    this.drawHorrLane(14,14,16);
+
+    this.drawHorrLane(16,0,0);
+    this.drawHorrLane(16,6,10);
+    this.drawHorrLane(16,16,16);
+
+    this.drawHorrLane(18,1,6);
+    this.drawHorrLane(18,10,15);
+
+    this.drawVertLane(8,0,2);
+
+    this.drawVertLane(8,5,6);
+
+    this.drawVertLane(4,4,8);
+    this.drawVertLane(12,4,8);
+    
+    this.drawVertLane(4,10,12);
+    this.drawVertLane(12,10,12);
+
+    this.drawVertLane(8,17,18);
+
+    this.drawVertLane(2,15,16);
+    this.drawVertLane(14,15,16);
+
+    this.drawVertLane(4,16,17);
+    this.drawVertLane(12,16,17);
     
     
 
