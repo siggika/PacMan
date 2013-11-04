@@ -37,9 +37,9 @@ Guy.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 
 // Initial, inheritable, default values
-Guy.prototype.radius = 15;
-Guy.prototype.cx = 200;
-Guy.prototype.cy = 200;
+Guy.prototype.radius = 12;
+Guy.prototype.cx = 25;
+Guy.prototype.cy = 25;
 Guy.prototype.velX = 5;
 Guy.prototype.velY = 5;
 Guy.prototype.directions = { 
@@ -87,10 +87,11 @@ Guy.prototype.update = function (du) {
      
     // TODO: MOVE   
     this.updateDirections();    
-    
+    this.clear(ctx);
     //spatialManager.unregister(this);
-	if(this._isDeadNow) return entityManager.KILL_ME_NOW;         
+	if(this._isDeadNow) return entityManager.KILL_ME_NOW;             
     this.Move(du);
+    
     //spatialManager.register(this);
 
 };
@@ -98,21 +99,35 @@ Guy.prototype.update = function (du) {
 
 Guy.prototype.Move = function (du) {
 	
+	var tile = entityManager.getTile(this.cx, this.cy, this.radius);
+    if(tile)
+    {
+    	tile.changed = true;    	
+    }    
+		    
 	//Move left
 	if(this.cx - this.radius > 0 && this.directions.left){
 			
 		this.cx -= du * this.velX; 
+		//this.cy = tile.cy + this.radius + 5;     	
 	}
 	//Move Right
-	if(this.cx + this.radius <= g_canvas.width && this.directions.right)
+	if(this.cx + this.radius <= g_canvas.width && this.directions.right )
 	{
 		this.cx += du * this.velX; 
+		//this.cy = tile.cy + this.radius + 5;     	
 	}
 	//Move up
-	if(this.cy - this.radius > 0 && this.directions.up) this.cy -= du * this.velY; 
+	if(this.cy - this.radius > 0 && this.directions.up ) {
+		this.cy -= du * this.velY; 		
+		//this.cx = tile.cx + this.radius + 5;     	
+	}
 	
 	//Move Down
-	if(this.cy + this.radius < g_canvas.height && this.directions.down) this.cy += du * this.velY;    
+	if(this.cy + this.radius < g_canvas.height && this.directions.down ) {
+		this.cy += du * this.velY;    
+		//this.cx = tile.cx + this.radius + 5;     	
+	}
 };
 
 
@@ -144,4 +159,8 @@ Guy.prototype.render = function (ctx) {
     
     //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);
     
+};
+Guy.prototype.clear = function(ctx){
+	var width = this.radius + 1; 
+	util.fillBox(ctx, this.cx - width, this.cy - width,  width * 2, width * 2, "white");
 };

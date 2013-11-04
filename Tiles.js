@@ -14,6 +14,9 @@ function Tile(descr) {
 //    this.sprite = this.sprite || g_sprites.rock;    
 };
 
+//Needs to be rendered or not:
+Tile.prototype.changed = false; 
+
 Tile.prototype.left = true; 
 Tile.prototype.right = true; 
 Tile.prototype.top = true; 
@@ -120,13 +123,14 @@ Tile.prototype.getsEaten = function () {
     this.kill();    
 };
 
+
 Tile.prototype.render = function (ctx) {
 	var offset = -5; 
     if(g_renderTilesDebug){
     	ctx.rect(this.cx,this.cy,this.width,this.height);
 		ctx.stroke(); 
 	}
-	//Top right corner
+/*	//Top right corner
 	util.drawLine(ctx, (this.cx + this.width + offset), this.cy, this.cx + this.width + offset, this.cy - offset);
 	util.drawLine(ctx, (this.cx + this.width + offset), this.cy - offset, this.cx + this.width, this.cy - offset);
 	
@@ -141,7 +145,7 @@ Tile.prototype.render = function (ctx) {
 	//Bottom Left
 	util.drawLine(ctx, (this.cx - offset), this.cy + this.height + offset, this.cx - offset, this.cy + this.height);
 	util.drawLine(ctx, (this.cx - offset), this.cy + this.height + offset, this.cx, this.cy + this.height + offset);
-	//DEBUG
+*/	//DEBUG
 	/*
 	this.left = false; 
 	this.right = true; 

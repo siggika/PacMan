@@ -34,19 +34,7 @@ Maze.prototype.initMaze = function (descr) {
     var h = g_canvas.height;     
     var t_w = 45 
     var t_h = 45; 
-    var _tiles = new Array();
-   //0:  Left - Right	
-    //1:  Top - Bottom  
-	//2:  Top - Bottom - Left - Right         
-	//3:  Top - Bottom - Right	    
-	//4:  Top - Bottom - Left	    
-	//5: Top - Right - Left
-	//6: Bottom - Right - Left
-	//7: Top - Left 
-	//8: Top - Right
-	//9: Bottom - Right
-	//10: Bottom - Left	
-
+    var _tiles = new Array();  
 	_tiles[0] = new Array();
 	_tiles[0][0] = 9;  
 	_tiles[0][1] = 0;  
@@ -92,8 +80,7 @@ Maze.prototype.initMaze = function (descr) {
 	//10: Bottom - Left	
 	      
 	            
-	//alert(_tiles.length + " ---- " + _tiles[0].length);
-	console.dir(_tiles);    
+	//alert(_tiles.length + " ---- " + _tiles[0].length);	
     var levels = 0;         
     for(var j = 0; j < _tiles.length; j++){    	
     	for(var i = 0; i < _tiles[j].length; i++){    	    		
@@ -107,6 +94,12 @@ Maze.prototype.initMaze = function (descr) {
     	}
     	levels = j * t_h;
     }
+    
+    for(var t in this._tile)
+    	{
+    		var tile = this._tile[t];
+    		if(tile) tile.render(ctx);    		
+    	}    
 };
 Maze.prototype.update = function (du) {
      return;
@@ -116,6 +109,22 @@ Maze.prototype.getsEaten = function () {
     this.kill();    
 };
 
+Maze.prototype.getTile = function(x,y,r){
+	
+	for(var t in this._tile)
+	{
+		var tile = this._tile[t];
+		var dist = util.distSq(tile.cx, tile.cy, x-r, y-r);		
+		if(dist <= r*r)return tile; 
+			dist = util.distSq(tile.cx, tile.cy, x+r, y+r);		
+		if(dist <= r*r)return tile; 
+			dist = util.distSq(tile.cx, tile.cy, x+r, y-r);		
+		if(dist <= r*r)return tile; 
+			dist = util.distSq(tile.cx, tile.cy, x-r, y+r);		
+		if(dist <= r*r)return tile; 
+	}
+	return false; 
+};
 
 Maze.prototype.render = function (ctx) {
     
@@ -125,7 +134,11 @@ Maze.prototype.render = function (ctx) {
 	for(var t in this._tile)
     	{
     		var tile = this._tile[t];
-    		if(tile) tile.render(ctx);
+    		if(tile.changed){
+    			tile.render(ctx);
+    			tile.changed = false; 
+    		}
+    		
     	}    	
     
     /*this.sprite.drawWrappedCentredAt(

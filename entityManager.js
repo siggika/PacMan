@@ -55,7 +55,12 @@ haltGuys: function() {
     this._forEachOf(this._pacman, Guy.prototype.halt);
 },	
 
-
+getTile: function(x,y,r) {
+	for(var t = 0; t < this._maze.length; t++)
+	{		
+		return this._maze[t].getTile(x,y,r); 
+	}	
+},
 
 update: function(du) {
 
@@ -79,6 +84,10 @@ update: function(du) {
             }
         }
     }    
+},
+
+clear: function(ctx){
+
 },
 
 render: function(ctx) {

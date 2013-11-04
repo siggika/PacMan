@@ -91,14 +91,20 @@ function processDiagnostics() {
 
 
 // =================
-// RENDER SIMULATION
+// RENDER/CLEAR SIMULATION
 // =================
+
+function clearBackground(ctx) {
+
+    entityManager.clear(ctx);        
+}
+
 
 // GAME-SPECIFIC RENDERING
 
 function renderSimulation(ctx) {
 
-    entityManager.render(ctx);
+    entityManager.render(ctx);        
 
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
