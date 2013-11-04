@@ -30,25 +30,48 @@ Maze.prototype.top = true;
 Maze.prototype.bottom = true; 
 
 Maze.prototype._tiles = new Array();
-Maze.prototype.drawHorrLane = function(level, startX, endX){
-	for(var i = startX; i <= endX; i++){
+Maze.prototype.drawHorrLane = function(level, startX, len){
+	for(var i = startX; i <= len; i++){
 
 		if(!this._tiles[level]) this._tiles[level] = new Array();
-		this._tiles[level][i] = 1; 
+		this._tiles[level][i] = new Tile({
+    		cx : i * this.width,
+    		cy : level * this.height,   
+    		width : this.width,
+    		height : this.height,
+    		type : 1
+    	});
 		//if(!this._tiles[i]) this._tiles[i] = new Array();		
 	}
 };
 
-Maze.prototype.drawVertLane = function(x, startY, endY){	
-	for(var i = startY; i <= endY; i++){	
+Maze.prototype.drawVertLane = function(x, startY, len){	
+	for(var i = startY; i <= len; i++){	
 		if(!this._tiles[i]) this._tiles[i] = new Array();
-		this._tiles[i][x] = 1;
+		
+		this._tiles[i][x] = new Tile({
+    		cx : i * this.width,
+    		cy : j * this.height,   
+    		width : this.width,
+    		height : this.height,
+    		type : 1
+    	});
 	}
 };
 Maze.prototype.prepArray = function(y,x){
 	for(var i = 0; i <= y; i++)
 	{
-		if(!this._tiles[i])this._tiles = new Array();						
+		if(!this._tiles[i])this._tiles[i] = new Array();
+		
+		for(var j = 0; j <= x; j++){
+			this._tiles[i][j] = new Tile({
+    			cx : j * this.width,
+    			cy : i * this.height,   
+    			width : this.width,
+    			height : this.height,
+    			type : 0
+    		});
+		}						
 	}	
 	
 }
@@ -56,34 +79,28 @@ Maze.prototype.prepArray = function(y,x){
 Maze.prototype.initMaze = function (descr) {
     var w = g_canvas.width; 
     var h = g_canvas.height;     
-    var t_w = 45 
-    var t_h = 45; 
+    var t_w = 30 
+    var t_h = 30; 
     
-    //Draw Bricks
-    this._tiles[0] = new Array();    
+    this.prepArray(30,30);
+    //Draw Bricks    
     this.drawHorrLane(1,1,2);
-    this.drawVertLane(1,2,3);
-
-	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	
-    var levels = 0;         
-    for(var j = 0; j < this._tiles.length; j++){    	
-    	for(var i = 0; i < this._tiles[j].length; i++){    	    		
-    		this._tile.push(new Tile({
-    			cx : i * t_w,
-    			cy : j * t_h,   
-    			width : t_w,
-    			height : t_h,
-    			type : this._tiles[j][i]
-    		}));    	
-    	}
-    	levels = j * t_h;
-    }
+    this.drawHorrLane(2,1,2);
+    this.drawHorrLane(1,4,4+2);
+    this.drawHorrLane(2,4,4+2);
+    this.drawHorrLane(0,8,8);
+    this.drawHorrLane(1,8,8);
     
-    for(var t in this._tile)
-    	{
-    		var tile = this._tile[t];
-    		if(tile) tile.render(ctx);    		
-    	}    
+    
+
+	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	    
+    for(var j = 0; j < this._tiles.length; j++){    	
+    	for(var i = 0; i < this._tiles[j].length; i++){    	    		    		
+    		this._tiles[j][i].render(ctx);
+    	}
+    	
+    }
+        
 };
 Maze.prototype.update = function (du) {
      return;
@@ -115,11 +132,13 @@ Maze.prototype.render = function (ctx) {
     
     if(g_renderTilesDebug){    	
 	}
-	for(var t in this._tile)
+	for(var level in this._tile)
     	{
-    		var tile = this._tiles[t];
-    		if(tile && tile.shouldRender){
-    			tile.render(ctx);    			
+    		var t = this._tiles[level];
+    		for(var tile in t)
+    		//if(tile && tile.shouldRender)
+    		{
+    			t.render(ctx);    			
     		}
     		
     	}    	

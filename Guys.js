@@ -102,7 +102,7 @@ Guy.prototype.Move = function (du) {
 	var tile = entityManager.getTile(this.cx, this.cy, this.radius);
     if(tile)
     {
-    	tile.changed = true;    	
+    	tile.shouldRender = true;    	
     }    
 		    
 	//Move left
