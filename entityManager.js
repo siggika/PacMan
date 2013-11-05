@@ -55,10 +55,10 @@ haltGuys: function() {
     this._forEachOf(this._pacman, Guy.prototype.halt);
 },	
 
-getTile: function(x,y,r) {
+getTile: function(x,y,r,dir) {
 	for(var t = 0; t < this._maze.length; t++)
 	{		
-		return this._maze[t].getTile(x,y,r); 
+		return this._maze[t].getTile(x,y,r,dir); 
 	}	
 },
 
