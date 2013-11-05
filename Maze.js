@@ -198,15 +198,18 @@ Maze.prototype.render = function (ctx) {
     
     if(g_renderTilesDebug){    	
 	}
-	for(var level in this._tile)
+	for(var level in this._tiles)
     	{
-    		var t = this._tiles[level];
-    		for(var tile in t)
-    		//if(tile && tile.shouldRender)
+    		var row = this._tiles[level];
+    		for(var t in row)
     		{
-    			t.render(ctx);    			
-    		}
-    		
+                    var tile = row[t];
+                  //  if(tile && tile.shouldRender)
+                    {
+    			
+                        tile.render(ctx);    			
+                    }
+                }
     	}    	
     
     /*this.sprite.drawWrappedCentredAt(

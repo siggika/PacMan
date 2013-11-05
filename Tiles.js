@@ -66,8 +66,16 @@ Tile.prototype.render = function (ctx) {
 	var endX = this.cx + this.width - offset; 
 	var startY = this.cy + offset; 
 	var endY = this.cy - offset + this.height;
-	if(!this.left) util.drawLine(ctx,startX, startY , startX, endY);
+        
+        
+        if(this.type ===1){
+            ctx.fillStyle = "blue";
+            ctx.fillRect(this.cx, this.cy, this.width, this.height);        
+            ctx.fillStyle = "black";
+            ctx.fillRect(this.cx + 2, this.cy + 2, this.width - 2, this.height -2);        
+        } 
+	/*if(!this.left) util.drawLine(ctx,startX, startY , startX, endY);
 	if(!this.right) util.drawLine(ctx, endX, startY, endX, endY);
 	if(!this.top) util.drawLine(ctx, startX, startY, endX, startY);
-	if(!this.bottom) util.drawLine(ctx, startX, endY, endX, endY);
+	if(!this.bottom) util.drawLine(ctx, startX, endY, endX, endY);*/
 };
