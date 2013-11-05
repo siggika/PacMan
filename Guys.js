@@ -38,13 +38,14 @@ Guy.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 // Initial, inheritable, default values
 Guy.prototype.radius = 12;
-Guy.prototype.cx = 25;
-Guy.prototype.cy = 25;
+Guy.prototype.cx = 20;
+Guy.prototype.cy = 15;
 Guy.prototype.velX = 5;
 Guy.prototype.velY = 5;
+Guy.prototype.score = 0;
 Guy.prototype.directions = { 
 	left : false,
-	right : false,
+	right : true,
 	up : false, 
 	down : false
 }
@@ -99,32 +100,38 @@ Guy.prototype.update = function (du) {
 
 Guy.prototype.Move = function (du) {
 	
-	var tile = entityManager.getTile(this.cx, this.cy, this.radius);
-    if(tile)
-    {
-    	tile.shouldRender = true;    	
-    }    
+	var prevX = this.cx;
+    var prevY = this.cy;
+    
+	var nextPos = this.getNextPos(du);
+	
+    var nextX = nextPos.nextX;
+    var nextY = nextPos.nextY;
+	
+	var nextTile = entityManager.getTile(nextX, nextY, this.radius, this.directions);
+
+	var wallColliding = this.isWallColliding (nextTile, nextX, nextY);
 		    
 	//Move left
-	if(this.cx - this.radius > 0 && this.directions.left){
+	if(nextX - this.radius > 0 && this.directions.left && !wallColliding.left){
 			
 		this.cx -= du * this.velX; 
 		//this.cy = tile.cy + this.radius + 5;     	
 	}
 	//Move Right
-	if(this.cx + this.radius <= g_canvas.width && this.directions.right )
+	if(nextX + this.radius <= g_canvas.width && this.directions.right && !wallColliding.right)
 	{
 		this.cx += du * this.velX; 
 		//this.cy = tile.cy + this.radius + 5;     	
 	}
 	//Move up
-	if(this.cy - this.radius > 0 && this.directions.up ) {
+	if(nextY - this.radius > 0 && this.directions.up && !wallColliding.up) {
 		this.cy -= du * this.velY; 		
 		//this.cx = tile.cx + this.radius + 5;     	
 	}
 	
 	//Move Down
-	if(this.cy + this.radius < g_canvas.height && this.directions.down ) {
+	if(nextY + this.radius < g_canvas.height && this.directions.down && !wallColliding.down) {
 		this.cy += du * this.velY;    
 		//this.cx = tile.cx + this.radius + 5;     	
 	}
@@ -161,6 +168,101 @@ Guy.prototype.render = function (ctx) {
     
 };
 Guy.prototype.clear = function(ctx){
-	var width = this.radius + 1; 
+	var width = this.radius + 1.5; 
 	util.fillBox(ctx, this.cx - width, this.cy - width,  width * 2, width * 2, "white");
 };
+
+Guy.prototype.getNextPos = function (du) {
+	var nextX;
+	var nextY;
+	
+	if (this.directions.left) {
+		nextX = this.cx - this.velX * du;
+		nextY = this.cy;
+	}
+	if (this.directions.right) {
+		nextX = this.cx + this.velX * du;
+		nextY = this.cy;
+	}
+	if (this.directions.up) {
+		nextX = this.cx;
+		nextY = this.cy - this.velY * du;
+	}
+	if (this.directions.down) {
+		nextX = this.cx;
+		nextY = this.cy + this.velY * du;
+	}
+
+    return {nextX : nextX, nextY : nextY};
+};
+
+Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
+	
+	//var distSq = util.distSq(posX, posY, entityPos.posX, entityPos.posY);
+	//var limitSq = util.square(this.radius + entityRadius);
+		
+	//if (distSq < limitSq) {
+	//console.log("it's a hit!");
+	
+	
+	if (nextTile && nextTile.type == "1") {
+	
+		var left, right, up, down = false;
+		var nextTileX = nextTile.cx + (nextTile.width/2);
+		var nextTileY = nextTile.cy + (nextTile.height/2);
+		var limit = this.radius + (nextTile.width/2);
+
+		/*
+		console.log("limit: " + limit);
+		console.log("right: " + (nextTileX - nextX));
+		console.log("left: " + (nextX - nextTileX));
+		console.log("up: " + (nextY - nextTileY));
+		console.log("down: " + (nextTileY - nextY));
+		console.log("nextTileX: " + nextTileX);
+		console.log("nextTileY: " + nextTileY);
+		*/
+		
+		//right
+		if (this.directions.right && (nextTileX - nextX) <= limit){
+			right = true;
+			//console.log("colliding right");
+		}
+		
+		//left
+		if (this.directions.left && (nextX - nextTileX) <= limit) {
+			left = true;
+			//console.log("colliding left");
+		}
+		
+		//up
+		if (this.directions.up && (nextY - nextTileY) <= limit) {
+			up = true;
+			//console.log("colliding up");
+		}
+		
+		//down
+		if (this.directions.down && (nextTileY - nextY) <= limit) {
+			down = true;
+			//console.log("colliding down");
+		}
+	}
+	//if tile has a cake, change it to a normal lane
+	else if (nextTile && nextTile.type == "0"){
+		nextTile.type = 2;
+		this.score++;
+		updateSideText(this.score);
+	}
+	return {
+		left: left, 
+		right: right,
+		up: up,
+		down: down
+	};
+
+};
+
+
+
+
+
+

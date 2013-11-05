@@ -82,9 +82,83 @@ Maze.prototype.initMaze = function (descr) {
     var t_w = 30 
     var t_h = 30; 
     
-    this.prepArray(30,30);
-    //Draw Bricks    
-    this.drawHorrLane(1,1,2);
+    this.prepArray(30,30);  
+    //Draw maze
+	this.drawMaze();
+	//Draw cakes
+	this.drawCakes(ctx);
+	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	    
+        
+};
+Maze.prototype.update = function (du) {
+     return;
+};
+
+Maze.prototype.getsEaten = function () {
+    this.kill();    
+};
+
+Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
+	var lowest = Number.MAX_VALUE;
+	var nearestTile;
+	
+	for(var j = 0; j < this._tiles.length; j++){    	
+    	for(var i = 0; i < this._tiles[j].length; i++){   
+    				
+			var tile = this._tiles[j][i];		
+			var tileX = tile.cx + (tile.width/2);
+			var tileY = tile.cy + (tile.height/2);
+			
+			// only searching to the right of guy when going right,
+			// left of guy when going left...
+			if ((dir.right && tileX >= guyX) || (dir.left && tileX <= guyX)
+				|| (dir.down && tileY >= guyY) || (dir.up && tileY <= guyY)) {	
+				
+				var dist =  util.distSq(guyX, guyY, tileX, tileY);
+				if (dist < lowest) { 
+					lowest = dist;
+					nearestTile = tile;
+				}
+			}
+    	}	
+    }
+	
+	return nearestTile;
+};
+
+Maze.prototype.render = function (ctx) {
+     
+	for(var level in this._tiles)
+    	{
+    		var row = this._tiles[level];
+    		for(var t in row)
+    		//if(tile && tile.shouldRender)
+    		{
+    			var tile = row[t];
+				tile.render(ctx);
+				if(g_renderTilesDebug){
+						ctx.rect(tile.cx,tile.cy,tile.width,tile.height);
+						ctx.stroke(); 
+					}    			
+    		}
+    		
+    	}    	
+    
+    /*this.sprite.drawWrappedCentredAt(
+        ctx, this.cx, this.cy, this.rotation
+    );*/
+};
+
+Maze.prototype.drawCakes = function () {
+	for(var j = 0; j < this._tiles.length; j++){    	
+    	for(var i = 0; i < this._tiles[j].length; i++){    	  
+    		this._tiles[j][i].renderCakes(ctx);
+    	}	
+    }
+};
+
+Maze.prototype.drawMaze = function () {
+	this.drawHorrLane(1,1,2);
     this.drawHorrLane(1,4,6);
     this.drawHorrLane(1,10,12);
     this.drawHorrLane(1,14,15);
@@ -158,61 +232,4 @@ Maze.prototype.initMaze = function (descr) {
     this.drawHorrLane(8,7,7);
     this.drawHorrLane(8,9,9);
     this.drawHorrLane(10,6,9);
-
-	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	    
-    for(var j = 0; j < this._tiles.length; j++){    	
-    	for(var i = 0; i < this._tiles[j].length; i++){    	    		    		
-    		this._tiles[j][i].render(ctx);
-    	}
-    	
-    }
-        
-};
-Maze.prototype.update = function (du) {
-     return;
-};
-
-Maze.prototype.getsEaten = function () {
-    this.kill();    
-};
-
-Maze.prototype.getTile = function(x,y,r){
-	
-	for(var t in this._tile)
-	{
-		var tile = this._tile[t];
-		var dist = util.distSq(tile.cx, tile.cy, x-r, y-r);		
-		if(dist <= r*r)return tile; 
-			dist = util.distSq(tile.cx, tile.cy, x+r, y+r);		
-		if(dist <= r*r)return tile; 
-			dist = util.distSq(tile.cx, tile.cy, x+r, y-r);		
-		if(dist <= r*r)return tile; 
-			dist = util.distSq(tile.cx, tile.cy, x-r, y+r);		
-		if(dist <= r*r)return tile; 
-	}
-	return false; 
-};
-
-Maze.prototype.render = function (ctx) {
-    
-    
-    if(g_renderTilesDebug){    	
-	}
-	for(var level in this._tiles)
-    	{
-    		var row = this._tiles[level];
-    		for(var t in row)
-    		{
-                    var tile = row[t];
-                  //  if(tile && tile.shouldRender)
-                    {
-    			
-                        tile.render(ctx);    			
-                    }
-                }
-    	}    	
-    
-    /*this.sprite.drawWrappedCentredAt(
-        ctx, this.cx, this.cy, this.rotation
-    );*/
 };

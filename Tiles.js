@@ -25,13 +25,14 @@ Tile.prototype.bottom = true;
 Tile.prototype.init = function(type){						
 	switch(type)
 	{		
-		//0:  Lane	
+		//0:  Lane with cake
 		case 0:
 	  		this.left = true; 
 	  		this.right = true;
 	  		this.top = true; 
 	  		this.bottom = true;
 	  		this.shouldRender = false;
+			this.hasCake = true;
 	  		break;	  		
 		//1:  Brick 
 		case 1:
@@ -40,7 +41,17 @@ Tile.prototype.init = function(type){
 	  		this.top = false; 
 	  		this.bottom = false; 
 	  		this.shouldRender = true; 
-	  		break;	  		
+			this.hasCake = false;
+	  		break;	
+		//2: Lane without cake
+		case 2:
+			this.left = true; 
+	  		this.right = true;
+	  		this.top = true; 
+	  		this.bottom = true;
+	  		this.shouldRender = false;
+			this.hasCake = false;
+	  		break;			
 	}	
 }
 
@@ -66,16 +77,15 @@ Tile.prototype.render = function (ctx) {
 	var endX = this.cx + this.width - offset; 
 	var startY = this.cy + offset; 
 	var endY = this.cy - offset + this.height;
-        
-        
-        if(this.type ===1){
-            ctx.fillStyle = "blue";
-            ctx.fillRect(this.cx, this.cy, this.width, this.height);        
-            ctx.fillStyle = "black";
-            ctx.fillRect(this.cx + 2, this.cy + 2, this.width - 2, this.height -2);        
-        } 
-	/*if(!this.left) util.drawLine(ctx,startX, startY , startX, endY);
-	if(!this.right) util.drawLine(ctx, endX, startY, endX, endY);
-	if(!this.top) util.drawLine(ctx, startX, startY, endX, startY);
-	if(!this.bottom) util.drawLine(ctx, startX, endY, endX, endY);*/
+	if (this.shouldRender) {
+		ctx.rect(this.cx,this.cy,this.width,this.height);
+		ctx.stroke(); 
+	}
+};
+
+Tile.prototype.renderCakes = function (ctx) {
+	if (this.hasCake) {
+		ctx.rect(this.cx + (this.width/2), this.cy + (this.height/2), 2, 2);
+		ctx.stroke();
+	}
 };
