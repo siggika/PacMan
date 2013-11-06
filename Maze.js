@@ -196,7 +196,7 @@ Maze.prototype.drawMaze = function () {
     this.drawHorrLane(14,1,2);
     this.drawHorrLane(14,4,6);
     this.drawHorrLane(14,10,12);
-    this.drawHorrLane(14,14,16);
+    this.drawHorrLane(14,14,15);
 
     this.drawHorrLane(16,0,0);
     this.drawHorrLane(16,6,10);
