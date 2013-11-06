@@ -113,25 +113,26 @@ Guy.prototype.Move = function (du) {
 	var wallColliding = this.isWallColliding (nextTile, nextX, nextY);
 		    
 	//Move left
-	if(nextX - this.radius > 0 && this.directions.left && !wallColliding.left){
+	console.log(nextTile);
+	if(nextX - this.radius > 0 && nextTile && this.directions.left && !wallColliding.left){
 			
 		this.cx -= du * this.velX; 
 		this.cy = nextTile.cy + (nextTile.height/2);     	
 	}
 	//Move Right
-	if(nextX + this.radius <= g_canvas.width && this.directions.right && !wallColliding.right)
+	if(nextX + this.radius <= g_canvas.width && nextTile && this.directions.right && !wallColliding.right)
 	{
 		this.cx += du * this.velX; 
 		this.cy = nextTile.cy + (nextTile.height/2);     	
 	}
 	//Move up
-	if(nextY - this.radius > 0 && this.directions.up && !wallColliding.up) {
+	if(nextY - this.radius > 0 && nextTile && this.directions.up && !wallColliding.up) {
 		this.cy -= du * this.velY; 		
 		this.cx = nextTile.cx + (nextTile.height/2);
 	}
 	
 	//Move Down
-	if(nextY + this.radius < g_canvas.height && this.directions.down && !wallColliding.down) {
+	if(nextY + this.radius < g_canvas.height && nextTile && this.directions.down && !wallColliding.down) {
 		this.cy += du * this.velY;    
 		this.cx = nextTile.cx + (nextTile.height/2);     	
 	}
@@ -198,6 +199,12 @@ Guy.prototype.getNextPos = function (du) {
 
 Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
+	//var distSq = util.distSq(posX, posY, entityPos.posX, entityPos.posY);
+	//var limitSq = util.square(this.radius + entityRadius);
+		
+	//if (distSq < limitSq) {
+	//console.log("it's a hit!");
+	
 	
 	if (nextTile && nextTile.type == "1") {
 	
@@ -254,3 +261,9 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	};
 
 };
+
+
+
+
+
+
