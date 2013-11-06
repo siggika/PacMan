@@ -43,6 +43,7 @@ Guy.prototype.cy = 15;
 Guy.prototype.velX = 5;
 Guy.prototype.velY = 5;
 Guy.prototype.score = 0;
+Guy.prototype.numSubSteps = 2;
 Guy.prototype.directions = { 
 	left : false,
 	right : true,
@@ -91,7 +92,12 @@ Guy.prototype.update = function (du) {
     this.clear(ctx);
     //spatialManager.unregister(this);
 	if(this._isDeadNow) return entityManager.KILL_ME_NOW;             
-    this.Move(du);
+    var steps = this.numSubSteps;
+    var dStep = du / steps;
+    for (var i = 0; i < steps; ++i) {
+        this.Move(dStep);
+    }
+	//this.Move(du);
     
     //spatialManager.register(this);
 
