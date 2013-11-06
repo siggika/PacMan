@@ -31,16 +31,47 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._pacman, this._maze];
+    this._categories = [this._maze,this._pacman];
 },
 
-init: function() {
-    this.generateGuy();
+init: function() {    
     this.generateMaze();
+    this.generateGuy();
 },
 
 generateGuy : function(descr) {
-    this._pacman.push(new Guy(descr));
+    //var tile = this._maze[0].getTile(215,280,3);
+    this._pacman.push(new Guy({
+        //cx: tile.cx + tile.width,
+        cx: 215+ 16,
+        //cy: tile.cy + tile.height/2        
+        cy: 280 + 16/2        
+    }));
+    var colors = ["","blue","pink","orange"]
+    for(var i = 1; i < 4; i++){
+        
+        //tile = this._maze[0].getTile(170 + (i * tile.width*2),230,3);
+        this._pacman.push(new Guy({
+            //cx: tile.cx,
+            cx: 160 + (i * 16*2),
+            //cy: tile.cy + tile.height/2,
+            cy: 220 + 16/2,
+            ai: true,
+            color : colors[i]
+        }));
+    }
+    
+    //tile = this._maze[0].getTile(230,190,3);
+    this._pacman.push(new Guy({
+        //cx: tile.cx,
+        cx: 225,
+        //cy: tile.cy + tile.height/2,
+        cy: 175 + 16/2,
+        ai: true,
+        color: "red"
+    }));
+    
+    
 },
 
 generateMaze : function(descr) {   
@@ -56,8 +87,7 @@ haltGuys: function() {
 },	
 
 getTile: function(x,y,r,dir) {
-	for(var t = 0; t < this._maze.length; t++)
-	{		
+	for(var t = 0; t < this._maze.length; t++) {		
 		return this._maze[t].getTile(x,y,r,dir); 
 	}	
 },

@@ -25,7 +25,7 @@ Tile.prototype.bottom = true;
 Tile.prototype.init = function(type){						
 	switch(type)
 	{		
-		//0:  Lane with cake
+		//0:  Lane	
 		case 0:
 	  		this.left = true; 
 	  		this.right = true;
@@ -42,25 +42,17 @@ Tile.prototype.init = function(type){
 	  		this.bottom = false; 
 	  		this.shouldRender = true; 
 			this.hasCake = false;
-	  		break;	
-		//2: Lane without cake
-		case 2:
-			this.left = true; 
-	  		this.right = true;
-	  		this.top = true; 
-	  		this.bottom = true;
-	  		this.shouldRender = false;
-			this.hasCake = false;
-	  		break;			
+	  		break;	  		
 	}	
 }
 
 Tile.prototype.cx = 0;
 Tile.prototype.cy = 0;
 Tile.prototype.type = 0; 
+Tile.prototype.debug = false; 
 
-Tile.prototype.height = 30; 
-Tile.prototype.width = 30; 
+Tile.prototype.height = 16; 
+Tile.prototype.width = 16; 
 
 Tile.prototype.getsEaten = function () {
     this.kill();    
@@ -68,24 +60,35 @@ Tile.prototype.getsEaten = function () {
 
 
 Tile.prototype.render = function (ctx) {
-	var offset = 5; 
+	var offset = 4; 
     if(g_renderTilesDebug){
     	ctx.rect(this.cx,this.cy,this.width,this.height);
 		ctx.stroke(); 
 	}
 	var startX = this.cx + offset;
-	var endX = this.cx + this.width - offset; 
+	var endX =  this.width - offset * 2; 
 	var startY = this.cy + offset; 
-	var endY = this.cy - offset + this.height;
-	if (this.shouldRender) {
-		ctx.rect(this.cx,this.cy,this.width,this.height);
-		ctx.stroke(); 
-	}
-};
-
-Tile.prototype.renderCakes = function (ctx) {
-	if (this.hasCake) {
-		ctx.rect(this.cx + (this.width/2), this.cy + (this.height/2), 2, 2);
-		ctx.stroke();
-	}
+	var endY = this.height - offset * 2;
+        
+        
+        if(this.type ===1){                        
+            util.fillBox(ctx, startX, startY,endX, endY, "blue");                        
+            util.fillBox(ctx, startX +2, startY+2,endX-2, endY-2, "black");                        
+        } 
+        if(this.type === 0){
+             
+            var startX = this.cx - offset;
+            var endX =  this.width + offset * 2; 
+            var startY = this.cy - offset; 
+            var endY = this.height + offset * 2;
+            util.fillBox(ctx, startX, startY,endX, endY, "black");                        
+            //util.strokeCircle(ctx,this.cx + this.width/2, this.cy + this.height/2, 2);            
+            if(this.hasCake){
+                ctx.fillStyle= "white";    
+                ctx.beginPath();
+                ctx.arc(this.cx + this.width/2, this.cy+this.height/2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }	
+        if(this.debug) util.fillBox(ctx, startX, startY,endX, endY, "red");                        
 };

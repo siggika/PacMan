@@ -38,10 +38,13 @@ Guy.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 // Initial, inheritable, default values
 Guy.prototype.radius = 12;
-Guy.prototype.cx = 20;
-Guy.prototype.cy = 15;
-Guy.prototype.velX = 5;
-Guy.prototype.velY = 5;
+Guy.prototype.cx = 25;
+Guy.prototype.cy = 25;
+Guy.prototype.velX = 3;
+Guy.prototype.velY = 3;
+Guy.prototype.ai = false;
+Guy.prototype.color = "yellow";
+Guy.prototype.nextTurn;
 Guy.prototype.score = 0;
 Guy.prototype.numSubSteps = 2;
 Guy.prototype.directions = { 
@@ -62,54 +65,57 @@ Guy.prototype.updateDirections = function(){
 		this.directions.down = false; 
 		this.directions.left = false; 
 		this.directions.right = false; 
+        this.nextTurn = "up";
 	}
     if (eatKey(this.KEY_DOWN)){
-    	this.directions.down = true;
-    	
+    	this.directions.down = true;    	
     	this.directions.up = false; 		
 		this.directions.left = false; 
-		this.directions.right = false; 
+		this.directions.right = false;
+        this.nextTurn = "down";
     } 
     if (eatKey(this.KEY_LEFT)){
     	this.directions.left = true;
     	this.directions.up = false; 
 		this.directions.down = false; 		
 		this.directions.right = false; 
+        this.nextTurn = "left";
     } 
     if (eatKey(this.KEY_RIGHT)){
     	this.directions.right = true;
     	this.directions.up = false; 
 		this.directions.down = false; 
 		this.directions.left = false; 		
+        this.nextTurn = "right";
     } 	
 };
     
 Guy.prototype.update = function (du) {
-
      
     // TODO: MOVE   
+	
+	//ÞETTA VAR VILLAN MEÐ AÐ FESTAST Í VEGGJUM
+    //if(!this.nextTurn)this.updateDirections(); 
     this.updateDirections();    
-    this.clear(ctx);
+    
     //spatialManager.unregister(this);
 	if(this._isDeadNow) return entityManager.KILL_ME_NOW;             
-    var steps = this.numSubSteps;
-    var dStep = du / steps;
-    for (var i = 0; i < steps; ++i) {
+    if(!this.ai) {
+		var steps = this.numSubSteps;
+		var dStep = du / steps;
+		for (var i = 0; i < steps; ++i) {
         this.Move(dStep);
     }
-	//this.Move(du);
-    
+	}
     //spatialManager.register(this);
 
 };
 
 
 Guy.prototype.Move = function (du) {
-	
-	var prevX = this.cx;
-    var prevY = this.cy;
-    
-	var nextPos = this.getNextPos(du);
+	    
+   
+    var nextPos = this.getNextPos(du);
 	
     var nextX = nextPos.nextX;
     var nextY = nextPos.nextY;
@@ -117,31 +123,40 @@ Guy.prototype.Move = function (du) {
 	var nextTile = entityManager.getTile(nextX, nextY, this.radius, this.directions);
 
 	var wallColliding = this.isWallColliding (nextTile, nextX, nextY);
-		    
-	//Move left
-	console.log(nextTile);
-	if(nextX - this.radius > 0 && nextTile && this.directions.left && !wallColliding.left){
-			
-		this.cx -= du * this.velX; 
-		this.cy = nextTile.cy + (nextTile.height/2);     	
+   /*
+   if(tile)
+    {
+    	tile.debug = true;    	
+    }    
+	*/
+	
+	//Move left        
+	if(this.cx - this.radius > 0 && (this.directions.left || this.nextTurn === "left") && nextTile && !wallColliding.left){			                  
+		this.cx = nextX; 
+		this.cy = nextTile.cy + (nextTile.height/2); 
+		this.nextTurn = false;
 	}
 	//Move Right
-	if(nextX + this.radius <= g_canvas.width && nextTile && this.directions.right && !wallColliding.right)
+	if(this.cx + this.radius <= g_canvas.width && (this.directions.right || this.nextTurn === "right" ) && nextTile && !wallColliding.right)
 	{
-		this.cx += du * this.velX; 
-		this.cy = nextTile.cy + (nextTile.height/2);     	
+		this.cx = nextX;                    
+		this.cy = nextTile.cy + (nextTile.height/2); 
+		this.nextTurn = false;
 	}
 	//Move up
-	if(nextY - this.radius > 0 && nextTile && this.directions.up && !wallColliding.up) {
-		this.cy -= du * this.velY; 		
-		this.cx = nextTile.cx + (nextTile.height/2);
+	if(this.cy - this.radius > 0 && (this.directions.up || this.nextTurn === "up") && nextTile && !wallColliding.up) {
+		this.cy = nextY;                 
+		this.cx = nextTile.cx + (nextTile.width/2); 
+		this.nextTurn = false;
 	}
 	
 	//Move Down
-	if(nextY + this.radius < g_canvas.height && nextTile && this.directions.down && !wallColliding.down) {
-		this.cy += du * this.velY;    
-		this.cx = nextTile.cx + (nextTile.height/2);     	
+	if(this.cy + this.radius < g_canvas.height && (this.directions.down || this.nextTurn === "down") && nextTile && !wallColliding.down) {
+		this.cy = nextY;                  	                
+		this.cx = nextTile.cx + (nextTile.width/2); 
+		this.nextTurn = false;
 	}
+        
 };
 
 
@@ -169,15 +184,21 @@ Guy.prototype.halt = function () {
 Guy.prototype.render = function (ctx) {
     
     
-    util.strokeCircle(ctx, this.cx, this.cy, this.radius);
+    //util.strokeCircle(ctx, this.cx, this.cy, this.radius);
+    ctx.fillStyle= this.color;    
+    ctx.beginPath();
+    ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI * 2);
+    ctx.fill();
     
+   // util.fillCircle(ctx, this.cx, this.cy, this.radius);
     //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);
     
 };
 Guy.prototype.clear = function(ctx){
-	var width = this.radius + 1.5; 
+	var width = this.radius + 1; 
 	util.fillBox(ctx, this.cx - width, this.cy - width,  width * 2, width * 2, "white");
 };
+
 
 Guy.prototype.getNextPos = function (du) {
 	var nextX;
@@ -205,13 +226,6 @@ Guy.prototype.getNextPos = function (du) {
 
 Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
-	//var distSq = util.distSq(posX, posY, entityPos.posX, entityPos.posY);
-	//var limitSq = util.square(this.radius + entityRadius);
-		
-	//if (distSq < limitSq) {
-	//console.log("it's a hit!");
-	
-	
 	if (nextTile && nextTile.type == "1") {
 	
 		var left, right, up, down = false;
@@ -220,6 +234,7 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		var limit = this.radius + (nextTile.width/2);
 
 		/*
+		collision-checking
 		console.log("limit: " + limit);
 		console.log("right: " + (nextTileX - nextX));
 		console.log("left: " + (nextX - nextTileX));
@@ -254,8 +269,8 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 	}
 	//if tile has a cake, change it to a normal lane
-	else if (nextTile && nextTile.type == "0"){
-		nextTile.type = 2;
+	else if (nextTile && nextTile.hasCake){
+		nextTile.hasCake = false;
 		this.score++;
 		updateSideText(this.score);
 	}
@@ -267,9 +282,6 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	};
 
 };
-
-
-
 
 
 
