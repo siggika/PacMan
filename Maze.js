@@ -243,27 +243,35 @@ Maze.prototype.getsEaten = function () {
 
 Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
 	var lowest = Number.MAX_VALUE;
-	var nearestTile;
-	
+	var nearestTile;	
 	for(var j = 0; j < this._tiles.length; j++){    	
     	for(var i = 0; i < this._tiles[j].length; i++){   
     				
-			var tile = this._tiles[j][i];		
-			var tileX = tile.cx + (tile.width/2);
-			var tileY = tile.cy + (tile.height/2);
-			
-			// only searching to the right of guy when going right,
-			// left of guy when going left...
-			if ((dir.right && tileX >= guyX) || (dir.left && tileX <= guyX)
-				|| (dir.down && tileY >= guyY) || (dir.up && tileY <= guyY)) {	
-				
-				var dist =  util.distSq(guyX, guyY, tileX, tileY);
-				if (dist < lowest) { 
-					lowest = dist;
-					nearestTile = tile;
-				}
-			}
-    	}	
+			var tile = this._tiles[j][i];
+            if(!dir){
+                if(tile.cx < guyX && tile.cx + tile.width > guyX)
+                    if(tile.cy < guyY && tile.cy + tile.height > guyY)
+                        return tile;         
+            }
+
+            else if(dir){
+
+    			var tileX = tile.cx + (tile.width/2);
+    			var tileY = tile.cy + (tile.height/2);
+    			
+    			// only searching to the right of guy when going right,
+    			// left of guy when going left...
+    			if ((dir.right && tileX >= guyX) || (dir.left && tileX <= guyX)
+    				|| (dir.down && tileY >= guyY) || (dir.up && tileY <= guyY)) {	
+    				
+				    var dist =  util.distSq(guyX, guyY, tileX, tileY);
+				    if (dist < lowest) { 
+					   lowest = dist;
+				    	nearestTile = tile;
+			     	}
+			 }
+    	   }
+        }	
     }
 	
 	return nearestTile;

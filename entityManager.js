@@ -40,33 +40,27 @@ init: function() {
 },
 
 generateGuy : function(descr) {
-    //var tile = this._maze[0].getTile(215,280,3);
+    var tile = this._maze[0].getTile(215,280,3);
     this._pacman.push(new Guy({
-        //cx: tile.cx + tile.width,
-        cx: 215+ 16,
-        //cy: tile.cy + tile.height/2        
-        cy: 280 + 16/2        
+        cx: tile.cx + tile.width,       
+        cy: tile.cy + tile.height/2               
     }));
     var colors = ["","blue","pink","orange"]
     for(var i = 1; i < 4; i++){
         
-        //tile = this._maze[0].getTile(170 + (i * tile.width*2),230,3);
+        tile = this._maze[0].getTile(170 + (i * tile.width*2),230,3);
         this._pacman.push(new Guy({
-            //cx: tile.cx,
-            cx: 160 + (i * 16*2),
-            //cy: tile.cy + tile.height/2,
-            cy: 220 + 16/2,
+            cx: tile.cx,           
+            cy: tile.cy + tile.height/2,           
             ai: true,
             color : colors[i]
         }));
     }
     
-    //tile = this._maze[0].getTile(230,190,3);
+    tile = this._maze[0].getTile(230,190,3);
     this._pacman.push(new Guy({
-        //cx: tile.cx,
-        cx: 225,
-        //cy: tile.cy + tile.height/2,
-        cy: 175 + 16/2,
+        cx: tile.cx,        
+        cy: tile.cy + tile.height/2,        
         ai: true,
         color: "red"
     }));

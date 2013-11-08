@@ -44,12 +44,13 @@ Guy.prototype.velX = 3;
 Guy.prototype.velY = 3;
 Guy.prototype.ai = false;
 Guy.prototype.color = "yellow";
-Guy.prototype.nextTurn;
+Guy.prototype.nextTurn = false;
+Guy.prototype.currentDirection = false;
 Guy.prototype.score = 0;
 Guy.prototype.numSubSteps = 2;
 Guy.prototype.directions = { 
 	left : false,
-	right : true,
+	right : false,
 	up : false, 
 	down : false
 }
@@ -59,12 +60,13 @@ Guy.prototype.directions = {
 */
 
 Guy.prototype.updateDirections = function(){
+	
 	if (eatKey(this.KEY_UP))
 	{
 		this.directions.up = true; 
 		this.directions.down = false; 
 		this.directions.left = false; 
-		this.directions.right = false; 
+		this.directions.right = false; 		
         this.nextTurn = "up";
 	}
     if (eatKey(this.KEY_DOWN)){
@@ -123,12 +125,7 @@ Guy.prototype.Move = function (du) {
 	var nextTile = entityManager.getTile(nextX, nextY, this.radius, this.directions);
 
 	var wallColliding = this.isWallColliding (nextTile, nextX, nextY);
-   /*
-   if(tile)
-    {
-    	tile.debug = true;    	
-    }    
-	*/
+ 	
 	
 	//Move left        
 	if(this.cx - this.radius > 0 && (this.directions.left || this.nextTurn === "left") && nextTile && !wallColliding.left){			                  
@@ -207,18 +204,22 @@ Guy.prototype.getNextPos = function (du) {
 	if (this.directions.left) {
 		nextX = this.cx - this.velX * du;
 		nextY = this.cy;
+		this.currentDirection = "left";
 	}
 	if (this.directions.right) {
 		nextX = this.cx + this.velX * du;
 		nextY = this.cy;
+		this.currentDirection = "right";
 	}
 	if (this.directions.up) {
 		nextX = this.cx;
 		nextY = this.cy - this.velY * du;
+		this.currentDirection = "up";
 	}
 	if (this.directions.down) {
 		nextX = this.cx;
 		nextY = this.cy + this.velY * du;
+		this.currentDirection = "down";
 	}
 
     return {nextX : nextX, nextY : nextY};
