@@ -249,8 +249,8 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
     				
 			var tile = this._tiles[j][i];
             if(!dir){
-                if(tile.cx < guyX && tile.cx + tile.width > guyX)
-                    if(tile.cy < guyY && tile.cy + tile.height > guyY)
+                if(tile.cx < guyX && tile.cx + tile.width >= guyX)
+                    if(tile.cy < guyY && tile.cy + tile.height >= guyY)
                         return tile;         
             }
 

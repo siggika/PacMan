@@ -58,44 +58,13 @@ Guy.prototype.directions = {
 /*Guy.prototype.warpSound = new Audio(
     "sounds/GuyWarp.ogg");
 */
-
-Guy.prototype.updateDirections = function(){
-	
-	if (eatKey(this.KEY_UP))
-	{
-		this.directions.up = true; 
-		this.directions.down = false; 
-		this.directions.left = false; 
-		this.directions.right = false; 		
-        this.nextTurn = "up";
-	}
-    if (eatKey(this.KEY_DOWN)){
-    	this.directions.down = true;    	
-    	this.directions.up = false; 		
-		this.directions.left = false; 
-		this.directions.right = false;
-        this.nextTurn = "down";
-    } 
-    if (eatKey(this.KEY_LEFT)){
-    	this.directions.left = true;
-    	this.directions.up = false; 
-		this.directions.down = false; 		
-		this.directions.right = false; 
-        this.nextTurn = "left";
-    } 
-    if (eatKey(this.KEY_RIGHT)){
-    	this.directions.right = true;
-    	this.directions.up = false; 
-		this.directions.down = false; 
-		this.directions.left = false; 		
-        this.nextTurn = "right";
-    } 	
-};
-    
 Guy.prototype.update = function (du) {
      
-    // TODO: MOVE   
-	
+    if (eatKey(this.KEY_UP)) this.nextTurn = "up";		
+	if (eatKey(this.KEY_DOWN)) this.nextTurn = "down";    	     
+    if (eatKey(this.KEY_LEFT)) this.nextTurn = "left";
+    if (eatKey(this.KEY_RIGHT)) this.nextTurn = "right"; 	
+
 	//ÞETTA VAR VILLAN MEÐ AÐ FESTAST Í VEGGJUM
     //if(!this.nextTurn)this.updateDirections(); 
     this.updateDirections();    
@@ -113,6 +82,64 @@ Guy.prototype.update = function (du) {
 
 };
 
+Guy.prototype.updateDirections = function(){
+		
+
+	var tile = entityManager.getTile(this.cx, this.cy, this.radius);	
+	if(!tile || !this.nextTurn)return;	
+	
+	if(this.nextTurn === "up"){
+		var nextX = tile.cx +1 ; 
+		var nextY = tile.cy - tile.height+1; 
+		var nextTile = entityManager.getTile(nextX, nextY, this.radius);			
+		if(!nextTile || nextTile.type === 1 ) return; 		
+		else{
+			this.directions.up = true; 
+			this.directions.down = false; 
+			this.directions.left = false; 
+			this.directions.right = false; 		        
+		}
+	}
+	if(this.nextTurn === "down"){
+		var nextX = tile.cx + 1; 
+		var nextY = tile.cy + tile.height + 1; 
+		var nextTile = entityManager.getTile(nextX, nextY, this.radius);		
+    	if(!nextTile || nextTile.type === 1 ) return; 
+    	else{
+    		this.directions.down = true;    	
+    		this.directions.up = false; 		
+			this.directions.left = false; 
+			this.directions.right = false;        
+		}
+	}
+    if(this.nextTurn === "left"){
+    	var nextX = tile.cx - tile.width + 1; 
+		var nextY = this.cy + 1; 
+		var nextTile = entityManager.getTile(nextX, nextY, this.radius)
+		if(!nextTile || nextTile.type === 1 ) return; 
+    	else{
+    		this.directions.left = true;
+    		this.directions.up = false; 
+			this.directions.down = false; 		
+			this.directions.right = false;  
+		}       
+    }
+    if(this.nextTurn === "right"){
+    	var nextX = tile.cx + tile.width + 1; 
+		var nextY = this.cy + 1; 
+		var nextTile = entityManager.getTile(nextX, nextY, this.radius)		
+    	if(!nextTile || nextTile.type === 1 ) return; 
+    	else{
+    		this.directions.right = true;
+    		this.directions.up = false; 
+			this.directions.down = false; 
+			this.directions.left = false; 		    
+		}
+    }	   
+};
+    
+
+
 
 Guy.prototype.Move = function (du) {
 	    
@@ -121,37 +148,41 @@ Guy.prototype.Move = function (du) {
 	
     var nextX = nextPos.nextX;
     var nextY = nextPos.nextY;
-	
+		
 	var nextTile = entityManager.getTile(nextX, nextY, this.radius, this.directions);
 
 	var wallColliding = this.isWallColliding (nextTile, nextX, nextY);
  	
 	
 	//Move left        
-	if(this.cx - this.radius > 0 && (this.directions.left || this.nextTurn === "left") && nextTile && !wallColliding.left){			                  
+	if(this.directions.left && !wallColliding.left){			                  
 		this.cx = nextX; 
+		if(this.cx + this.radius <= 0) this.cx = g_canvas.width + this.cx; 
+		if(!nextTile)return; 
 		this.cy = nextTile.cy + (nextTile.height/2); 
-		this.nextTurn = false;
+		//this.nextTurn = false;
 	}
 	//Move Right
-	if(this.cx + this.radius <= g_canvas.width && (this.directions.right || this.nextTurn === "right" ) && nextTile && !wallColliding.right)
+	if(this.directions.right && !wallColliding.right)
 	{
-		this.cx = nextX;                    
+		this.cx = nextX;   
+		if(this.cx - this.radius > g_canvas.width) this.cx -= g_canvas.width; 		
+		if(!nextTile)return;
 		this.cy = nextTile.cy + (nextTile.height/2); 
-		this.nextTurn = false;
+		//this.nextTurn = false;
 	}
 	//Move up
-	if(this.cy - this.radius > 0 && (this.directions.up || this.nextTurn === "up") && nextTile && !wallColliding.up) {
+	if(this.cy - this.radius > 0 && this.directions.up  && nextTile && !wallColliding.up) {
 		this.cy = nextY;                 
 		this.cx = nextTile.cx + (nextTile.width/2); 
-		this.nextTurn = false;
+		//this.nextTurn = false;
 	}
 	
 	//Move Down
-	if(this.cy + this.radius < g_canvas.height && (this.directions.down || this.nextTurn === "down") && nextTile && !wallColliding.down) {
+	if(this.cy + this.radius < g_canvas.height && this.directions.down && nextTile && !wallColliding.down) {
 		this.cy = nextY;                  	                
 		this.cx = nextTile.cx + (nextTile.width/2); 
-		this.nextTurn = false;
+		//this.nextTurn = false;
 	}
         
 };
@@ -184,8 +215,18 @@ Guy.prototype.render = function (ctx) {
     //util.strokeCircle(ctx, this.cx, this.cy, this.radius);
     ctx.fillStyle= this.color;    
     ctx.beginPath();
-    ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI * 2);
+    ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI * 2);    
     ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(this.cx - g_canvas.width, this.cy, this.radius, 0, Math.PI * 2);    
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(g_canvas.width + this.cx, this.cy, this.radius, 0, Math.PI * 2);    
+    ctx.fill();
+
+
     
    // util.fillCircle(ctx, this.cx, this.cy, this.radius);
     //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);
