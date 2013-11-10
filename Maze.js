@@ -33,13 +33,14 @@ Maze.prototype._tiles = new Array();
 Maze.prototype.drawHorrLane = function(level, startX, len){
 	for(var i = startX; i <= len; i++){
 
-		if(!this._tiles[level]) this._tiles[level] = new Array();
+		//if(!this._tiles[level]) this._tiles[level] = new Array();
 		this._tiles[level][i] = new Tile({
     		cx : i * this.width,
     		cy : level * this.height,   
     		width : this.width,
     		height : this.height,
-    		type : 1
+    		type : 1,
+            draw : "HL"
     	});
 		//if(!this._tiles[i]) this._tiles[i] = new Array();		
 	}
@@ -47,17 +48,34 @@ Maze.prototype.drawHorrLane = function(level, startX, len){
 
 Maze.prototype.drawVertLane = function(x, startY, len){	
 	for(var i = startY; i <= len; i++){	
-		if(!this._tiles[i]) this._tiles[i] = new Array();
+		//if(!this._tiles[i]) this._tiles[i] = new Array();
 		
 		this._tiles[i][x] = new Tile({
     		cx : x * this.width,
     		cy : i * this.height,   
     		width : this.width,
     		height : this.height,
-    		type : 1
+    		type : 1,
+            draw : "VL"
     	});
 	}
 };
+
+Maze.prototype.drawBlankLane = function(level, startX, len){ 
+    for(var i = startX; i <= len; i++){
+
+        //if(!this._tiles[level]) this._tiles[level] = new Array();
+        this._tiles[level][i] = new Tile({
+            cx : i * this.width,
+            cy : level * this.height,   
+            width : this.width,
+            height : this.height,
+            type : 1,
+            draw : "Blank"
+        });     
+    }
+};
+
 Maze.prototype.prepArray = function(y,x){
 	for(var i = 0; i <= y; i++)
 	{
@@ -79,9 +97,7 @@ Maze.prototype.prepArray = function(y,x){
 Maze.prototype.initMaze = function (descr) {
     var w = g_canvas.width; 
     var h = g_canvas.height;     
-  /*  var t_w = 16 
-    var t_h = 16; 
-    */
+  
     this.prepArray(30,27);
     //Draw Bricks    
     this.drawHorrLane(0,0,27);
@@ -92,85 +108,91 @@ Maze.prototype.initMaze = function (descr) {
     this.drawHorrLane(30,0,27);
     
     this.drawHorrLane(2,2,5);
-    this.drawHorrLane(3,2,5);    
+    this.drawVertLane(2,3,3);    
+    this.drawVertLane(5,3,3);    
     this.drawHorrLane(4,2,5);
+    this.drawBlankLane(3,3,4);
     
     
     this.drawHorrLane(2,7,11);
-    this.drawHorrLane(3,7,11);
+    this.drawVertLane(7,3,3);    
+    this.drawVertLane(11,3,3);    
+    this.drawBlankLane(3,8,10);
     this.drawHorrLane(4,7,11);
     
-    this.drawHorrLane(1,13,14);
-    this.drawHorrLane(2,13,14);
-    this.drawHorrLane(3,13,14);
+    this.drawVertLane(13,1,3);
+    this.drawVertLane(14,1,3);
     this.drawHorrLane(4,13,14);
     
     
     this.drawHorrLane(2,16,20);
-    this.drawHorrLane(3,16,20);
+    this.drawVertLane(16,3,3);    
+    this.drawBlankLane(3,17,20);
+    this.drawVertLane(20,3,3);    
     this.drawHorrLane(4,16,20);
     
-    
     this.drawHorrLane(2,22,25);
-    this.drawHorrLane(3,22,25);
+    this.drawVertLane(22,3,3);    
+    this.drawBlankLane(3,23,24);
+    this.drawVertLane(25,3,3);    
     this.drawHorrLane(4,22,25);    
     
     this.drawHorrLane(6,2,5);
-    this.drawHorrLane(7,2,5);
+    this.drawHorrLane(7,2,5);    
     
     this.drawVertLane(7,6,13);
     this.drawVertLane(8,6,13);   
-    this.drawHorrLane(9,7,11);
-    this.drawHorrLane(10,7,11);
+    this.drawHorrLane(9,9,11);
+    this.drawHorrLane(10,9,11);
 
     this.drawHorrLane(6,10,17);
     this.drawHorrLane(7,10,17);
-    this.drawVertLane(13,6,10);   
-    this.drawVertLane(14,6,10);   
+    this.drawVertLane(13,8,10);   
+    this.drawVertLane(14,8,10);   
         
     this.drawVertLane(19,6,13);   
     this.drawVertLane(20,6,13);   
-    this.drawHorrLane(9,16,20);
-    this.drawHorrLane(10,16,20);
+    this.drawHorrLane(9,16,18);
+    this.drawHorrLane(10,16,18);
     
     this.drawHorrLane(6,22,25);
     this.drawHorrLane(7,22,25);
 
 //Left right center "boxes"
     this.drawHorrLane(9,22,26);
-    this.drawHorrLane(10,22,26);
-    this.drawHorrLane(11,22,26);
-    this.drawHorrLane(12,22,26);
+    this.drawBlankLane(10,22,26);
+    this.drawBlankLane(11,22,26);
+    this.drawBlankLane(12,22,26);
     this.drawVertLane(22,10,12);   
     this.drawHorrLane(13,22,26);
     
     this.drawHorrLane(15,22,26);
-    this.drawHorrLane(16,22,26);
-    this.drawHorrLane(17,22,26);
-    this.drawHorrLane(18,22,26);
+    this.drawBlankLane(16,22,26);
+    this.drawBlankLane(17,22,26);
+    this.drawBlankLane(18,22,26);
     this.drawVertLane(22,16,18);   
     this.drawHorrLane(19,22,26);
     
     this.drawHorrLane(9,1,5);
-    this.drawHorrLane(10,1,5);
-    this.drawHorrLane(11,1,5);
-    this.drawHorrLane(12,1,5);
+    this.drawBlankLane(10,1,5);
+    this.drawBlankLane(11,1,5);
+    this.drawBlankLane(12,1,5);
     this.drawVertLane(5,10,12);   
     this.drawHorrLane(13,1,5);
     
     this.drawHorrLane(15,1,5);
-    this.drawHorrLane(16,1,5);
-    this.drawHorrLane(17,1,5);
-    this.drawHorrLane(18,1,5);
+    this.drawBlankLane(16,1,5);
+    this.drawBlankLane(17,1,5);
+    this.drawBlankLane(18,1,5);
     this.drawVertLane(5,16,18);   
     this.drawHorrLane(19,1,5);
 
     //Center
     this.drawHorrLane(12,10,12);
     this.drawHorrLane(12,15,17);
-    this.drawVertLane(10,13,16);   
-    this.drawVertLane(17,13,16);   
-    this.drawHorrLane(16,10,16);
+    this.drawVertLane(10,13,15);   
+    this.drawVertLane(17,13,15);   
+    this.drawHorrLane(16,10,17);
     
 /***********************************/
 
@@ -181,6 +203,7 @@ Maze.prototype.initMaze = function (descr) {
     this.drawVertLane(20,15,19);   
 
 /*Center Low "T"'s*/
+
     this.drawHorrLane(18,10,17);
     this.drawHorrLane(19,10,17);
     this.drawVertLane(13,20,22);   
@@ -225,11 +248,13 @@ Maze.prototype.initMaze = function (descr) {
     this.drawHorrLane(28,16,25);
   
 	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	    
-    for(var j = 0; j < this._tiles.length; j++){    	
-    	for(var i = 0; i < this._tiles[j].length; i++){    	    		    		
-    		this._tiles[j][i].render(ctx);
-    	}
-    	
+    for(var j = 1; j < this._tiles.length -1 ; j++){    	    	
+        for(var i = 1; i < this._tiles[j].length - 1; i++){    	    		    		    		           
+            if(this._tiles[j][i].type === 0 && this._tiles[j][i+1].draw === "HL"){
+              this._tiles[j][i+1].draw = "UL";  
+              //if(this._tiles[j+1][i+1].draw === "HL") this.draw === "LL";
+            } 
+    	}    
     }
         
 }
@@ -278,22 +303,21 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
 };
 
 Maze.prototype.render = function (ctx) {
-    
-    
-    if(g_renderTilesDebug){    	
-	}
+           
+       var j = 0; 
 	for(var level in this._tiles)
     	{
-    		var row = this._tiles[level];
+    		j++;
+            var i = 0; 
+            var row = this._tiles[level];
     		for(var t in row)
     		{
-                    var tile = row[t];
-                  //  if(tile && tile.shouldRender)
-                    {
-    			
-                        tile.render(ctx);    			
-                    }
-                }
+                i++;
+                var tile = row[t];                                
+    			tile.render(ctx);
+                tile.number = j + "-" + i    			
+            }                
+                
     	}    	
     
     /*this.sprite.drawWrappedCentredAt(
