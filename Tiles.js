@@ -51,6 +51,9 @@ Tile.prototype.cy = 0;
 Tile.prototype.type = 0; 
 Tile.prototype.debug = false; 
 Tile.prototype.draw = false; 
+Tile.prototype.hasFruit = false; 
+Tile.prototype.Fruit = "none"; 
+Tile.prototype.timeout = "none"; 
 
 Tile.prototype.height = 16; 
 Tile.prototype.width = 16; 
@@ -144,8 +147,30 @@ Tile.prototype.render = function (ctx) {
             ctx.arc(this.cx + this.width/2, this.cy+this.height/2, 2, 0, Math.PI * 2);
             ctx.fill();
         }
+		if (this.hasFruit) {
+			if (this.Fruit === "cherry") ctx.fillStyle = "DeepPink";
+			else if (this.Fruit === "strawberry") ctx.fillStyle = "red"; 
+            ctx.beginPath();
+            ctx.arc(this.cx + this.width/2, this.cy+this.height/2, 4, 0, Math.PI * 2);
+            ctx.fill();
+		}
     }	
     if(this.debug){    
     	util.fillBox(ctx, this.cx, this.cy, this.width, this.height , "red");                        	
     } 
+};
+
+Tile.prototype.putFruit = function (dotsCaught, tile) {
+	
+	this.hasFruit = true;
+	
+	//make fruit last for 10 seconds
+	this.timeout = setTimeout(function(){tile.hasFruit = false;}, 10000);
+	
+	if (dotsCaught < 75) {		
+		this.Fruit = "cherry";
+	}
+	else if (dotsCaught < 175) {
+		this.Fruit = "strawberry";
+	}
 };

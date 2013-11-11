@@ -47,6 +47,7 @@ Guy.prototype.color = "yellow";
 Guy.prototype.nextTurn = false;
 Guy.prototype.currentDirection = false;
 Guy.prototype.score = 0;
+Guy.prototype.dotsCaught = 0;
 Guy.prototype.numSubSteps = 2;
 Guy.prototype.directions = { 
 	left : false,
@@ -71,13 +72,16 @@ Guy.prototype.update = function (du) {
     
     //spatialManager.unregister(this);
 	if(this._isDeadNow) return entityManager.KILL_ME_NOW;             
-    if(!this.ai) {
+	
+	if(!this.ai) {
 		var steps = this.numSubSteps;
 		var dStep = du / steps;
 		for (var i = 0; i < steps; ++i) {
-        this.Move(dStep);
-    }
+			this.Move(dStep);
+		}
+		this.updateScore();
 	}
+
     //spatialManager.register(this);
 
 };
@@ -314,8 +318,13 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	//if tile has a cake, change it to a normal lane
 	else if (nextTile && nextTile.hasCake){
 		nextTile.hasCake = false;
-		this.score++;
-		updateSideText(this.score);
+		this.score += 10;
+		this.dotsCaught++;
+	}
+	else if (nextTile && nextTile.hasFruit){
+		if (nextTile.Fruit === "cherry") this.score += 100;
+		if (nextTile.Fruit === "strawberry") this.score += 300;
+		nextTile.hasFruit = false;
 	}
 	return {
 		left: left, 
@@ -326,5 +335,11 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 
 };
 
-
+Guy.prototype.updateScore = function (score) {
+	updateSideText(this.score);
+	if (this.dotsCaught === 70 || this.dotsCaught === 170) {
+		var tile = entityManager.getTile(215,280,3);
+		tile.putFruit(this.dotsCaught, tile);
+	}
+}
 
