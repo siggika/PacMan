@@ -102,16 +102,19 @@ Maze.prototype.initMaze = function (descr) {
     //Draw Bricks    
     this.drawHorrLane(0,0,27);
     this.drawVertLane(0,0,13);    
+
     this.drawVertLane(0,15,29);    
     this.drawVertLane(27,0,13);    
     this.drawVertLane(27,15,29);    
     this.drawHorrLane(30,0,27);
     
+
     this.drawHorrLane(2,2,5);
     this.drawVertLane(2,3,3);    
-    this.drawVertLane(5,3,3);    
-    this.drawHorrLane(4,2,5);
-    this.drawBlankLane(3,3,4);
+    this.drawBlankLane(3,3,4);    
+    this.drawVertLane(5,3,3); 
+    this.drawHorrLane(4,2,5);       
+    
     
     
     this.drawHorrLane(2,7,11);
@@ -119,6 +122,7 @@ Maze.prototype.initMaze = function (descr) {
     this.drawVertLane(11,3,3);    
     this.drawBlankLane(3,8,10);
     this.drawHorrLane(4,7,11);
+    
     
     this.drawVertLane(13,1,3);
     this.drawVertLane(14,1,3);
@@ -131,19 +135,23 @@ Maze.prototype.initMaze = function (descr) {
     this.drawVertLane(20,3,3);    
     this.drawHorrLane(4,16,20);
     
+    
     this.drawHorrLane(2,22,25);
     this.drawVertLane(22,3,3);    
     this.drawBlankLane(3,23,24);
     this.drawVertLane(25,3,3);    
     this.drawHorrLane(4,22,25);    
     
+    //Level 2
     this.drawHorrLane(6,2,5);
     this.drawHorrLane(7,2,5);    
     
-    this.drawVertLane(7,6,13);
-    this.drawVertLane(8,6,13);   
+    this.drawHorrLane(6,7,8);
+    this.drawVertLane(7,7,12);
+    this.drawVertLane(8,7,12);   
     this.drawHorrLane(9,9,11);
     this.drawHorrLane(10,9,11);
+    this.drawHorrLane(13,7,8);
 
     this.drawHorrLane(6,10,17);
     this.drawHorrLane(7,10,17);
@@ -159,33 +167,34 @@ Maze.prototype.initMaze = function (descr) {
     this.drawHorrLane(7,22,25);
 
 //Left right center "boxes"
-    this.drawHorrLane(9,22,26);
-    this.drawBlankLane(10,22,26);
-    this.drawBlankLane(11,22,26);
-    this.drawBlankLane(12,22,26);
+    
+    this.drawHorrLane(9,22,27);
+    this.drawBlankLane(10,22,27);
+    this.drawBlankLane(11,22,27);
+    this.drawBlankLane(12,22,27);
     this.drawVertLane(22,10,12);   
-    this.drawHorrLane(13,22,26);
+    this.drawHorrLane(13,22,27);
     
-    this.drawHorrLane(15,22,26);
-    this.drawBlankLane(16,22,26);
-    this.drawBlankLane(17,22,26);
-    this.drawBlankLane(18,22,26);
+    this.drawHorrLane(15,22,27);
+    this.drawBlankLane(16,22,27);
+    this.drawBlankLane(17,22,27);
+    this.drawBlankLane(18,22,27);
     this.drawVertLane(22,16,18);   
-    this.drawHorrLane(19,22,26);
+    this.drawHorrLane(19,22,27);
     
-    this.drawHorrLane(9,1,5);
-    this.drawBlankLane(10,1,5);
-    this.drawBlankLane(11,1,5);
-    this.drawBlankLane(12,1,5);
+    this.drawHorrLane(9,0,5);
+    this.drawBlankLane(10,0,5);
+    this.drawBlankLane(11,0,5);
+    this.drawBlankLane(12,0,5);
     this.drawVertLane(5,10,12);   
-    this.drawHorrLane(13,1,5);
+    this.drawHorrLane(13,0,5);
     
-    this.drawHorrLane(15,1,5);
-    this.drawBlankLane(16,1,5);
-    this.drawBlankLane(17,1,5);
-    this.drawBlankLane(18,1,5);
+    this.drawHorrLane(15,0,5);
+    this.drawBlankLane(16,0,5);
+    this.drawBlankLane(17,0,5);
+    this.drawBlankLane(18,0,5);
     this.drawVertLane(5,16,18);   
-    this.drawHorrLane(19,1,5);
+    this.drawHorrLane(19,0,5);
 
     //Center
     this.drawHorrLane(12,10,12);
@@ -215,22 +224,21 @@ Maze.prototype.initMaze = function (descr) {
     this.drawVertLane(14,26,28);   
 
     this.drawHorrLane(21,2,5);
-    this.drawHorrLane(22,2,5);
+    this.drawHorrLane(22,2,4);
     this.drawVertLane(4,23,25);   
-    this.drawVertLane(5,23,25);   
+    this.drawVertLane(5,22,25);   
     
     this.drawHorrLane(24,1,2);
     this.drawHorrLane(25,1,2);
     
     this.drawHorrLane(21,22,25);
     this.drawHorrLane(22,22,25);
-    this.drawVertLane(22,23,25);   
+    this.drawVertLane(22,22,25);   
     this.drawVertLane(23,23,25);   
     
     this.drawHorrLane(24,25,27);
     this.drawHorrLane(25,25,27);
-    
-    
+        
     this.drawHorrLane(21,7,11);
     this.drawHorrLane(22,7,11);
     
@@ -246,17 +254,96 @@ Maze.prototype.initMaze = function (descr) {
     this.drawVertLane(20,24,26);   
     this.drawHorrLane(27,16,25 );
     this.drawHorrLane(28,16,25);
-  
-	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	    
-    for(var j = 1; j < this._tiles.length -1 ; j++){    	    	
-        for(var i = 1; i < this._tiles[j].length - 1; i++){    	    		    		    		           
-            if(this._tiles[j][i].type === 0 && this._tiles[j][i+1].draw === "HL"){
-              this._tiles[j][i+1].draw = "UL";  
-              //if(this._tiles[j+1][i+1].draw === "HL") this.draw === "LL";
-            } 
-    	}    
+    
+    this._tiles[0][0].draw = "UL";
+    this._tiles[0][27].draw = "UR";
+    
+    this._tiles[9][0].draw = "LL";
+    this._tiles[9][27].draw = "LR";
+    
+    this._tiles[19][0].draw = "UL";
+    this._tiles[19][27].draw = "UR";
+    
+    this._tiles[24][0].draw = "LL";
+    this._tiles[24][27].draw = "LR";
+    
+    this._tiles[25][0].draw = "UL";
+    this._tiles[25][27].draw = "UR";
+    
+    this._tiles[30][0].draw = "LL";
+    this._tiles[30][27].draw = "LR";
+
+
+	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	                        
+    for(var j = 1; j < this._tiles.length-1; j++){    	    	
+        for(var i = 1; i < this._tiles[j].length-1; i++){    	    		    		    		           
+            if(this._tiles[j][i].draw === "HL") 
+            {
+                if(this._tiles[j][i+1].draw === "VL") 
+                {
+                    if(this._tiles[j-1][i] && this._tiles[j-1][i].type === 0) this._tiles[j][i+1].draw = "LR";
+                    if(this._tiles[j+1][i].type === 0) this._tiles[j][i+1].draw = "UR";
+                }
+                
+                if(this._tiles[j-1][i] && this._tiles[j-1][i].draw === "VL" && this._tiles[j-1][i].type !== 0 && this._tiles[j+1][i].type !== 0) 
+                {
+                    if(this._tiles[j-1][i-1] && this._tiles[j-1][i-1].type === 0) this._tiles[j][i].draw = "LR";
+                    if(this._tiles[j-1][i+1].type === 0) this._tiles[j][i].draw = "LL";
+                }                
+
+            }
+
+            if(this._tiles[j][i].type === 0 )
+            {
+                
+                if(this._tiles[j][i+1].draw === "HL") 
+                {
+                    if(this._tiles[j-1][i+1] && this._tiles[j-1][i+1].type === 0)this._tiles[j][i+1].draw = "UL";
+                    if(this._tiles[j+1][i+1].type === 0)this._tiles[j][i+1].draw = "LL";                    
+                }
+                if(this._tiles[j][i-1] && this._tiles[j][i-1].draw === "HL")
+                {
+                    if(this._tiles[j-1][i-1] && this._tiles[j-1][i-1].type === 0)this._tiles[j][i-1].draw = "UR";
+                    if(this._tiles[j+1][i-1].type === 0)this._tiles[j][i-1].draw = "LR";
+                }                
+            }                         
+            if(this._tiles[j][i].draw === "VL")
+            {
+                
+                if(this._tiles[j-1][i] && this._tiles[j-1][i].type === 0)
+                {
+                    if(this._tiles[j][i-1] && this._tiles[j][i-1].type === 0)this._tiles[j][i].draw = "UL";
+                    if(this._tiles[j][i+1].type === 0)this._tiles[j][i].draw = "UR";
+
+                } 
+                if(this._tiles[j+1][i].type === 0){
+
+                     if(this._tiles[j][i-1] && this._tiles[j][i-1].type === 0) this._tiles[j][i].draw = "LL";
+                     if(this._tiles[j][i+1].type === 0) this._tiles[j][i].draw = "LR";
+                }
+                if(this._tiles[j][i+1].draw === "HL"){
+                    if(this._tiles[j-1][i+1].type === 0)this._tiles[j][i].draw = "LL";
+                    if(this._tiles[j+1][i+1].type === 0)this._tiles[j][i].draw = "UL";
+                }                
+                if(this._tiles[j-1][i] && this._tiles[j-1][i].draw === "HL"){
+                    if(this._tiles[j][i-1] && this._tiles[j][i-1].type === 0)this._tiles[j-1][i].draw = "UR";
+                    if(this._tiles[j][i+1].type === 0)this._tiles[j-1][i].draw = "UL";
+                }                
+
+            }                        
+        }    
     }
-        
+    this._tiles[12][12].draw = "HL"
+    this._tiles[12][15].draw = "HL"    
+    this._tiles[12][13].draw = "Blank"
+    this._tiles[12][14].draw = "Blank"
+    for(var x = 13; x < 16; x++)
+    {
+        for(var y = 11; y < 17; y++){
+            
+            this._tiles[x][y].draw = "Blank";
+        }
+    }
 }
 Maze.prototype.update = function (du) {
      return;

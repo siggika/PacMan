@@ -63,8 +63,9 @@ Tile.prototype.getsEaten = function () {
 Tile.prototype.render = function (ctx) {
 	var offset = this.width/2; 
     if(g_renderTilesDebug){    	
+    	ctx.strokeStyle = "white";
     	ctx.rect(this.cx,this.cy,this.width,this.height);
-		ctx.stroke(); 
+		ctx.stroke(); 		
 	}
 	var startX = this.cx + offset;
 	var endX =  this.cx + this.width; 
@@ -77,9 +78,7 @@ Tile.prototype.render = function (ctx) {
         ctx.strokeStyle = "blue";
 		ctx.lineWidth=2;			        
         if(this.draw === "VL")
-        {
-//        	util.drawLine(ctx, startX, startY, startX, endY, "blue");						
-    		
+        {    	
     		ctx.beginPath();        
         	ctx.moveTo(this.cx + offset,this.cy);    
     		ctx.lineTo(this.cx + offset,this.cy + this.height);
@@ -88,8 +87,7 @@ Tile.prototype.render = function (ctx) {
         }
          if(this.draw === "HL")
         {
-
-        	//util.drawLine(ctx, startX, startY, endX, startY, "blue");        	    
+        
 			ctx.beginPath();        
         	ctx.moveTo(this.cx, this.cy + offset);    
 			ctx.lineTo(this.cx + this.width,this.cy + offset);
@@ -107,17 +105,39 @@ Tile.prototype.render = function (ctx) {
 
 		}
 
-       /* util.fillBox(ctx, startX, startY,endX, endY, "blue");                        
-            util.fillBox(ctx, startX +2, startY+2,endX-2, endY-2, "black");                        */
+		if(this.draw === "LL"){
+		    ctx.strokeStyle = "blue";
+		    ctx.beginPath();        
+        	ctx.moveTo(this.cx + offset, this.cy);    
+			ctx.lineTo(this.cx + offset, this.cy + this.height/2);
+    		ctx.stroke();  
+			ctx.moveTo(this.cx + offset, this.cy + this.height/2);    
+			ctx.lineTo(this.cx + this.width,this.cy +this.height/2);
+    		ctx.stroke();  
+		}
+		if(this.draw === "UR"){
+		    ctx.strokeStyle = "blue";
+		    ctx.beginPath();        
+        	ctx.moveTo(this.cx + offset, this.cy + this.height/2);    
+			ctx.lineTo(this.cx + offset, this.cy + this.height);
+    		ctx.stroke();  
+			ctx.moveTo(this.cx + offset, this.cy + this.height/2);    
+			ctx.lineTo(this.cx, this.cy +this.height/2);
+    		ctx.stroke();  
+		}
+		if(this.draw === "LR"){
+		    ctx.strokeStyle = "blue";
+		    ctx.beginPath();        
+        	ctx.moveTo(this.cx + offset, this.cy + this.height/2);    
+			ctx.lineTo(this.cx + offset, this.cy);
+    		ctx.stroke();  
+			ctx.moveTo(this.cx + offset, this.cy + this.height/2);    
+			ctx.lineTo(this.cx, this.cy +this.height/2);
+    		ctx.stroke();  
+
+		}
     } 
-    if(this.type === 0){
-         
-    /*    var startX = this.cx - offset;
-        var endX =  this.width + offset * 2; 
-        var startY = this.cy - offset; 
-        var endY = this.height + offset * 2;
-        util.fillBox(ctx, startX, startY,endX, endY, "black");                        */
-        //util.strokeCircle(ctx,this.cx + this.width/2, this.cy + this.height/2, 2);            
+    if(this.type === 0 && this.draw != "Blank"){            
         if(this.hasCake){
             ctx.fillStyle= "white";    
             ctx.beginPath();
@@ -126,6 +146,6 @@ Tile.prototype.render = function (ctx) {
         }
     }	
     if(this.debug){    
-    	util.fillBox(ctx, startX, startY,endX, endY, "red");                        	
+    	util.fillBox(ctx, this.cx, this.cy, this.width, this.height , "red");                        	
     } 
 };

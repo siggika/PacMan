@@ -157,7 +157,7 @@ Guy.prototype.Move = function (du) {
 	//Move left        
 	if(this.directions.left && !wallColliding.left){			                  
 		this.cx = nextX; 
-		if(this.cx + this.radius <= 0) this.cx = g_canvas.width + this.cx; 
+		if(this.cx <= 0) this.cx = g_canvas.width; 
 		if(!nextTile)return; 
 		this.cy = nextTile.cy + (nextTile.height/2); 
 		//this.nextTurn = false;
@@ -165,8 +165,9 @@ Guy.prototype.Move = function (du) {
 	//Move Right
 	if(this.directions.right && !wallColliding.right)
 	{
+		
 		this.cx = nextX;   
-		if(this.cx - this.radius > g_canvas.width) this.cx -= g_canvas.width; 		
+		if(this.cx  >= g_canvas.width) this.cx = 0; 		
 		if(!nextTile)return;
 		this.cy = nextTile.cy + (nextTile.height/2); 
 		//this.nextTurn = false;
