@@ -18,6 +18,7 @@ function Guy(descr) {
     
     // Set normal drawing scale, and warp state off
     this._scale = 1;
+    this.init();
     
 };
 
@@ -37,53 +38,206 @@ Guy.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 
 // Initial, inheritable, default values
+//Movement and positions
 Guy.prototype.radius = 12;
 Guy.prototype.cx = 25;
 Guy.prototype.cy = 25;
 Guy.prototype.velX = 3;
 Guy.prototype.velY = 3;
-Guy.prototype.ai = false;
-Guy.prototype.color = "yellow";
 Guy.prototype.nextTurn = false;
 Guy.prototype.currentDirection = false;
-Guy.prototype.score = 0;
 Guy.prototype.numSubSteps = 2;
-Guy.prototype.directions = { 
+Guy.prototype.directions; 
+Guy.prototype.init = function() {
+	this.directions = { 
 	left : false,
 	right : false,
 	up : false, 
 	down : false
-}
+	};
+	this.currentDirection = false;
+	this.nextTurn = false;
+};
+
+//AI and individual Attributes
+Guy.prototype.ai = false;
+Guy.prototype.targetTile = false; 
+Guy.prototype.color = "yellow";
+Guy.prototype.score = 0;
+
 // HACKED-IN AUDIO (no preloading)
 /*Guy.prototype.warpSound = new Audio(
     "sounds/GuyWarp.ogg");
 */
+//Functions
 Guy.prototype.update = function (du) {
-     
-    if (eatKey(this.KEY_UP)) this.nextTurn = "up";		
-	if (eatKey(this.KEY_DOWN)) this.nextTurn = "down";    	     
-    if (eatKey(this.KEY_LEFT)) this.nextTurn = "left";
-    if (eatKey(this.KEY_RIGHT)) this.nextTurn = "right"; 	
-
-	//ÞETTA VAR VILLAN MEÐ AÐ FESTAST Í VEGGJUM
-    //if(!this.nextTurn)this.updateDirections(); 
+         
     this.updateDirections();    
-    
     //spatialManager.unregister(this);
-	if(this._isDeadNow) return entityManager.KILL_ME_NOW;             
-    if(!this.ai) {
-		var steps = this.numSubSteps;
-		var dStep = du / steps;
-		for (var i = 0; i < steps; ++i) {
-        this.Move(dStep);
+	var steps = this.numSubSteps;
+	var dStep = du / steps;	
+	if(this._isDeadNow) return entityManager.KILL_ME_NOW;                    
+    if(this.ai){
+    	
+    	if(!this.targetTile) return; 
+    	
+
+    	this.getAIDirection();        	
+    	for (var i = 0; i < steps; ++i) {
+        	this.Move(dStep);
+    	}
     }
+    if(!this.ai) {    		
+		for (var i = 0; i < steps; ++i) {
+        	this.Move(dStep);
+    	}
 	}
     //spatialManager.register(this);
 
 };
 
+Guy.prototype.getAIDirection = function(){
+	if(!this.ai)return;
+		else{
+		this.targetTile.debug = true; 		
+		var tile = entityManager.getTile(this.cx, this.cy, this.radius);			
+		if(this.directions.up || this.directions.down)this.cx = tile.cx + tile.width/2; 
+		if(this.directions.left || this.directions.right) this.cy = tile.cy + tile.height/2;
+		
+		var targetX = this.targetTile.cx + this.targetTile.width/2;
+		var targetY = this.targetTile.cy + this.targetTile.height/2; 	
+		var xRelativePos = targetX < this.cx ? "rightOf":"leftOf"; 
+		var yRelativePos = targetY < this.cy ? "below" : "above"; 		
+		
+		this.resetDirections();
+		
+		
+		var x = this.isStuck(tile); //alert(this.aiMoveUp(tile) +"" +this.aiMoveDown(tile) + this.aiMoveLeft(tile) +this.aiMoveRight(tile));
+		
+		var left = this.aiMoveLeft(tile);
+		var right = this.aiMoveRight(tile);
+		var up = this.aiMoveUp(tile);
+		var down = this.aiMoveDown(tile);
+
+		if(xRelativePos === "rightOf") 
+		{
+			//if(up && yRelativePos === "below") this.directions.up = true; 
+			//if(down && yRelativePos === "above") this.directions.down = true; 
+			
+			//else{
+				if(left) this.directions.left = true;
+				//Cant go to the left
+				//Evaluate up down 
+				 
+				if(!left)
+				{				
+					if(yRelativePos === "below" && up) this.directions.up = true; 
+					if(yRelativePos === "below" && !up) this.directions.down = true; 
+					if(yRelativePos === "above" && down) this.directions.down = true;
+					if(yRelativePos === "above" && !down) this.directions.up = true;							
+				} 	
+			//}		
+		}
+
+		if(xRelativePos === "leftOf") 
+		{
+			if(up && yRelativePos === "below") this.directions.up = true; 
+			if(down && yRelativePos === "above") this.directions.down = true; 
+			if(right)this.directions.right = true;
+			//If cant go to right
+			//Check up / down			
+			if(!right){
+				
+				if(yRelativePos === "below" && up) this.directions.up = true; 
+				if(yRelativePos === "below" && !up) this.directions.down = true; 
+				if(yRelativePos === "above" && down) this.directions.down = true;
+				if(yRelativePos === "above" && !down) this.directions.up = true;
+			} 			
+		}
+		
+		if(this.targetTile.cx === tile.cx){
+			
+			this.cx = tile.cx + tile.width/2; 
+			this.cy = tile.cy + tile.height/2; 
+			this.targetTile= entityManager.getTile(400,30,5);
+		}					
+	}
+};
+/*
+Guy.prototype.aiMoveUp = function(tile,xRelativePos,yRelativePos){
+	var nextTile = entityManager.getTile(this.cx, tile.cy - tile.height +1, this.radius);			
+	//Is below the tile
+	if(nextTile.type !== 1) this.directions.up = true; 
+	else{				
+		//Is below
+		//Cant go up 
+		//Go left or right
+		if(xRelativePos === "leftOf")
+		{
+			nextTile = entityManager.getTile(tile.cx + tile.width + 1, tile.cy+1 , this.radius);											
+			if(nextTile.type !== 1) this.directions.right = true; 
+			else{
+				//Is Below and leftof
+				//cant go right
+				//try left
+				nextTile = entityManager.getTile(tile.cx - tile.width + 1, tile.cy+1 , this.radius);	
+				nextTile.debug = true; 					
+				if(nextTile.type !==1)this.directions.left = true;
+				else{
+					//all else fails - go right
+					this.directions.right = true; 
+				}
+			}
+		} 
+		
+	}
+};
+*/
+//Guy.prototype.aiMoveDown = function(tile,xRelativePos,yRelativePos){};
+Guy.prototype.isStuck = function(tile){
+	if(this.aiMoveUp(tile))return false; 
+	if(this.aiMoveDown(tile))return false; 
+	if(this.aiMoveLeft(tile))return false; 
+	if(this.aiMoveRight(tile))return false; 
+	return true; 	
+};
+Guy.prototype.aiMoveUp = function(tile){
+	var nextTile = entityManager.getTile(tile.cx + tile.width, tile.cy , this.radius);				
+	if(nextTile.type === 1)return false; 		
+	return true;
+};
+Guy.prototype.aiMoveDown = function(tile){
+	var nextTile = entityManager.getTile(tile.cx + tile.width, tile.cy + tile.height+1 , this.radius);				
+	if(nextTile.type === 1)return false; 		
+	return true;
+};
+
+Guy.prototype.aiMoveLeft = function(tile){
+	var nextTile = entityManager.getTile(tile.cx, tile.cy+1 , this.radius);			
+	if(nextTile.type === 1)return false; 	
+	return true;
+};
+Guy.prototype.aiMoveRight = function(tile){
+	var nextTile = entityManager.getTile(tile.cx + tile.width+1, tile.cy+1 , this.radius);				
+	if(nextTile.type === 1)return false; 	
+	return true;
+};
+
+Guy.prototype.resetDirections = function() {
+	this.directions = { 
+		left : false,
+		right : false,
+		up : false, 
+		down : false
+	};
+}
+
 Guy.prototype.updateDirections = function(){
 		
+	if (eatKey(this.KEY_UP)) this.nextTurn = "up";		
+	if (eatKey(this.KEY_DOWN)) this.nextTurn = "down";    	     
+    if (eatKey(this.KEY_LEFT)) this.nextTurn = "left";
+    if (eatKey(this.KEY_RIGHT)) this.nextTurn = "right"; 		   
 
 	var tile = entityManager.getTile(this.cx, this.cy, this.radius);	
 	if(!tile || !this.nextTurn)return;	
@@ -136,10 +290,7 @@ Guy.prototype.updateDirections = function(){
 			this.directions.left = false; 		    
 		}
     }	   
-};
-    
-
-
+};    
 
 Guy.prototype.Move = function (du) {
 	    
@@ -188,8 +339,6 @@ Guy.prototype.Move = function (du) {
         
 };
 
-
-
 Guy.prototype.getRadius = function () {
     return (this.sprite.width / 2) * 0.9;
 };
@@ -218,26 +367,21 @@ Guy.prototype.render = function (ctx) {
     ctx.beginPath();
     ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI * 2);    
     ctx.fill();
-    
+    /*
     ctx.beginPath();
     ctx.arc(this.cx - g_canvas.width, this.cy, this.radius, 0, Math.PI * 2);    
     ctx.fill();
     
     ctx.beginPath();
     ctx.arc(g_canvas.width + this.cx, this.cy, this.radius, 0, Math.PI * 2);    
-    ctx.fill();
-
-
-    
+    ctx.fill();   
    // util.fillCircle(ctx, this.cx, this.cy, this.radius);
-    //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);
-    
+    //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);   */
 };
 Guy.prototype.clear = function(ctx){
 	var width = this.radius + 1; 
 	util.fillBox(ctx, this.cx - width, this.cy - width,  width * 2, width * 2, "white");
 };
-
 
 Guy.prototype.getNextPos = function (du) {
 	var nextX;

@@ -37,15 +37,19 @@ deferredSetup : function () {
 init: function() {    
     this.generateMaze();
     this.generateGuy();
+    this.initTargetTiles();
 },
 
 generateGuy : function(descr) {
     var tile = this._maze[0].getTile(215,280,3);
     this._pacman.push(new Guy({
         cx: tile.cx + tile.width,       
-        cy: tile.cy + tile.height/2               
+        cy: tile.cy + tile.height/2,
+        ai : false,
+        color :   "yellow"            
     }));
     var colors = ["","blue","pink","orange"]
+
     for(var i = 1; i < 4; i++){
         
         tile = this._maze[0].getTile(170 + (i * tile.width*2),230,3);
@@ -57,17 +61,25 @@ generateGuy : function(descr) {
         }));
     }
     
+    
     tile = this._maze[0].getTile(230,190,3);
     this._pacman.push(new Guy({
         cx: tile.cx,        
         cy: tile.cy + tile.height/2,        
         ai: true,
         color: "red"
-    }));
-    
-    
+    }));    
 },
-
+setPacMan : function(x,y){
+    var tile = this._maze[0].getTile(x,y,5);
+    this._pacman[4].cx = tile.cx + tile.width/2;
+    this._pacman[4].cy = tile.cy + tile.height/2;
+},
+setTarget : function(x,y){
+    this._pacman[4].targetTile.debug = false; 
+    var tile = this._maze[0].getTile(x,y,5);
+    this._pacman[4].targetTile = tile;     
+},
 generateMaze : function(descr) {   
     this._maze.push(new Maze(descr));    
 },
@@ -84,6 +96,14 @@ getTile: function(x,y,r,dir) {
 	for(var t = 0; t < this._maze.length; t++) {		
 		return this._maze[t].getTile(x,y,r,dir); 
 	}	
+},
+
+initTargetTiles: function(){
+    var tile = this.getTile(337,17,5);    
+    var tile2 = this.getTile(17,17,5);    
+    //Hentugt til að sjá flísina sem verið er að vinna með:
+    //tile.debug = true; 
+    this._pacman[4].targetTile = tile2; 
 },
 
 update: function(du) {
