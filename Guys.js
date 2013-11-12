@@ -68,6 +68,7 @@ Guy.prototype.init = function() {
 Guy.prototype.ai = false;
 Guy.prototype.targetTile = false; 
 Guy.prototype.color = "yellow";
+Guy.prototype.type = "pacman";
 Guy.prototype.score = 0;
 
 // HACKED-IN AUDIO (no preloading)
@@ -373,13 +374,67 @@ Guy.prototype.halt = function () {
 };
 
 Guy.prototype.render = function (ctx) {
+	
+	var cel;
+    
+    if(this.type === "pacman") {
+    	if(!this.directions.left && !this.directions.right && !this.directions.up
+    		&& !this.directions.down) {
+    		cel = g_sprites[18];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    	}
+    
+		if(this.directions.left) {
+			cel = g_sprites[g_cel_left];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+			++g_cel_left;
+		 	if (g_cel_left === 55) g_cel_left = 51;
+		}
+		if(this.directions.up) {
+			cel = g_sprites[g_cel_up];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+			++g_cel_up;
+		 	if (g_cel_up === 4) g_cel_up = 0;
+		}
+		if(this.directions.down) {
+			cel = g_sprites[g_cel_down];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+			++g_cel_down;
+		 	if (g_cel_down === 38) g_cel_down = 34;
+		}
+		if(this.directions.right) {
+			cel = g_sprites[g_cel_right];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+			++g_cel_right;
+		 	if (g_cel_right === 21) g_cel_right = 17;
+		}
+	}
+	
+	if(this.type === "ghost") {
+		if(this.color === "blue") {
+			cel = g_sprites[40];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+		}
+		if(this.color === "pink") {
+			cel = g_sprites[42];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+		}
+		if(this.color === "orange") {
+			cel = g_sprites[44];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+		}
+		if(this.color === "red") {
+			cel = g_sprites[38];
+			cel.drawAt(ctx, this.cx, this.cy, this.radius);
+		}
+	}	
     
     
     //util.strokeCircle(ctx, this.cx, this.cy, this.radius);
-    ctx.fillStyle= this.color;    
+    /*ctx.fillStyle= this.color;    
     ctx.beginPath();
     ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI * 2);    
-    ctx.fill();
+    ctx.fill();*/
     /*
     ctx.beginPath();
     ctx.arc(this.cx - g_canvas.width, this.cy, this.radius, 0, Math.PI * 2);    
