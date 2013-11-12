@@ -373,6 +373,11 @@ Guy.prototype.halt = function () {
     this.velY = 0;
 };
 
+var g_cel_left = 51;
+var g_cel_up = 0;
+var g_cel_down = 34;
+var g_cel_right = 17;
+
 Guy.prototype.render = function (ctx) {
 	
 	var cel;
