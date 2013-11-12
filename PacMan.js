@@ -117,23 +117,40 @@ function renderSimulation(ctx) {
 var g_images = {};
 
 function requestPreloads() {
-
-    var requiredImages = {
+    g_spriteSheet = new Image();
+    g_spriteSheet.onload = preloadDone;
+    g_spriteSheet.src = "https://notendur.hi.is/ebk13/PMsprite.png";
+    /*var requiredImages = {
         Guy   : "ship.png",
         Guy2  : "ship_2.png",        
         
     };
 
-    imagesPreload(requiredImages, g_images, preloadDone);
+    imagesPreload(requiredImages, g_images, preloadDone);*/
 }
 
 var g_sprites = {};
 
 function preloadDone() {
 
-    g_sprites.Guy  = new Sprite(g_images.Guy);
-    g_sprites.Guy2 = new Sprite(g_images.Guy2);    
-   
+  	var celWidth  = 24;
+    var celHeight = 24;
+    var numCols = 17;
+    var numRows = 4;
+    var numCels = 68;
+    
+    g_sprites = [];
+    var sprite;
+    
+    for (var row = 0; row < numRows; ++row) {
+        for (var col = 0; col < numCols; ++col) {
+            sprite = new Sprite(col * celWidth, row * celHeight,
+                                celWidth, celHeight) ;
+            g_sprites.push(sprite);
+        }
+    }
+    g_sprites.splice(numCels);
+
     entityManager.init();    
     main.init();
 }
