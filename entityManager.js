@@ -44,12 +44,9 @@ generateGuy : function(descr) {
     var tile = this._maze[0].getTile(215,280,3);
     this._pacman.push(new Guy({
         cx: tile.cx + tile.width,       
-        cy: tile.cy + tile.height/2,
-        ai : false,
-        color :   "yellow"            
+        cy: tile.cy + tile.height/2               
     }));
     var colors = ["","blue","pink","orange"]
-
     for(var i = 1; i < 4; i++){
         
         tile = this._maze[0].getTile(170 + (i * tile.width*2),230,3);
@@ -57,18 +54,19 @@ generateGuy : function(descr) {
             cx: tile.cx,           
             cy: tile.cy + tile.height/2,           
             ai: true,
+            type : "ghost",
             color : colors[i]
         }));
     }
-    
     
     tile = this._maze[0].getTile(230,190,3);
     this._pacman.push(new Guy({
         cx: tile.cx,        
         cy: tile.cy + tile.height/2,        
         ai: true,
+        type: "ghost",
         color: "red"
-    }));    
+    }));
 },
 setPacMan : function(x,y){
     var tile = this._maze[0].getTile(x,y,5);
