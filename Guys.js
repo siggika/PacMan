@@ -46,11 +46,11 @@ Guy.prototype.velX = 3;
 Guy.prototype.velY = 3;
 Guy.prototype.nextTurn = false;
 Guy.prototype.currentDirection = false;
-<<<<<<< HEAD
-=======
+
+
 Guy.prototype.score = 0;
 Guy.prototype.dotsCaught = 0;
->>>>>>> cc6dca9573fe7a689817637e190d30ee16c88f86
+
 Guy.prototype.numSubSteps = 2;
 Guy.prototype.directions; 
 Guy.prototype.init = function() {
@@ -79,7 +79,6 @@ Guy.prototype.update = function (du) {
          
     this.updateDirections();    
     //spatialManager.unregister(this);
-<<<<<<< HEAD
 	var steps = this.numSubSteps;
 	var dStep = du / steps;	
 	if(this._isDeadNow) return entityManager.KILL_ME_NOW;                    
@@ -93,22 +92,18 @@ Guy.prototype.update = function (du) {
         	this.Move(dStep);
     	}
     }
-    if(!this.ai) {    		
-		for (var i = 0; i < steps; ++i) {
-        	this.Move(dStep);
-    	}
-=======
+    
+
 	if(this._isDeadNow) return entityManager.KILL_ME_NOW;             
 	
-	if(!this.ai) {
-		var steps = this.numSubSteps;
-		var dStep = du / steps;
+	if(!this.ai) {	
 		for (var i = 0; i < steps; ++i) {
 			this.Move(dStep);
 		}
 		this.updateScore();
->>>>>>> cc6dca9573fe7a689817637e190d30ee16c88f86
-	}
+
+		}
+	
 
     //spatialManager.register(this);
 
