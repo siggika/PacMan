@@ -178,14 +178,14 @@ Maze.prototype._setIntersection = function(HL_Tile, VL_Tile, lane1,lane2, IS1, I
 Maze.prototype._clearUpMaze = function() {
     this._tiles[12][12].draw = "HL"
     this._tiles[12][15].draw = "HL"    
-    this._tiles[12][13].draw = "Blank"
-    this._tiles[12][14].draw = "Blank"
+    this._tiles[12][13].hasCake = false; 
+    this._tiles[12][14].hasCake = false; 
     
     for(var x = 13; x < 16; x++)
     {
         for(var y = 11; y < 17; y++){
             
-            this._tiles[x][y].draw = "Blank";
+            this._tiles[x][y].hasCake = false; 
         }
     }
     
@@ -239,7 +239,7 @@ Maze.prototype.drawBlankLane = function(level, startX, len){
             width : this.width,
             height : this.height,
             type : 1,
-            draw : "Blank"
+            draw : "Blank",            
         });     
     }
 };
@@ -321,8 +321,15 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
 //================
 
 
-Maze.prototype.update = function (du) {
-     return;
+Maze.prototype.update = function (du) {     
+     for(var j = 0; j < this._tiles.length; j++){              
+        for(var i = 0; i < this._tiles[j].length; i++){
+        var tile = this._tiles[j][i]; 
+        if (tile.hasCake) return;         
+        }
+    }    
+    entityManager.haltGuys(); 
+    gameWon = true;    
 };
 
 Maze.prototype.getsEaten = function () {

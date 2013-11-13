@@ -530,7 +530,7 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	}
 	//if tile has a cake, change it to a normal lane
 	else if (nextTile && nextTile.hasCake){
-		nextTile.hasCake = false;
+		nextTile.hasCake = false;		
 		this.score += 10;
 		this.dotsCaught++;
 	}

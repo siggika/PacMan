@@ -23,7 +23,7 @@ function render(ctx) {
     if (eatKey(TOGGLE_UNDO_BOX)) g_undoBox = !g_undoBox;
     if (eatKey(TOGGLE_FLIPFLOP)) g_doFlipFlop = !g_doFlipFlop;
     if (eatKey(TOGGLE_RENDER)) g_doRender = !g_doRender;
-    
+
     // I've pulled the clear out of `renderSimulation()` and into
     // here, so that it becomes part of our "diagnostic" wrappers
     //
@@ -68,6 +68,13 @@ function render(ctx) {
     // to illustrate flicker-proof double-buffering
     //
     if (g_undoBox) ctx.clearRect(200, 200, 50, 50);
-    
+    if(gameWon){
+
+        ctx.font="bolder 40px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("You win!!!",130+Math.random(),285 + Math.random());
+        ctx.fillStyle = OF; 
+    }
     ++g_frameCounter;
 }
