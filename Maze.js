@@ -273,70 +273,58 @@ Maze.prototype.initMaze = function (descr) {
     this._tiles[30][0].draw = "LL";
     this._tiles[30][27].draw = "LR";
 
+    this._drawCorners();	
+    this._clearMaze();
+}
 
-	//alert(this._tiles.length + " ---- " + this._tiles[0].length);	                        
-    for(var j = 1; j < this._tiles.length-1; j++){    	    	
-        for(var i = 1; i < this._tiles[j].length-1; i++){    	    		    		    		           
-            if(this._tiles[j][i].draw === "HL") 
-            {
-                if(this._tiles[j][i+1].draw === "VL") 
-                {
-                    if(this._tiles[j-1][i] && this._tiles[j-1][i].type === 0) this._tiles[j][i+1].draw = "LR";
-                    if(this._tiles[j+1][i].type === 0) this._tiles[j][i+1].draw = "UR";
-                }
-                
-                if(this._tiles[j-1][i] && this._tiles[j-1][i].draw === "VL" && this._tiles[j-1][i].type !== 0 && this._tiles[j+1][i].type !== 0) 
-                {
-                    if(this._tiles[j-1][i-1] && this._tiles[j-1][i-1].type === 0) this._tiles[j][i].draw = "LR";
-                    if(this._tiles[j-1][i+1].type === 0) this._tiles[j][i].draw = "LL";
-                }                
+Maze.prototype._drawCorners = function() {            
+    for(var j = 1; j < this._tiles.length-1; j++){              
+        for(var i = 1; i < this._tiles[j].length-1; i++){
 
-            }
+            var prevTile = this._tiles[j][i-1];
+            var tile = this._tiles[j][i];            
+            var nextTile = this._tiles[j][i+1];
+            
+            var prevAbove = this._tiles[j-1][i-1]; 
+            var prevBelow = this._tiles[j+1][i-1];
+        
+            var tileAbove = this._tiles[j-1][i];
+            var tileBelow = this._tiles[j+1][i];
 
-            if(this._tiles[j][i].type === 0 )
-            {
-                
-                if(this._tiles[j][i+1].draw === "HL") 
-                {
-                    if(this._tiles[j-1][i+1] && this._tiles[j-1][i+1].type === 0)this._tiles[j][i+1].draw = "UL";
-                    if(this._tiles[j+1][i+1].type === 0)this._tiles[j][i+1].draw = "LL";                    
-                }
-                if(this._tiles[j][i-1] && this._tiles[j][i-1].draw === "HL")
-                {
-                    if(this._tiles[j-1][i-1] && this._tiles[j-1][i-1].type === 0)this._tiles[j][i-1].draw = "UR";
-                    if(this._tiles[j+1][i-1].type === 0)this._tiles[j][i-1].draw = "LR";
-                }                
-            }                         
-            if(this._tiles[j][i].draw === "VL")
-            {
-                
-                if(this._tiles[j-1][i] && this._tiles[j-1][i].type === 0)
-                {
-                    if(this._tiles[j][i-1] && this._tiles[j][i-1].type === 0)this._tiles[j][i].draw = "UL";
-                    if(this._tiles[j][i+1].type === 0)this._tiles[j][i].draw = "UR";
-
-                } 
-                if(this._tiles[j+1][i].type === 0){
-
-                     if(this._tiles[j][i-1] && this._tiles[j][i-1].type === 0) this._tiles[j][i].draw = "LL";
-                     if(this._tiles[j][i+1].type === 0) this._tiles[j][i].draw = "LR";
-                }
-                if(this._tiles[j][i+1].draw === "HL"){
-                    if(this._tiles[j-1][i+1].type === 0)this._tiles[j][i].draw = "LL";
-                    if(this._tiles[j+1][i+1].type === 0)this._tiles[j][i].draw = "UL";
-                }                
-                if(this._tiles[j-1][i] && this._tiles[j-1][i].draw === "HL"){
-                    if(this._tiles[j][i-1] && this._tiles[j][i-1].type === 0)this._tiles[j-1][i].draw = "UR";
-                    if(this._tiles[j][i+1].type === 0)this._tiles[j-1][i].draw = "UL";
-                }                
-
-            }                        
-        }    
+            var nextAbove = this._tiles[j-1][i+1];
+            var nextBelow = this._tiles[j+1][i+1];
+            //Upper/Lower Left corners
+            this._setCorner(tile, nextTile,nextAbove, nextBelow, "UL", "LL", tile);
+            
+            //Upper/Lower Right Coreners
+            this._setCorner(tile, prevTile,prevAbove, prevBelow, "UR", "LR", tile);
+         
+            //Check for horizontal/vertical intersections
+            this._setIntersection(tile, tileBelow, prevBelow, nextBelow, "UR", "UL", tile);
+            this._setIntersection(tile, nextTile, tileAbove, tileBelow, "LR", "UR", nextTile);
+            this._setIntersection(tileBelow, tile, prevTile, nextTile, "LR", "LL", tileBelow);
+            this._setIntersection(nextTile, tile, nextAbove, nextBelow, "LL", "UL",tile);
+        }
     }
+    
+};  
+Maze.prototype._setCorner = function(lane, brick, above,below, Ucorn, Lcorn) {
+      if(lane.type === 0 && brick.type === 1){
+                if(above.type !== 1) brick.draw = Ucorn;
+                if(below.type !== 1) brick.draw = Lcorn;
+            }
+};
+Maze.prototype._setIntersection = function(HL_Tile, VL_Tile, lane1,lane2, IS1, IS2, targetTile) {
+    if(HL_Tile.draw === "HL" && VL_Tile.draw === "VL" && lane1.type === 0) targetTile.draw = IS1;
+    if(HL_Tile.draw === "HL" && VL_Tile.draw === "VL" && lane2.type === 0) targetTile.draw = IS2;
+    
+};
+Maze.prototype._clearMaze = function() {
     this._tiles[12][12].draw = "HL"
     this._tiles[12][15].draw = "HL"    
     this._tiles[12][13].draw = "Blank"
     this._tiles[12][14].draw = "Blank"
+    
     for(var x = 13; x < 16; x++)
     {
         for(var y = 11; y < 17; y++){
@@ -344,7 +332,7 @@ Maze.prototype.initMaze = function (descr) {
             this._tiles[x][y].draw = "Blank";
         }
     }
-}
+};      
 Maze.prototype.update = function (du) {
      return;
 };
