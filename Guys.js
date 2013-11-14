@@ -559,6 +559,11 @@ Guy.prototype.render = function (ctx) {
    // util.fillCircle(ctx, this.cx, this.cy, this.radius);
     //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);   */
 };
+
+Guy.prototype.renderSprite = function(sprite) {
+	var cel = g_sprites[sprite];
+	cel.drawAt(ctx, this.cx, this.cy, this.radius);
+};
 Guy.prototype.clear = function(ctx){
 	var width = this.radius + 1; 
 	util.fillBox(ctx, this.cx - width, this.cy - width,  width * 2, width * 2, "white");
