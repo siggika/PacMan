@@ -401,12 +401,12 @@ var red_down = 38;
 var red_right = 21;
 
 Guy.prototype.render = function (ctx) {
-    if(this.type === "pacman") {
-    	if(!this.directions.left && !this.directions.right && !this.directions.up
+	if(this.type === "pacman") {
+    		if(!this.directions.left && !this.directions.right && !this.directions.up
     		&& !this.directions.down) {
-    		cel = g_sprites[18];
+    			cel = g_sprites[18];
 			cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    	}
+    		}
 		if(this.directions.left) {
 			this.renderSprite(g_cel_left);
 			++g_cel_left;
@@ -432,10 +432,10 @@ Guy.prototype.render = function (ctx) {
 	if(this.type === "ghost") {
 		if(this.color === "blue") {
 			if(!this.directions.left && !this.directions.right && !this.directions.up
-    		&& !this.directions.down) {
-    			cel = g_sprites[6];
+    			&& !this.directions.down) {
+    				cel = g_sprites[6];
 				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
+    			}
 			if(this.directions.left) {
 				this.renderSprite(blue_left);
 				++blue_left;
@@ -459,10 +459,10 @@ Guy.prototype.render = function (ctx) {
 		}
 		if(this.color === "pink") {
 			if(!this.directions.left && !this.directions.right && !this.directions.up
-    		&& !this.directions.down) {
-    			cel = g_sprites[8];
+    			&& !this.directions.down) {
+    				cel = g_sprites[8];
 				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
+    			}
     
 			if(this.directions.left) {
 				this.renderSprite(pink_left);
@@ -488,9 +488,9 @@ Guy.prototype.render = function (ctx) {
 		if(this.color === "orange") {
 			if(!this.directions.left && !this.directions.right && !this.directions.up
     		&& !this.directions.down) {
-    			cel = g_sprites[10];
+    				cel = g_sprites[10];
 				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
+    			}
 			if(this.directions.left) {
 				this.renderSprite(orange_left);
 				++orange_left;
@@ -514,10 +514,10 @@ Guy.prototype.render = function (ctx) {
 		}
 		if(this.color === "red") {
 			if(!this.directions.left && !this.directions.right && !this.directions.up
-    		&& !this.directions.down) {
-    			cel = g_sprites[4];
+    			&& !this.directions.down) {
+    				cel = g_sprites[4];
 				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
+    			}
 			if(this.directions.left) {
 				this.renderSprite(red_left);
 				++red_left;
@@ -558,7 +558,6 @@ Guy.prototype.render = function (ctx) {
     ctx.fill();   
    // util.fillCircle(ctx, this.cx, this.cy, this.radius);
     //this.sprite.drawWrappedCentredAt(ctx, this.cx, this.cy, this.radius);   */
-};
 
 Guy.prototype.renderSprite = function(sprite) {
 	var cel = g_sprites[sprite];
