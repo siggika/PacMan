@@ -120,16 +120,12 @@ function requestPreloads() {
     g_spriteSheet = new Image();
     g_spriteSheet.onload = preloadDone;
     g_spriteSheet.src = "https://notendur.hi.is/ebk13/PMsprite.png";
-    /*var requiredImages = {
-        Guy   : "ship.png",
-        Guy2  : "ship_2.png",        
-        
-    };
-
-    imagesPreload(requiredImages, g_images, preloadDone);*/
+    g_spriteSheet2 = new Image();
+    g_spriteSheet2.src = "https://notendur.hi.is/ebk13/pacmansprites.png";
 }
 
-var g_sprites = {};
+var g_fruit_sprites = [];
+var g_sprites = [];
 
 function preloadDone() {
 
@@ -139,7 +135,7 @@ function preloadDone() {
     var numRows = 4;
     var numCels = 68;
     
-    g_sprites = [];
+    //g_sprites = [];
     var sprite;
     
     for (var row = 0; row < numRows; ++row) {
@@ -150,6 +146,11 @@ function preloadDone() {
         }
     }
     g_sprites.splice(numCels);
+    
+    //cherry
+    g_fruit_sprites.push(new Sprite(g_spriteSheet2, 170, 163, 22, 20));
+    //strawberry
+    g_fruit_sprites.push(new Sprite(g_spriteSheet2, 170, 185, 22, 20));
 
     entityManager.init();    
     main.init();
