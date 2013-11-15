@@ -21,12 +21,13 @@
     this.height = image.height;
     this.scale = 1;
 }*/
-function Sprite(sx, sy, width, height) {
+function Sprite(image, sx, sy, width, height) {
     this.sx = sx;
     this.sy = sy;
     this.width = width;
     this.height = height;
-    this.image = g_spriteSheet;
+    //this.image = g_spriteSheet;
+    this.image = image;
     this.scale = 1;
 }
 
