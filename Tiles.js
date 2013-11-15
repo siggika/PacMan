@@ -148,11 +148,14 @@ Tile.prototype.render = function (ctx) {
             ctx.fill();
         }
 		if (this.hasFruit) {
-			if (this.Fruit === "cherry") ctx.fillStyle = "DeepPink";
-			else if (this.Fruit === "strawberry") ctx.fillStyle = "red"; 
-            ctx.beginPath();
-            ctx.arc(this.cx + this.width/2, this.cy+this.height/2, 4, 0, Math.PI * 2);
-            ctx.fill();
+			if (this.Fruit === "cherry") {
+				var cel = g_fruit_sprites[0];
+				cel.drawAt(ctx, this.cx, this.cy+10, this.radius);
+			}
+			if (this.Fruit === "strawberry") {
+				var cel = g_fruit_sprites[1];
+				cel.drawAt(ctx, this.cx, this.cy+10, this.radius);
+			}
 		}
     }	
     if(this.debug){    
