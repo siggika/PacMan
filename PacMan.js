@@ -140,7 +140,7 @@ function preloadDone() {
     
     for (var row = 0; row < numRows; ++row) {
         for (var col = 0; col < numCols; ++col) {
-            sprite = new Sprite(col * celWidth, row * celHeight,
+            sprite = new Sprite(g_spriteSheet, col * celWidth, row * celHeight,
                                 celWidth, celHeight) ;
             g_sprites.push(sprite);
         }
