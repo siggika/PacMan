@@ -646,7 +646,7 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		this.score += 10;
 		this.dotsCaught++;
 	}
-	else if (nextTile && nextTile.hasFruit){
+	else if (nextTile && nextTile.hasFruit && this.type === "pacman"){
 		if (nextTile.Fruit === "cherry") this.score += 100;
 		if (nextTile.Fruit === "strawberry") this.score += 300;
 		nextTile.hasFruit = false;
