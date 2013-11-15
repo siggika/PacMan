@@ -310,8 +310,14 @@ Guy.prototype.updateDirections = function(du){
 	
 	if(this.nextTurn === "up")
 	{
+<<<<<<< HEAD
 		nextTile = entityManager.getTile(nextPos.nextXup, nextPos.nextYup, this.radius, this.nextTurn);
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
+=======
+		nextTile = entityManager.getTile(nextPos.nextXup, nextPos.nextYup, this.radius, this.nextTurn);	
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
+		
+>>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 		if (wallColliding.up) return;
 		else
 		{
@@ -323,12 +329,18 @@ Guy.prototype.updateDirections = function(du){
 	}
 	if(this.nextTurn === "down")
 	{
+<<<<<<< HEAD
 		nextTile = entityManager.getTile(nextPos.nextXdown, nextPos.nextYdown, this.radius, this.nextTurn);
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
 
+=======
+		nextTile = entityManager.getTile(nextPos.nextXdown, nextPos.nextYdown, this.radius, this.nextTurn);		
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
+		
+>>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 		if (wallColliding.down) return;
     	else
-    	{
+		{
     		this.directions.down = true;    	
     		this.directions.up = false; 		
 			this.directions.left = false; 
@@ -336,12 +348,20 @@ Guy.prototype.updateDirections = function(du){
 		}
 	}
     if(this.nextTurn === "left")
+<<<<<<< HEAD
     {
     	nextTile = entityManager.getTile(nextPos.nextXleft, nextPos.nextYleft, this.radius, this.nextTurn);
     	wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
     	if (wallColliding.left) return; 
+=======
+	{
+		nextTile = entityManager.getTile(nextPos.nextXleft, nextPos.nextYleft, this.radius, this.nextTurn);
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
+		
+		if (wallColliding.left) return;
+>>>>>>> f713685fbcde084eed539e754c208089636c4eb2
     	else
-    	{
+		{
     		this.directions.left = true;
     		this.directions.up = false; 
 			this.directions.down = false; 		
@@ -349,12 +369,20 @@ Guy.prototype.updateDirections = function(du){
 		}       
     }
     if(this.nextTurn === "right")
+<<<<<<< HEAD
     {
     	nextTile = entityManager.getTile(nextPos.nextXright, nextPos.nextYright, this.radius, this.nextTurn);
     	wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
     	if (wallColliding.right) return;
+=======
+	{
+		nextTile = entityManager.getTile(nextPos.nextXright, nextPos.nextYright, this.radius, this.nextTurn);
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
+		
+		if (wallColliding.right) return;
+>>>>>>> f713685fbcde084eed539e754c208089636c4eb2
     	else
-    	{
+		{
     		this.directions.right = true;
     		this.directions.up = false; 
 			this.directions.down = false; 
@@ -705,6 +733,7 @@ Guy.prototype.getNextPos = function (du) {
 		nextY = this.cy + this.velY * du;
 		this.currentDirection = "down";
 	}
+<<<<<<< HEAD
 
     nextXleft = this.cx - this.velX * du;
     nextYleft = this.cy;
@@ -724,6 +753,26 @@ Guy.prototype.getNextPos = function (du) {
     	nextXup : nextXup, nextYup : nextYup,
     	nextXdown : nextXdown, nextYdown : nextYdown
     };
+=======
+	nextXleft = this.cx - this.velX * du;
+	nextYleft = this.cy;
+	
+	nextXright = this.cx + this.velX * du;
+	nextYright = this.cy;
+	
+	nextXup = this.cx;
+	nextYup = this.cy - this.velY * du;
+	
+	nextXdown = this.cx;
+	nextYdown = this.cy + this.velY * du;
+
+    return {nextX : nextX, nextY : nextY,
+			nextXleft : nextXleft, nextYleft : nextYleft,
+			nextXright : nextXright, nextYright : nextYright,
+			nextXup : nextXup, nextYup : nextYup,
+			nextXdown : nextXdown, nextYdown : nextYdown
+			};
+>>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 };
 
 Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
@@ -751,18 +800,25 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			right = true;
 			//console.log("colliding right");
 		}
+		
 		//left
 		if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
 		{
 			left = true;
 			//console.log("colliding left");
 		}
+		
 		//up
+<<<<<<< HEAD
 		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit)  
+=======
+		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
+>>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 		{
 			up = true;
 			//console.log("colliding up");
 		}
+		
 		//down
 		if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
 		{
@@ -771,18 +827,16 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 	}
 	//if tile has a cake, change it to a normal lane
-	else if (nextTile && nextTile.hasCake && this.type === "pacman")
+	else if (nextTile && nextTile.hasCake)
 	{
-		nextTile.hasCake = false;		
+		nextTile.hasCake = false;
 		this.score += 10;
 		this.cakesEaten++;
 	}
 	else if (nextTile && nextTile.hasFruit)
 	{
-		if (nextTile.Fruit === "cherry") 
-			this.score += 100;
-		if (nextTile.Fruit === "strawberry") 
-			this.score += 300;
+		if (nextTile.Fruit === "cherry") this.score += 100;
+		if (nextTile.Fruit === "strawberry") this.score += 300;
 		nextTile.hasFruit = false;
 	}
 	return {
@@ -795,10 +849,8 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 };
 
 Guy.prototype.updateScore = function (score) {
-
 	updateSideText(this.score);
-	if (this.dotsCaught === 70 || this.dotsCaught === 170) 
-	{
+	if (this.cakesEaten === 70 || this.cakesEaten === 170) {
 		var tile = entityManager.getTile(215,280,3);
 		tile.putFruit(this.cakesEaten, tile);
 	}
