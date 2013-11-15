@@ -46,7 +46,7 @@ Guy.prototype.nextTurn = false;
 Guy.prototype.currentDirection = false;
 
 Guy.prototype.score = 0;
-Guy.prototype.dotsCaught = 0;
+Guy.prototype.cakesEaten = 0;
 
 Guy.prototype.numSubSteps = 2;
 Guy.prototype.directions;
@@ -78,7 +78,7 @@ Guy.prototype.score = 0;
 //Functions
 Guy.prototype.update = function (du) {
          
-    this.updateDirections();    
+    this.updateDirections(du);    
     //spatialManager.unregister(this);
 	var steps = this.numSubSteps;
 	var dStep = du / steps;	
@@ -274,7 +274,7 @@ Guy.prototype.resetDirections = function() {
 	};
 }
 
-Guy.prototype.updateDirections = function(){
+Guy.prototype.updateDirections = function(du){
 		
 	if (eatKey(this.KEY_UP)) 
 		this.nextTurn = "up";		
@@ -285,17 +285,14 @@ Guy.prototype.updateDirections = function(){
     if (eatKey(this.KEY_RIGHT)) 
     	this.nextTurn = "right"; 		   
 
-	var tile = entityManager.getTile(this.cx, this.cy, this.radius);	
-	if(!tile || !this.nextTurn)
-		return;	
+	var nextPos = this.getNextPos(du);
 	
 	if(this.nextTurn === "up")
 	{
-		var nextX = tile.cx +1 ; 
-		var nextY = tile.cy - tile.height+1; 
-		var nextTile = entityManager.getTile(nextX, nextY, this.radius);			
-		if(!nextTile || nextTile.type === 1 ) 
-			return; 		
+		nextTile = entityManager.getTile(nextPos.nextXup, nextPos.nextYup, this.radius, this.nextTurn);	
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
+		
+		if (wallColliding.up) return;
 		else
 		{
 			this.directions.up = true; 
@@ -306,13 +303,12 @@ Guy.prototype.updateDirections = function(){
 	}
 	if(this.nextTurn === "down")
 	{
-		var nextX = tile.cx + 1; 
-		var nextY = tile.cy + tile.height + 1; 
-		var nextTile = entityManager.getTile(nextX, nextY, this.radius);		
-    	if(!nextTile || nextTile.type === 1 ) 
-    		return; 
+		nextTile = entityManager.getTile(nextPos.nextXdown, nextPos.nextYdown, this.radius, this.nextTurn);		
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
+		
+		if (wallColliding.down) return;
     	else
-    	{
+		{
     		this.directions.down = true;    	
     		this.directions.up = false; 		
 			this.directions.left = false; 
@@ -320,14 +316,13 @@ Guy.prototype.updateDirections = function(){
 		}
 	}
     if(this.nextTurn === "left")
-    {
-    	var nextX = tile.cx - tile.width + 1; 
-		var nextY = this.cy + 1; 
-		var nextTile = entityManager.getTile(nextX, nextY, this.radius)
-		if(!nextTile || nextTile.type === 1 ) 
-			return; 
+	{
+		nextTile = entityManager.getTile(nextPos.nextXleft, nextPos.nextYleft, this.radius, this.nextTurn);
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
+		
+		if (wallColliding.left) return;
     	else
-    	{
+		{
     		this.directions.left = true;
     		this.directions.up = false; 
 			this.directions.down = false; 		
@@ -335,14 +330,13 @@ Guy.prototype.updateDirections = function(){
 		}       
     }
     if(this.nextTurn === "right")
-    {
-    	var nextX = tile.cx + tile.width + 1; 
-		var nextY = this.cy + 1; 
-		var nextTile = entityManager.getTile(nextX, nextY, this.radius)		
-    	if(!nextTile || nextTile.type === 1 ) 
-    		return; 
+	{
+		nextTile = entityManager.getTile(nextPos.nextXright, nextPos.nextYright, this.radius, this.nextTurn);
+		wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
+		
+		if (wallColliding.right) return;
     	else
-    	{
+		{
     		this.directions.right = true;
     		this.directions.up = false; 
 			this.directions.down = false; 
@@ -368,7 +362,6 @@ Guy.prototype.Move = function (du) {
 		if(!nextTile)
 			return; 
 		this.cy = nextTile.cy + (nextTile.height/2); 
-		//this.nextTurn = false;
 	}
 	//Move Right
 	if(this.directions.right && !wallColliding.right)
@@ -379,21 +372,18 @@ Guy.prototype.Move = function (du) {
 		if(!nextTile)
 			return;
 		this.cy = nextTile.cy + (nextTile.height/2); 
-		//this.nextTurn = false;
 	}
 	//Move up
 	if(this.cy - this.radius > 0 && this.directions.up  && nextTile && !wallColliding.up) 
 	{
 		this.cy = nextY;                 
 		this.cx = nextTile.cx + (nextTile.width/2); 
-		//this.nextTurn = false;
 	}
 	//Move Down
 	if(this.cy + this.radius < g_canvas.height && this.directions.down && nextTile && !wallColliding.down) 
 	{
 		this.cy = nextY;                  	                
 		this.cx = nextTile.cx + (nextTile.width/2); 
-		//this.nextTurn = false;
 	}
 };
 
@@ -670,8 +660,8 @@ Guy.prototype.clear = function(ctx){
 
 Guy.prototype.getNextPos = function (du) {
 
-	var nextX;
-	var nextY;
+	var nextX, nextY;
+	var nextXleft, nextXright, nextXup, nextXdown, nextYleft, nextYright, nextYup, nextYdown;
 	
 	if (this.directions.left) 
 	{
@@ -697,8 +687,24 @@ Guy.prototype.getNextPos = function (du) {
 		nextY = this.cy + this.velY * du;
 		this.currentDirection = "down";
 	}
+	nextXleft = this.cx - this.velX * du;
+	nextYleft = this.cy;
+	
+	nextXright = this.cx + this.velX * du;
+	nextYright = this.cy;
+	
+	nextXup = this.cx;
+	nextYup = this.cy - this.velY * du;
+	
+	nextXdown = this.cx;
+	nextYdown = this.cy + this.velY * du;
 
-    return {nextX : nextX, nextY : nextY};
+    return {nextX : nextX, nextY : nextY,
+			nextXleft : nextXleft, nextYleft : nextYleft,
+			nextXright : nextXright, nextYright : nextYright,
+			nextXup : nextXup, nextYup : nextYup,
+			nextXdown : nextXdown, nextYdown : nextYdown
+			};
 };
 
 Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
@@ -721,43 +727,44 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		console.log("nextTileY: " + nextTileY);
 		*/
 		//right
-		if (this.directions.right && (nextTileX - nextX) <= limit)
+		if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
 		{
 			right = true;
 			//console.log("colliding right");
 		}
+		
 		//left
-		if (this.directions.left && (nextX - nextTileX) <= limit) 
+		if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
 		{
 			left = true;
 			//console.log("colliding left");
 		}
+		
 		//up
-		if (this.directions.up && (nextY - nextTileY) <= limit) 
+		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
 		{
 			up = true;
 			//console.log("colliding up");
 		}
+		
 		//down
-		if (this.directions.down && (nextTileY - nextY) <= limit) 
+		if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
 		{
 			down = true;
 			//console.log("colliding down");
 		}
 	}
 	//if tile has a cake, change it to a normal lane
-	else if (nextTile && nextTile.hasCake && this.type === "pacman")
+	else if (nextTile && nextTile.hasCake)
 	{
-		nextTile.hasCake = false;		
+		nextTile.hasCake = false;
 		this.score += 10;
-		this.dotsCaught++;
+		this.cakesEaten++;
 	}
 	else if (nextTile && nextTile.hasFruit)
 	{
-		if (nextTile.Fruit === "cherry") 
-			this.score += 100;
-		if (nextTile.Fruit === "strawberry") 
-			this.score += 300;
+		if (nextTile.Fruit === "cherry") this.score += 100;
+		if (nextTile.Fruit === "strawberry") this.score += 300;
 		nextTile.hasFruit = false;
 	}
 	return {
@@ -770,12 +777,10 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 };
 
 Guy.prototype.updateScore = function (score) {
-
 	updateSideText(this.score);
-	if (this.dotsCaught === 70 || this.dotsCaught === 170) 
-	{
+	if (this.cakesEaten === 70 || this.cakesEaten === 170) {
 		var tile = entityManager.getTile(215,280,3);
-		tile.putFruit(this.dotsCaught, tile);
+		tile.putFruit(this.cakesEaten, tile);
 	}
 }
 

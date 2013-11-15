@@ -316,21 +316,20 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
                         return tile;         
             }
 
-            else if(dir)
-            {
-                var tileX = tile.cx + (tile.width/2);
-                var tileY = tile.cy + (tile.height/2);
-                
-                // only searching to the right of guy when going right,
-                // left of guy when going left...
-                if ((dir.right && tileX >= guyX) || (dir.left && tileX <= guyX)
-                    || (dir.down && tileY >= guyY) || (dir.up && tileY <= guyY)) 
-                {
-                    var dist =  util.distSq(guyX, guyY, tileX, tileY);
-                    if (dist < lowest)
-                    { 
-                        lowest = dist;
-                        nearestTile = tile;
+            else if(dir){
+
+    			var tileX = tile.cx + (tile.width/2);
+    			var tileY = tile.cy + (tile.height/2);
+    			
+    			// only searching to the right of guy when going right,
+    			// left of guy when going left...
+    			if (((dir.right || dir == "right") && tileX > guyX) || ((dir.left || dir == "left") && tileX < guyX)
+    				|| ((dir.down || dir == "down") && tileY > guyY) || ((dir.up || dir == "up") && tileY < guyY)) {	
+    				
+				    var dist =  util.distSq(guyX, guyY, tileX, tileY);
+				    if (dist < lowest) { 
+					   lowest = dist;
+				    	nearestTile = tile;
                     }
                 }
             }

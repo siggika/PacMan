@@ -163,17 +163,17 @@ Tile.prototype.render = function (ctx) {
     } 
 };
 
-Tile.prototype.putFruit = function (dotsCaught, tile) {
+Tile.prototype.putFruit = function (cakesEaten, tile) {
 	
 	this.hasFruit = true;
 	
 	//make fruit last for 10 seconds
 	this.timeout = setTimeout(function(){tile.hasFruit = false;}, 10000);
 	
-	if (dotsCaught < 75) {		
+	if (cakesEaten < 75) {		
 		this.Fruit = "cherry";
 	}
-	else if (dotsCaught < 175) {
+	else if (cakesEaten < 175) {
 		this.Fruit = "strawberry";
 	}
 };
