@@ -80,13 +80,18 @@ setPacMan : function(x,y){
     var tile = this._maze[0].getTile(x,y,5);
     this._pacman[4].cx = tile.cx + tile.width/2;
     this._pacman[4].cy = tile.cy + tile.height/2;
+    this._pacman[3].cx = tile.cx + tile.width/2;
+    this._pacman[3].cy = tile.cy + tile.height/2;
 },
 
 setTarget : function(x,y){
 
-    this._pacman[4].targetTile.debug = false;
+    this._pacman[4].targetTile.debug = true;
     var tile = this._maze[0].getTile(x,y,5);
-    this._pacman[4].targetTile = tile;     
+    console.log(tile);
+    this._pacman[4].targetTile = tile;
+    this._pacman[3].targetTile = tile;
+
 },
 
 generateMaze : function(descr) {
@@ -117,8 +122,9 @@ initTargetTiles: function(){
     var tile = this.getTile(337,17,5);    
     var tile2 = this.getTile(17,17,5);    
     //Hentugt til að sjá flísina sem verið er að vinna með:
-    //tile.debug = true; 
-    this._pacman[4].targetTile = tile2; 
+    //tile.debug = true;
+    this._pacman[4].targetTile = tile2;
+    this._pacman[3].targetTile = tile;
 },
 
 update: function(du) {
