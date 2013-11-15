@@ -641,12 +641,12 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 	}
 	//if tile has a cake, change it to a normal lane
-	else if (nextTile && nextTile.hasCake){
+	else if (nextTile && nextTile.hasCake && this.type === "pacman"){
 		nextTile.hasCake = false;		
 		this.score += 10;
 		this.dotsCaught++;
 	}
-	else if (nextTile && nextTile.hasFruit && this.type === "pacman"){
+	else if (nextTile && nextTile.hasFruit){
 		if (nextTile.Fruit === "cherry") this.score += 100;
 		if (nextTile.Fruit === "strawberry") this.score += 300;
 		nextTile.hasFruit = false;
