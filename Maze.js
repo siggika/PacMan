@@ -19,7 +19,8 @@ Maze.prototype.height = 16;
 Maze.prototype.width = 16; 
 
 
-Maze.prototype.initMaze = function () {        
+Maze.prototype.initMaze = function () {
+
     this._prepArray(30,27);    
     this._layBricks();
     this._drawCorners();    
@@ -30,6 +31,8 @@ Maze.prototype.initMaze = function () {
 //==================
 //   DRAWING UTILS        
 //==================
+
+
 Maze.prototype._layBricks = function () {    
      
      //Draw the Borders        
@@ -110,8 +113,7 @@ Maze.prototype._layBricks = function () {
     this._drawBox(16,27,9,1);    
 }
 
-Maze.prototype._drawCorners = function() {    
-   
+Maze.prototype._drawCorners = function() {
 
     this._tiles[0][0].draw = "UL";
     this._tiles[0][27].draw = "UR";
@@ -134,9 +136,10 @@ Maze.prototype._drawCorners = function() {
     this._tiles[30][0].draw = "LL";
     this._tiles[30][27].draw = "LR";
     
-    for(var j = 1; j < this._tiles.length-1; j++){              
-        for(var i = 1; i < this._tiles[j].length-1; i++){
-
+    for(var j = 1; j < this._tiles.length-1; j++)
+    {
+        for(var i = 1; i < this._tiles[j].length-1; i++)
+        {
             var prevTile = this._tiles[j][i-1];
             var tile = this._tiles[j][i];            
             var nextTile = this._tiles[j][i+1];
@@ -162,20 +165,27 @@ Maze.prototype._drawCorners = function() {
             this._setIntersection(nextTile, tile, nextAbove, nextBelow, "LL", "UL",tile);
         }
     }
-    
-};  
+};
+
 Maze.prototype._setCorner = function(lane, brick, above,below, Ucorn, Lcorn) {
-      if(lane.type === 0 && brick.type === 1){
-                if(above.type !== 1) brick.draw = Ucorn;
-                if(below.type !== 1) brick.draw = Lcorn;
-            }
+
+    if(lane.type === 0 && brick.type === 1)
+    {
+        if(above.type !== 1) brick.draw = Ucorn;
+        if(below.type !== 1) brick.draw = Lcorn;
+    }
 };
+
 Maze.prototype._setIntersection = function(HL_Tile, VL_Tile, lane1,lane2, IS1, IS2, targetTile) {
-    if(HL_Tile.draw === "HL" && VL_Tile.draw === "VL" && lane1.type === 0) targetTile.draw = IS1;
-    if(HL_Tile.draw === "HL" && VL_Tile.draw === "VL" && lane2.type === 0) targetTile.draw = IS2;
-    
+
+    if(HL_Tile.draw === "HL" && VL_Tile.draw === "VL" && lane1.type === 0) 
+        targetTile.draw = IS1;
+    if(HL_Tile.draw === "HL" && VL_Tile.draw === "VL" && lane2.type === 0) 
+        targetTile.draw = IS2;
 };
+
 Maze.prototype._clearUpMaze = function() {
+
     this._tiles[12][12].draw = "HL"
     this._tiles[12][15].draw = "HL"    
     this._tiles[12][13].hasCake = false; 
@@ -183,13 +193,14 @@ Maze.prototype._clearUpMaze = function() {
     
     for(var x = 13; x < 16; x++)
     {
-        for(var y = 11; y < 17; y++){
-            
+        for(var y = 11; y < 17; y++)
+        {
             this._tiles[x][y].hasCake = false; 
         }
     }
     
-    for(var j = 0; j < 3; j++){        
+    for(var j = 0; j < 3; j++)
+    {        
         this.drawBlankLane(10 + j,0,4);
         this.drawBlankLane(16 + j,0,4);
         
@@ -199,8 +210,9 @@ Maze.prototype._clearUpMaze = function() {
 };      
 
 Maze.prototype.drawHorrLane = function(level, startX, len){
-    for(var i = startX; i <= len; i++){
 
+    for(var i = startX; i <= len; i++)
+    {
         //if(!this._tiles[level]) this._tiles[level] = new Array();
         this._tiles[level][i] = new Tile({
             cx : i * this.width,
@@ -214,8 +226,10 @@ Maze.prototype.drawHorrLane = function(level, startX, len){
     }
 };
 
-Maze.prototype.drawVertLane = function(x, startY, len){ 
-    for(var i = startY; i <= len; i++){ 
+Maze.prototype.drawVertLane = function(x, startY, len){
+
+    for(var i = startY; i <= len; i++)
+    {
         //if(!this._tiles[i]) this._tiles[i] = new Array();
         
         this._tiles[i][x] = new Tile({
@@ -229,40 +243,44 @@ Maze.prototype.drawVertLane = function(x, startY, len){
     }
 };
 
-Maze.prototype.drawBlankLane = function(level, startX, len){ 
+Maze.prototype.drawBlankLane = function(level, startX, len){
+
     for(var i = startX; i <= len; i++){
 
         //if(!this._tiles[level]) this._tiles[level] = new Array();
         this._tiles[level][i] = new Tile({
             cx : i * this.width,
-            cy : level * this.height,   
+            cy : level * this.height,
             width : this.width,
             height : this.height,
             type : 1,
-            draw : "Blank",            
-        });     
+            draw : "Blank"
+        });
     }
 };
 
 Maze.prototype._prepArray = function(y,x){
+
     for(var i = 0; i <= y; i++)
     {
-        if(!this._tiles[i])this._tiles[i] = new Array();
+        if(!this._tiles[i])
+            this._tiles[i] = new Array();
         
-        for(var j = 0; j <= x; j++){
+        for(var j = 0; j <= x; j++)
+        {
             this._tiles[i][j] = new Tile({
                 cx : j * this.width,
-                cy : i * this.height,   
+                cy : i * this.height,
                 width : this.width,
                 height : this.height,
                 type : 0
             });
-        }                       
-    }   
-    
+        }
+    }
 }
 
 Maze.prototype._drawBox = function(startX, startY,length, height){
+
     var endX = startX + length; 
     var endY = startY + height;
     this.drawHorrLane(startY,startX,endX);
@@ -270,7 +288,8 @@ Maze.prototype._drawBox = function(startX, startY,length, height){
     this.drawVertLane(startX,startY+1,endY-1);
     this.drawVertLane(endX,startY+1,endY-1); 
     
-    for(var i = 1; i < height; i++){
+    for(var i = 1; i < height; i++)
+    {
        this.drawBlankLane(startY + i, startX + 1,endX - 1);
     }
 };
@@ -279,39 +298,44 @@ Maze.prototype._drawBox = function(startX, startY,length, height){
 //==================
 //   UTILS        
 //==================
+
+
 Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
+
     var lowest = Number.MAX_VALUE;
     var nearestTile;    
-    for(var j = 0; j < this._tiles.length; j++){        
-        for(var i = 0; i < this._tiles[j].length; i++){   
-                    
+    for(var j = 0; j < this._tiles.length; j++)
+    {
+        for(var i = 0; i < this._tiles[j].length; i++)
+        { 
             var tile = this._tiles[j][i];
-            if(!dir){
+            if(!dir)
+            {
                 if(tile.cx < guyX && tile.cx + tile.width >= guyX)
                     if(tile.cy < guyY && tile.cy + tile.height >= guyY)
                         return tile;         
             }
 
-            else if(dir){
-
+            else if(dir)
+            {
                 var tileX = tile.cx + (tile.width/2);
                 var tileY = tile.cy + (tile.height/2);
                 
                 // only searching to the right of guy when going right,
                 // left of guy when going left...
                 if ((dir.right && tileX >= guyX) || (dir.left && tileX <= guyX)
-                    || (dir.down && tileY >= guyY) || (dir.up && tileY <= guyY)) {  
-                    
+                    || (dir.down && tileY >= guyY) || (dir.up && tileY <= guyY)) 
+                {
                     var dist =  util.distSq(guyX, guyY, tileX, tileY);
-                    if (dist < lowest) { 
-                       lowest = dist;
+                    if (dist < lowest)
+                    { 
+                        lowest = dist;
                         nearestTile = tile;
                     }
-             }
-           }
+                }
+            }
         }   
     }
-    
     return nearestTile;
 };
 
@@ -321,39 +345,41 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
 //================
 
 
-Maze.prototype.update = function (du) {     
-     for(var j = 0; j < this._tiles.length; j++){              
-        for(var i = 0; i < this._tiles[j].length; i++){
-        var tile = this._tiles[j][i]; 
-        if (tile.hasCake) return;         
+Maze.prototype.update = function (du) {
+
+    for(var j = 0; j < this._tiles.length; j++) 
+    {
+        for(var i = 0; i < this._tiles[j].length; i++) 
+        {
+            var tile = this._tiles[j][i];
+            if (tile.hasCake) return;
         }
-    }    
-    entityManager.haltGuys(); 
-    gameWon = true;    
+    }
+    entityManager.haltGuys();
+    gameWon = true;
 };
 
 Maze.prototype.getsEaten = function () {
-    this.kill();    
+
+    this.kill();
 };
 
 Maze.prototype.render = function (ctx) {
-           
-       var j = 0; 
+
+    var j = 0; 
 	for(var level in this._tiles)
+    {
+    	j++;
+        var i = 0; 
+        var row = this._tiles[level];
+    	for(var t in row)
     	{
-    		j++;
-            var i = 0; 
-            var row = this._tiles[level];
-    		for(var t in row)
-    		{
-                i++;
-                var tile = row[t];                                
-    			tile.render(ctx);
-                tile.number = j + "-" + i    			
-            }                
-                
-    	}    	
-    
+            i++;
+            var tile = row[t];                                
+    		tile.render(ctx);
+            tile.number = j + "-" + i    			
+        }                
+    }    	
     /*this.sprite.drawWrappedCentredAt(
         ctx, this.cx, this.cy, this.rotation
     );*/
