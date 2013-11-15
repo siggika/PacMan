@@ -310,14 +310,9 @@ Guy.prototype.updateDirections = function(du){
 	
 	if(this.nextTurn === "up")
 	{
-<<<<<<< HEAD
-		nextTile = entityManager.getTile(nextPos.nextXup, nextPos.nextYup, this.radius, this.nextTurn);
-		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
-=======
 		nextTile = entityManager.getTile(nextPos.nextXup, nextPos.nextYup, this.radius, this.nextTurn);	
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
 		
->>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 		if (wallColliding.up) return;
 		else
 		{
@@ -329,15 +324,9 @@ Guy.prototype.updateDirections = function(du){
 	}
 	if(this.nextTurn === "down")
 	{
-<<<<<<< HEAD
-		nextTile = entityManager.getTile(nextPos.nextXdown, nextPos.nextYdown, this.radius, this.nextTurn);
-		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
-
-=======
 		nextTile = entityManager.getTile(nextPos.nextXdown, nextPos.nextYdown, this.radius, this.nextTurn);		
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
 		
->>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 		if (wallColliding.down) return;
     	else
 		{
@@ -348,18 +337,11 @@ Guy.prototype.updateDirections = function(du){
 		}
 	}
     if(this.nextTurn === "left")
-<<<<<<< HEAD
-    {
-    	nextTile = entityManager.getTile(nextPos.nextXleft, nextPos.nextYleft, this.radius, this.nextTurn);
-    	wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
-    	if (wallColliding.left) return; 
-=======
 	{
 		nextTile = entityManager.getTile(nextPos.nextXleft, nextPos.nextYleft, this.radius, this.nextTurn);
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
 		
 		if (wallColliding.left) return;
->>>>>>> f713685fbcde084eed539e754c208089636c4eb2
     	else
 		{
     		this.directions.left = true;
@@ -369,18 +351,12 @@ Guy.prototype.updateDirections = function(du){
 		}       
     }
     if(this.nextTurn === "right")
-<<<<<<< HEAD
-    {
-    	nextTile = entityManager.getTile(nextPos.nextXright, nextPos.nextYright, this.radius, this.nextTurn);
-    	wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
-    	if (wallColliding.right) return;
-=======
 	{
 		nextTile = entityManager.getTile(nextPos.nextXright, nextPos.nextYright, this.radius, this.nextTurn);
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
 		
 		if (wallColliding.right) return;
->>>>>>> f713685fbcde084eed539e754c208089636c4eb2
+
     	else
 		{
     		this.directions.right = true;
@@ -733,27 +709,7 @@ Guy.prototype.getNextPos = function (du) {
 		nextY = this.cy + this.velY * du;
 		this.currentDirection = "down";
 	}
-<<<<<<< HEAD
 
-    nextXleft = this.cx - this.velX * du;
-    nextYleft = this.cy;
-
-    nextXright = this.cx + this.velX * du;
-    nextYright = this.cy;
-
-    nextXup = this.cx;
-    nextYup = this.cy - this.velY * du;
-
-    nextXdown = this.cx;
-    nextYdown = this.cy + this.velY * du;
-
-    return {nextX : nextX, nextY : nextY,
-    	nextXleft : nextXleft, nextYleft : nextYleft,
-    	nextXright : nextXright, nextYright : nextYright,
-    	nextXup : nextXup, nextYup : nextYup,
-    	nextXdown : nextXdown, nextYdown : nextYdown
-    };
-=======
 	nextXleft = this.cx - this.velX * du;
 	nextYleft = this.cy;
 	
@@ -772,7 +728,6 @@ Guy.prototype.getNextPos = function (du) {
 			nextXup : nextXup, nextYup : nextYup,
 			nextXdown : nextXdown, nextYdown : nextYdown
 			};
->>>>>>> f713685fbcde084eed539e754c208089636c4eb2
 };
 
 Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
@@ -809,11 +764,7 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 		
 		//up
-<<<<<<< HEAD
-		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit)  
-=======
-		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
->>>>>>> f713685fbcde084eed539e754c208089636c4eb2
+		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit)
 		{
 			up = true;
 			//console.log("colliding up");
