@@ -50,6 +50,7 @@ Tile.prototype.cx = 0;
 Tile.prototype.cy = 0;
 Tile.prototype.type = 0; 
 Tile.prototype.debug = false; 
+Tile.prototype.debug2 = false; 
 Tile.prototype.draw = false; 
 Tile.prototype.hasFruit = false; 
 Tile.prototype.Fruit = "none"; 
@@ -161,6 +162,9 @@ Tile.prototype.render = function (ctx) {
     if(this.debug){    
     	util.fillBox(ctx, this.cx, this.cy, this.width, this.height , "red");                        	
     } 
+	if(this.debug2){    
+    	util.fillBox(ctx, this.cx, this.cy, this.width, this.height , "blue");                        	
+    } 
 };
 
 Tile.prototype.putFruit = function (cakesEaten, tile) {
@@ -176,4 +180,40 @@ Tile.prototype.putFruit = function (cakesEaten, tile) {
 	else if (cakesEaten < 175) {
 		this.Fruit = "strawberry";
 	}
+};
+
+Tile.prototype.isCloser = function (tile1, tile2) {
+	var centerX = this.cx + this.width/2;
+	var centerY = this.cy + this.height/2;
+	var tile1X = tile1.cx + tile1.width/2;
+	var tile1Y = tile1.cy + tile1.height/2;
+	var tile2X = tile2.cx + tile2.width/2;
+	var tile2Y = tile2.cy + tile2.height/2;
+	
+	var dist1 =  util.distSq(tile1X, tile1Y, centerX, centerY);
+	var dist2 =  util.distSq(tile2X, tile2Y, centerX, centerY);
+	
+	//if (dist1 === dist2) console.log("EVEN DISTANCE");
+	
+	//the first parameter get's priority
+	if (dist1 <= dist2) return tile1;
+	else return tile2;	
+};
+
+Tile.prototype.isIntersection = function () {
+	var tileX = this.cx + this.width/2;
+	var tileY = this.cy + this.height/2;
+	var count = 0;
+	
+	var tileAbove = entityManager.getTile(tileX, tileY - this.height, this.radius);
+	var tileBelow = entityManager.getTile(tileX, tileY + this.height, this.radius);
+	var tileLeft = entityManager.getTile(tileX - this.width, tileY, this.radius);
+	var tileRight = entityManager.getTile(tileX + this.width, tileY, this.radius);
+	
+	if (tileAbove && tileAbove.type === 0 ) count++;
+	if (tileBelow && tileBelow.type === 0 ) count++;
+	if (tileLeft && tileLeft.type === 0 ) count++;
+	if (tileRight && tileRight.type === 0 ) count++;
+	
+	if (count > 2) return true;
 };

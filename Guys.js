@@ -40,15 +40,17 @@ Guy.prototype.KEY_RIGHT = 'D'.charCodeAt(0);
 Guy.prototype.radius = 12;
 Guy.prototype.cx = 25;
 Guy.prototype.cy = 25;
-Guy.prototype.velX = 3;
-Guy.prototype.velY = 3;
+Guy.prototype.velX = 2;
+Guy.prototype.velY = 2;
 Guy.prototype.nextTurn = false;
 Guy.prototype.currentDirection = false;
+
 
 Guy.prototype.score = 0;
 Guy.prototype.cakesEaten = 0;
 
 Guy.prototype.numSubSteps = 2;
+Guy.prototype.start = true;
 Guy.prototype.directions;
 
 Guy.prototype.init = function() {
@@ -61,6 +63,7 @@ Guy.prototype.init = function() {
 	};
 	this.currentDirection = false;
 	this.nextTurn = false;
+
 };
 
 //AI and individual Attributes
@@ -69,6 +72,7 @@ Guy.prototype.targetTile = false;
 Guy.prototype.color = "yellow";
 Guy.prototype.type = "pacman";
 Guy.prototype.score = 0;
+Guy.prototype.mode = "scatter";
 
 // HACKED-IN AUDIO (no preloading)
 /*Guy.prototype.warpSound = new Audio(
@@ -78,28 +82,29 @@ Guy.prototype.score = 0;
 //Functions
 Guy.prototype.update = function (du) {
          
-    this.updateDirections(du);    
+      
     //spatialManager.unregister(this);
 	var steps = this.numSubSteps;
 	var dStep = du / steps;	
+	
 	if(this._isDeadNow) 
-		return entityManager.KILL_ME_NOW;                    
+		return entityManager.KILL_ME_NOW;  
+		
     if(this.ai)
     {
-    	if(!this.targetTile)
+    	this.setTargetTile();
+		if(!this.targetTile)
     		return; 
-    	this.getAIDirection();
+    	this.getAIDirection(du);
     	for (var i = 0; i < steps; ++i) 
     	{
         	this.Move(dStep);
     	}
-    }
-
-	if(this._isDeadNow) 
-		return entityManager.KILL_ME_NOW;             
+    }          
 	
 	if(!this.ai) 
 	{	
+		this.updateDirections(du);  
 		for (var i = 0; i < steps; ++i) 
 		{
 			this.Move(dStep);
@@ -109,183 +114,6 @@ Guy.prototype.update = function (du) {
     //spatialManager.register(this);
 };
 
-Guy.prototype.getAIDirection = function(){
-
-	if(!this.ai)
-		return;
-	else{
-		this.targetTile.debug = true;
-		var tile = entityManager.getTile(this.cx, this.cy, this.radius);
-		if(this.directions.up || this.directions.down)
-			this.cx = tile.cx + tile.width/2; 
-		if(this.directions.left || this.directions.right) 
-			this.cy = tile.cy + tile.height/2;
-
-		var targetX = entityManager._pacman[0].cx;
-		var targetY = entityManager._pacman[0].cy;
-
-		if(this.color === "orange")
-		{
-			targetY += this.radius;
-			//console.log("this.radius = "+this.radius);
-		}
-		if(this.color === "red")
-		{
-			targetY -= this.radius;
-		}
-		if(this.color === "blue")
-		{
-			targetX += this.radius;
-		}
-		if(this.color === "pink"){
-			targetX -= this.radius;
-		}
-		if(this.cx === entityManager._pacman[0].cx &&
-			this.cy === entityManager._pacman[0].cy)
-		{
-			entityManager._pacman[0].getsEaten();
-			console.log("Oh noes! "+this.color+" ate PacMan");
-		}	
-		var xRelativePos = targetX < this.cx ? "rightOf":"leftOf";
-		var yRelativePos = targetY < this.cy ? "below" : "above";
-		
-		this.resetDirections();
-		
-		var x = this.isStuck(tile); //alert(this.aiMoveUp(tile) +"" +this.aiMoveDown(tile) + this.aiMoveLeft(tile) +this.aiMoveRight(tile));
-		
-		var left = this.aiMoveLeft(tile);
-		var right = this.aiMoveRight(tile);
-		var up = this.aiMoveUp(tile);
-		var down = this.aiMoveDown(tile);
-
-		if(xRelativePos === "rightOf") 
-		{
-			if(left) 
-				this.directions.left = true;
-			//Cant go to the left
-			//Evaluate up down 
-				 
-			if(!left)
-			{				
-				if(yRelativePos === "below" && up) 
-					this.directions.up = true; 
-				if(yRelativePos === "below" && !up) 
-					this.directions.down = true; 
-				if(yRelativePos === "above" && down) 
-					this.directions.down = true;
-				if(yRelativePos === "above" && !down) 
-					this.directions.up = true;							
-			} 	
-		}
-
-		if(xRelativePos === "leftOf") 
-		{
-			if(up && yRelativePos === "below") 
-				this.directions.up = true; 
-			if(down && yRelativePos === "above") 
-				this.directions.down = true; 
-			if(right)
-				this.directions.right = true;
-			//If cant go to right
-			//Check up / down			
-			if(!right){
-				if(yRelativePos === "below" && up) 
-					this.directions.up = true; 
-				if(yRelativePos === "below" && !up) 
-					this.directions.down = true; 
-				if(yRelativePos === "above" && down) 
-					this.directions.down = true;
-				if(yRelativePos === "above" && !down) 
-					this.directions.up = true;
-			} 			
-		}
-		
-		if(this.targetTile.cx === tile.cx){
-			this.cx = tile.cx + tile.width/2; 
-			this.cy = tile.cy + tile.height/2; 
-			this.targetTile= entityManager.getTile(400,30,5);
-		}					
-	}
-};
-
-/*
-Guy.prototype.aiMoveUp = function(tile,xRelativePos,yRelativePos){
-	var nextTile = entityManager.getTile(this.cx, tile.cy - tile.height +1, this.radius);			
-	//Is below the tile
-	if(nextTile.type !== 1) this.directions.up = true; 
-	else{				
-		//Is below
-		//Cant go up 
-		//Go left or right
-		if(xRelativePos === "leftOf")
-		{
-			nextTile = entityManager.getTile(tile.cx + tile.width + 1, tile.cy+1 , this.radius);											
-			if(nextTile.type !== 1) this.directions.right = true; 
-			else{
-				//Is Below and leftof
-				//cant go right
-				//try left
-				nextTile = entityManager.getTile(tile.cx - tile.width + 1, tile.cy+1 , this.radius);	
-				nextTile.debug = true; 					
-				if(nextTile.type !==1)this.directions.left = true;
-				else{
-					//all else fails - go right
-					this.directions.right = true; 
-				}
-			}
-		} 
-		
-	}
-};
-*/
-
-//Guy.prototype.aiMoveDown = function(tile,xRelativePos,yRelativePos){};
-
-Guy.prototype.isStuck = function(tile){
-
-	if(this.aiMoveUp(tile))
-		return false; 
-	if(this.aiMoveDown(tile))
-		return false; 
-	if(this.aiMoveLeft(tile))
-		return false; 
-	if(this.aiMoveRight(tile))
-		return false; 
-	return true; 	
-};
-
-Guy.prototype.aiMoveUp = function(tile){
-
-	var nextTile = entityManager.getTile(tile.cx + tile.width, tile.cy , this.radius);				
-	if(nextTile.type === 1)
-		return false; 		
-	return true;
-};
-
-Guy.prototype.aiMoveDown = function(tile){
-
-	var nextTile = entityManager.getTile(tile.cx + tile.width, tile.cy + tile.height+1 , this.radius);				
-	if(nextTile.type === 1)
-		return false; 		
-	return true;
-};
-
-Guy.prototype.aiMoveLeft = function(tile){
-
-	var nextTile = entityManager.getTile(tile.cx, tile.cy+1 , this.radius);			
-	if(nextTile.type === 1)
-		return false; 	
-	return true;
-};
-
-Guy.prototype.aiMoveRight = function(tile){
-
-	var nextTile = entityManager.getTile(tile.cx + tile.width+1, tile.cy+1 , this.radius);				
-	if(nextTile.type === 1)
-		return false; 	
-	return true;
-};
-
 Guy.prototype.resetDirections = function() {
 	this.directions = { 
 		left : false,
@@ -293,7 +121,281 @@ Guy.prototype.resetDirections = function() {
 		up : false, 
 		down : false
 	};
-}
+};
+
+Guy.prototype.getAIDirection = function(du)
+{
+	//this.targetTile.debug = true;
+	var tileX = this.targetTile.cx + this.targetTile.width/2;
+	var tileY = this.targetTile.cy + this.targetTile.height/2;
+	var nextPos = this.getNextPos(du);
+	
+	// first move just to get red ghost moving
+	// needs better to get everybody out of the cage
+	if (this.start) {
+		if (tileX < this.cx) {
+			this.directions.left = true;
+		}
+		if (tileX > this.cx) {
+			this.directions.right = true;
+		}
+		this.start = false;
+	}	
+	
+	var thisTile = entityManager.getTile(this.cx, this.cy, this.radius, this.directions);
+	var nextTile = entityManager.getTile(nextPos.nextX, nextPos.nextY, this.radius, this.directions);
+	
+	if (nextTile) {
+		
+		var nextTileX = nextTile.cx + nextTile.width/2;
+		var nextTileY = nextTile.cy + nextTile.height/2;
+		
+		var tileAbove = entityManager.getTile(this.cx, this.cy - nextTile.height, this.radius, this.directions);
+		var tileBelow = entityManager.getTile(this.cx, this.cy + nextTile.height, this.radius, this.directions);
+		var tileLeft = entityManager.getTile(this.cx - nextTile.width, this.cy, this.radius, this.directions);
+		var tileRight = entityManager.getTile(this.cx + nextTile.width, this.cy, this.radius, this.directions);
+		
+		var intersection = thisTile.isIntersection();
+		
+		var startingGhostTile = entityManager.getTile(230,200,3);
+		var startingGhostTile2 = entityManager.getTile(220,200,3);
+		
+		if (intersection) 
+		{
+			var tileCloserUD = this.targetTile.isCloser(tileAbove, tileBelow); //tileCloser Up or Down
+			var tileCloserLR = this.targetTile.isCloser(tileLeft, tileRight); //tileCloser Left or Right
+
+			if (this.directions.right) 
+			{
+				var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
+				
+				//so they won't go in the box
+				if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
+					tileCloser = tileRight;
+				}
+				
+				if (tileCloser.type === 0 && tileCloser != tileRight) {
+					if (tileCloser === tileAbove) this.setDirectionUp();
+					else this.setDirectionDown();
+				}
+				else if (tileCloser.type === 1) {
+					if (tileCloser === tileRight) {
+						if (tileCloserUD === tileAbove) {
+							this.setDirectionUp();
+						}
+						else this.setDirectionDown();
+					}
+					else if (tileCloser === tileAbove) {
+						var tileSecondClosest = this.targetTile.isCloser(tileBelow, tileRight);
+						if (tileSecondClosest === tileBelow) {
+							this.setDirectionDown();
+						}
+					}
+					else if (tileCloser === tileBelow) {
+						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileRight);
+						if (tileSecondClosest === tileAbove) {
+							this.setDirectionUp();
+						}
+					}
+				}				
+			}
+			else if (this.directions.left) 
+			{
+				var tileCloser = this.targetTile.isCloser(tileLeft, tileCloserUD);
+				
+				//so they won't go in the box
+				if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2) {
+					tileCloser = tileLeft;
+				}
+				
+				if (tileCloser.type === 0 && tileCloser != tileLeft) {
+					if (tileCloser === tileAbove) this.setDirectionUp();
+					else this.setDirectionDown();
+				}
+				else if (tileCloser.type === 1) {
+					if (tileCloser === tileLeft) {
+						if (tileCloserUD === tileAbove) {
+							this.setDirectionUp();
+						}
+						else this.setDirectionDown();
+					}
+					else if (tileCloser === tileAbove) {
+						var tileSecondClosest = this.targetTile.isCloser(tileLeft, tileBelow);
+						if (tileSecondClosest === tileBelow) {
+							this.setDirectionDown();
+						}
+					}
+					else if (tileCloser === tileBelow) {
+						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileLeft);
+						if (tileSecondClosest === tileAbove) {
+							this.setDirectionUp();
+						}
+					}
+				}	
+			}
+			else if (this.directions.down) 
+			{
+				var tileCloser = this.targetTile.isCloser(tileBelow, tileCloserLR);
+				
+				if (tileCloser.type === 0 && tileCloser != tileBelow) {
+					if (tileCloser === tileLeft) this.setDirectionLeft();
+					else this.setDirectionRight();
+				}
+				else if (tileCloser.type === 1) {
+					if (tileCloser === tileBelow) {
+						if (tileCloserLR === tileLeft) {
+							this.setDirectionLeft();
+						}
+						else this.setDirectionRight();
+					}
+					else if (tileCloser === tileLeft) {
+						var tileSecondClosest = this.targetTile.isCloser(tileBelow, tileRight);
+						if (tileSecondClosest === tileRight) {
+							this.setDirectionRight();
+						}
+					}
+					else if (tileCloser === tileRight) {
+						var tileSecondClosest = this.targetTile.isCloser(tileLeft, tileBelow);
+						if (tileSecondClosest === tileLeft) {
+							this.setDirectionLeft();
+						}
+					}
+				}	
+				
+			}
+			else if (this.directions.up) 
+			{
+				var tileCloser = this.targetTile.isCloser(tileAbove, tileCloserLR);
+				
+				if (tileCloser.type === 0 && tileCloser != tileAbove) {
+					if (tileCloser === tileLeft) this.setDirectionLeft();
+					else this.setDirectionRight();
+				}
+				else if (tileCloser.type === 1) {
+					if (tileCloser === tileAbove) {
+						if (tileCloserLR === tileLeft) {
+							this.setDirectionLeft();
+						}
+						else this.setDirectionRight();
+					}
+					else if (tileCloser === tileLeft) {
+						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileRight);
+						if (tileSecondClosest === tileRight) {
+							this.setDirectionRight();
+						}
+					}
+					else if (tileCloser === tileRight) {
+						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileLeft);
+						if (tileSecondClosest === tileLeft) {
+							this.setDirectionLeft();
+						}
+					}
+				}
+				
+			}
+			//tileCloser.debug2 = true;
+		}
+		// if ghosts hit walls
+		else if (nextTile.type === 1) {
+			
+			if (this.directions.right || this.directions.left) {
+				if (tileAbove.type === 0) {
+					this.setDirectionUp();
+				}
+				else {
+					this.setDirectionDown();
+				}
+			}
+			else if (this.directions.down || this.directions.up) {
+				
+				if (tileRight.type === 0) {
+					this.setDirectionRight();
+				}
+				else {
+					this.setDirectionLeft();
+				}
+			}
+		}
+	}
+	
+};
+
+Guy.prototype.setTargetTile = function () {
+	
+	if (this.color === "red") {
+		this.setTargetForRed();	
+	}
+	if (this.color === "pink") {
+		this.setTargetForPink();	
+	}
+	if (this.color === "orange") {
+		this.setTargetForOrange();	
+	}
+	if (this.color === "blue") {
+		this.setTargetForBlue();	
+	}
+};
+
+Guy.prototype.setTargetForRed = function () {
+	
+	if (this.mode === "scatter") {
+		var targetTile = entityManager.getTile(430,17,5);	// upper right corner
+	}
+	
+	else if (this.mode === "chase") {
+		var pacman = entityManager.getPacman();
+		var targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+	}
+	
+	if (targetTile) {
+		this.targetTile = targetTile;
+	}
+};
+
+Guy.prototype.setTargetForPink = function () {
+	
+	if (this.mode === "scatter") {
+		//var targetTile = entityManager.getTile(17,17,5);    // upper left corner
+		//targetTile.debug = true;
+	}
+	
+	else if (this.mode === "chase") {
+	}
+	
+	/*if (targetTile) {
+		this.targetTile = targetTile;
+	}*/
+};
+
+Guy.prototype.setTargetForOrange = function () {
+	
+	if (this.mode === "scatter") {
+		//var targetTile = entityManager.getTile(17,470,5);		// bottom left corner
+		//targetTile.debug = true;
+	}
+	
+	else if (this.mode === "chase") {
+	}
+	
+	/*if (targetTile) {
+		this.targetTile = targetTile;
+	}*/
+};
+
+Guy.prototype.setTargetForBlue = function () {
+
+	if (this.mode === "scatter") {
+		//var targetTile = entityManager.getTile(430,470,5);    //bttom right corner
+		//targetTile.debug = true;
+	}
+	
+	else if (this.mode === "chase") {
+	}
+	
+	/*if (targetTile) {
+		this.targetTile = targetTile;
+	}*/
+};
 
 Guy.prototype.updateDirections = function(du){
 		
@@ -316,10 +418,7 @@ Guy.prototype.updateDirections = function(du){
 		if (wallColliding.up) return;
 		else
 		{
-			this.directions.up = true; 
-			this.directions.down = false; 
-			this.directions.left = false; 
-			this.directions.right = false; 		        
+			this.setDirectionUp();	        
 		}
 	}
 	if(this.nextTurn === "down")
@@ -330,10 +429,7 @@ Guy.prototype.updateDirections = function(du){
 		if (wallColliding.down) return;
     	else
 		{
-    		this.directions.down = true;    	
-    		this.directions.up = false; 		
-			this.directions.left = false; 
-			this.directions.right = false;        
+    		this.setDirectionDown();       
 		}
 	}
     if(this.nextTurn === "left")
@@ -344,10 +440,7 @@ Guy.prototype.updateDirections = function(du){
 		if (wallColliding.left) return;
     	else
 		{
-    		this.directions.left = true;
-    		this.directions.up = false; 
-			this.directions.down = false; 		
-			this.directions.right = false;  
+    		this.setDirectionLeft();
 		}       
     }
     if(this.nextTurn === "right")
@@ -356,13 +449,9 @@ Guy.prototype.updateDirections = function(du){
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
 		
 		if (wallColliding.right) return;
-
     	else
 		{
-    		this.directions.right = true;
-    		this.directions.up = false; 
-			this.directions.down = false; 
-			this.directions.left = false; 		    
+    		this.setDirectionRight();	    
 		}
     }	   
 };    
@@ -680,27 +769,35 @@ Guy.prototype.clear = function(ctx){
 	util.fillBox(ctx, this.cx - width, this.cy - width,  width * 2, width * 2, "white");
 };
 
-Guy.prototype.getNextPos = function (du) {
-
+Guy.prototype.getNextPos = function (du, cx, cy) {
+	if (cx === undefined) 
+	{
+		cx = this.cx;
+	}
+	if (cy === undefined) 
+	{
+		cy = this.cy;
+	}
+	
 	var nextX, nextY;
 	var nextXleft, nextXright, nextXup, nextXdown, nextYleft, nextYright, nextYup, nextYdown;
 	
 	if (this.directions.left) 
 	{
-		nextX = this.cx - this.velX * du;
-		nextY = this.cy;
+		nextX = cx - this.velX * du;
+		nextY = cy;
 		this.currentDirection = "left";
 	}
 	if (this.directions.right) 
 	{
-		nextX = this.cx + this.velX * du;
-		nextY = this.cy;
+		nextX = cx + this.velX * du;
+		nextY = cy;
 		this.currentDirection = "right";
 	}
 	if (this.directions.up) 
 	{
-		nextX = this.cx;
-		nextY = this.cy - this.velY * du;
+		nextX = cx;
+		nextY = cy - this.velY * du;
 		this.currentDirection = "up";
 	}
 	if (this.directions.down) 
@@ -709,7 +806,6 @@ Guy.prototype.getNextPos = function (du) {
 		nextY = this.cy + this.velY * du;
 		this.currentDirection = "down";
 	}
-
 	nextXleft = this.cx - this.velX * du;
 	nextYleft = this.cy;
 	
@@ -732,70 +828,72 @@ Guy.prototype.getNextPos = function (du) {
 
 Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
-	if (nextTile && nextTile.type == "1") 
-	{
-		var left, right, up, down = false;
-		var nextTileX = nextTile.cx + (nextTile.width/2);
-		var nextTileY = nextTile.cy + (nextTile.height/2);
-		var limit = this.radius + (nextTile.width/2);
-
-		/*
-		collision-checking
-		console.log("limit: " + limit);
-		console.log("right: " + (nextTileX - nextX));
-		console.log("left: " + (nextX - nextTileX));
-		console.log("up: " + (nextY - nextTileY));
-		console.log("down: " + (nextTileY - nextY));
-		console.log("nextTileX: " + nextTileX);
-		console.log("nextTileY: " + nextTileY);
-		*/
-		//right
-		if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
-		{
-			right = true;
-			//console.log("colliding right");
-		}
-		
-		//left
-		if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
-		{
-			left = true;
-			//console.log("colliding left");
-		}
-		
-		//up
-		if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit)
-		{
-			up = true;
-			//console.log("colliding up");
-		}
-		
-		//down
-		if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
-		{
+	var startingGhostTile = entityManager.getTile(230,200,3);
+	var startingGhostTile2 = entityManager.getTile(220,200,3);	
+	
+	if (nextTile)
+	{	
+		//the ghost box
+		if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
 			down = true;
 			//console.log("colliding down");
 		}
+	
+		if (nextTile.type == "1") 
+		{
+			var left, right, up, down = false;
+			var nextTileX = nextTile.cx + (nextTile.width/2);
+			var nextTileY = nextTile.cy + (nextTile.height/2);
+			var limit = this.radius + (nextTile.width/2);
+			
+			//right
+			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
+			{
+				right = true;
+				//console.log("colliding right");
+			}
+			
+			//left
+			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
+			{
+				left = true;
+				//console.log("colliding left");
+			}
+			
+			//up
+			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
+			{
+				up = true;
+				//console.log("colliding up");
+			}
+			
+			//down
+			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
+			{
+				down = true;
+				//console.log("colliding down");
+			}
+		}
+		//if tile has a cake, change it to a normal lane
+		else if (nextTile && nextTile.hasCake && this.type == "pacman")
+		{
+			nextTile.hasCake = false;
+			this.score += 10;
+			this.cakesEaten++;
+		}
+		else if (nextTile && nextTile.hasFruit && this.type == "pacman")
+		{
+			if (nextTile.Fruit === "cherry") this.score += 100;
+			if (nextTile.Fruit === "strawberry") this.score += 300;
+			nextTile.hasFruit = false;
+		}
+		return {
+			left: left, 
+			right: right,
+			up: up,
+			down: down
+		};
 	}
-	//if tile has a cake, change it to a normal lane
-	else if (nextTile && nextTile.hasCake)
-	{
-		nextTile.hasCake = false;
-		this.score += 10;
-		this.cakesEaten++;
-	}
-	else if (nextTile && nextTile.hasFruit)
-	{
-		if (nextTile.Fruit === "cherry") this.score += 100;
-		if (nextTile.Fruit === "strawberry") this.score += 300;
-		nextTile.hasFruit = false;
-	}
-	return {
-		left: left, 
-		right: right,
-		up: up,
-		down: down
-	};
 
 };
 
@@ -806,4 +904,45 @@ Guy.prototype.updateScore = function (score) {
 		tile.putFruit(this.cakesEaten, tile);
 	}
 }
+
+Guy.prototype.setDirectionLeft = function () {
+	this.directions = {
+		left : true,
+		right : false,
+		up : false, 
+		down : false
+	};
+};
+Guy.prototype.setDirectionRight = function () {
+	this.directions = {
+		left : false,
+		right : true,
+		up : false, 
+		down : false
+	};
+};
+Guy.prototype.setDirectionUp = function () {
+	this.directions = {
+		left : false,
+		right : false,
+		up : true, 
+		down : false
+	};
+};
+Guy.prototype.setDirectionDown = function () {
+	this.directions = {
+		left : false,
+		right : false,
+		up : false, 
+		down : true
+	};
+};
+
+Guy.prototype.setChaseMode = function () {
+	this.mode = "chase";
+};
+
+Guy.prototype.setScatterMode = function () {
+	this.mode = "scatter";
+};
 

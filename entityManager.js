@@ -42,6 +42,7 @@ init: function() {
     this.generateMaze();
     this.generateGuy();
     this.initTargetTiles();
+	this.initTimeouts();
 },
 
 generateGuy : function(descr) {
@@ -66,6 +67,7 @@ generateGuy : function(descr) {
     }
     
     tile = this._maze[0].getTile(230,190,3);
+    //tile = this._maze[0].getTile(230,280,3);
     this._pacman.push(new Guy({
         cx: tile.cx,        
         cy: tile.cy + tile.height/2,
@@ -80,18 +82,66 @@ setPacMan : function(x,y){
     var tile = this._maze[0].getTile(x,y,5);
     this._pacman[4].cx = tile.cx + tile.width/2;
     this._pacman[4].cy = tile.cy + tile.height/2;
-    this._pacman[3].cx = tile.cx + tile.width/2;
-    this._pacman[3].cy = tile.cy + tile.height/2;
 },
 
 setTarget : function(x,y){
 
-    this._pacman[4].targetTile.debug = true;
+    this._pacman[4].targetTile.debug = false;
     var tile = this._maze[0].getTile(x,y,5);
-    console.log(tile);
-    this._pacman[4].targetTile = tile;
-    this._pacman[3].targetTile = tile;
+    //this._pacman[4].targetTile = tile;     
+},
 
+initTimeouts : function () {
+	// set first chase after 7 seconds
+	var timeout = setTimeout(setFirstChase, 7000);
+	
+	function setFirstChase() {
+		console.log("setting first timeout");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		timeout = setTimeout(setSecondScatter, 20000);
+	}
+	
+	function setSecondScatter() {
+		console.log("setting second scatter");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
+		timeout = setTimeout(setSecondChase, 7000);
+	}
+	
+	function setSecondChase() {
+		console.log("setting second chase");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		timeout = setTimeout(setThirdScatter, 20000);
+	}
+	
+	function setThirdScatter() {
+		console.log("setting third scatter");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
+		timeout = setTimeout(setThirdChase, 5000);
+	}
+	
+	function setThirdChase() {
+		console.log("setting third chase");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		timeout = setTimeout(setFourthScatter, 20000);
+	}
+	
+	function setFourthScatter() {
+		console.log("setting fourth scatter");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
+		timeout = setTimeout(setLastChase, 5000);
+	}
+	
+	function setLastChase() {
+		console.log("setting last chase");
+		
+		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+	}
 },
 
 generateMaze : function(descr) {
@@ -117,14 +167,21 @@ getTile: function(x,y,r,dir) {
 	}	
 },
 
+getPacman: function () {
+	return this._pacman[0];
+},
+
 initTargetTiles: function(){
 
-    var tile = this.getTile(337,17,5);    
-    var tile2 = this.getTile(17,17,5);    
+    var tile = this.getTile(430,17,5);  //upper right corner  
+    var tile2 = this.getTile(17,17,5);    //upper left corner
+    var tile3 = this.getTile(430,470,5);    //bttom right corner
+    var tile4 = this.getTile(17,470,5);    //bottom left corner
+	var tile5 = this.getTile(230,190,3);	//starting tile
+	var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
     //Hentugt til að sjá flísina sem verið er að vinna með:
-    //tile.debug = true;
-    this._pacman[4].targetTile = tile2;
-    this._pacman[3].targetTile = tile;
+    //tilePacman.debug = true; 
+    this._pacman[4].targetTile = tilePacman;
 },
 
 update: function(du) {
