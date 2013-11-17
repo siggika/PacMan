@@ -336,68 +336,108 @@ Guy.prototype.setTargetTile = function () {
 	}
 };
 
-Guy.prototype.setTargetForRed = function () {
+Guy.prototype.setTargetForRed = function () { 
 	var targetTile = false;
 	
-	if (this.mode === "scatter") {
+	if (this.mode === "scatter") 
+	{ //done
 		targetTile = entityManager.getTile(430,17,5);	// upper right corner
 	}
 	
-	else if (this.mode === "chase") {
+	else if (this.mode === "chase") 
+	{ //done
 		var pacman = entityManager.getPacman();
 		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 	}
-	else if (this.mode === "frightened") {
-		targetTile = false;
+	else if (this.mode === "frightened") 
+	{
+		targetTile = false; 
 	}
-	
-	this.targetTile = targetTile;
+	if(targetTile) 
+	{ //done
+		this.targetTile = targetTile;
+	}
 	//console.log("mode: " + this.mode);
 };
 
-Guy.prototype.setTargetForPink = function () {
-	
-	if (this.mode === "scatter") {
-		//var targetTile = entityManager.getTile(17,17,5);    // upper left corner
-		//targetTile.debug = true;
+Guy.prototype.setTargetForPink = function () { 
+	var targetTile = false;
+
+	if (this.mode === "scatter") 
+	{ //done
+		var targetTile = entityManager.getTile(17,17,5);    // upper left corner
 	}
 	
-	else if (this.mode === "chase") {
+	else if (this.mode === "chase") 
+	{
+		var pacman = entityManager.getPacman();
+		if(this.directions.up)
+		{
+			var targetTile = entityManager.getTile(pacman.cx, pacman.cy-(pacman.radius*4), pacman.radius);
+		}
+		else if(this.directions.down)
+		{
+			var targetTile = entityManager.getTile(pacman.cx, pacman.cy+(pacman.radius*4), pacman.radius);
+		}
+		else if(this.directions.left)
+		{
+			var targetTile = entityManager.getTile(pacman.cx-(pacman.radius*4), pacman.cy, pacman.radius);
+		}
+		else if(this.directions.right)
+		{
+			var targetTile = entityManager.getTile(pacman.cx+(pacman.radius*4), pacman.cy, pacman.radius);
+		}
 	}
 	
-	/*if (targetTile) {
+	if (targetTile) 
+	{
 		this.targetTile = targetTile;
-	}*/
+	}
 };
 
-Guy.prototype.setTargetForOrange = function () {
-	
-	if (this.mode === "scatter") {
-		//var targetTile = entityManager.getTile(17,470,5);		// bottom left corner
-		//targetTile.debug = true;
+Guy.prototype.setTargetForOrange = function () { 
+	var targetTile = false;
+
+	if (this.mode === "scatter") 
+	{ // done
+		var targetTile = entityManager.getTile(17,470,5);		// bottom left corner
 	}
 	
-	else if (this.mode === "chase") {
+	else if (this.mode === "chase") 
+	{
+		//calculate distance from pacman
+		//if(distance from pacman is less than 8)
+		//	this.mode = "scatter";
+		//else 
+		var pacman = entityManager.getPacman();
+		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+
 	}
 	
-	/*if (targetTile) {
+	if (targetTile) 
+	{
 		this.targetTile = targetTile;
-	}*/
+	}
 };
 
-Guy.prototype.setTargetForBlue = function () {
+Guy.prototype.setTargetForBlue = function () { 
+	var targetTile = false;
 
-	if (this.mode === "scatter") {
-		//var targetTile = entityManager.getTile(430,470,5);    //bttom right corner
-		//targetTile.debug = true;
+	if (this.mode === "scatter") 
+	{ //done
+		var targetTile = entityManager.getTile(430,470,5);    //bottom right corner
 	}
 	
-	else if (this.mode === "chase") {
+	else if (this.mode === "chase") 
+	{
+		var pacman = entityManager.getPacman();
+		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 	}
 	
-	/*if (targetTile) {
+	if (targetTile) 
+	{
 		this.targetTile = targetTile;
-	}*/
+	}
 };
 
 Guy.prototype.updateDirections = function(du){

@@ -186,16 +186,31 @@ getPacman: function () {
 
 initTargetTiles: function(){
 
-    var tile = this.getTile(430,17,5);  //upper right corner  
-    var tile2 = this.getTile(17,17,5);    //upper left corner
-    var tile3 = this.getTile(430,470,5);    //bttom right corner
-    var tile4 = this.getTile(17,470,5);    //bottom left corner
-	var tile5 = this.getTile(230,190,3);	//starting tile
-	var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
-	
+    var tile = this.getTile(430,17,5);  //upper right corner (red)
+    var tile2 = this.getTile(17,17,5);    //upper left corner (pink)
+    var tile3 = this.getTile(430,470,5);    //bottom right corner (blue)
+    var tile4 = this.getTile(17,470,5);    //bottom left corner (orange)
+    var tile5 = this.getTile(230,190,3);    //starting tile
+    var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
     //Hentugt til að sjá flísina sem verið er að vinna með:
-    //tile6.debug = true; 
-    this._pacman[4].targetTile = tilePacman;
+    //tilePacman.debug = true; 
+    this._pacman[1].targetTile = tile;
+    this._pacman[1].cx = 250;
+    this._pacman[1].cy = 175;
+    console.log(this._pacman[1].color);
+
+    this._pacman[2].targetTile = tile;
+    this._pacman[2].cx = 180;
+    this._pacman[2].cy = 175;
+    console.log(this._pacman[2].color);
+    
+    this._pacman[3].targetTile = tile;
+    this._pacman[3].cx = 200;
+    this._pacman[3].cy = 175;
+    console.log(this._pacman[3].color);
+    
+    this._pacman[4].targetTile = tile;
+    console.log(this._pacman[4].color);
 },
 
 update: function(du) {
