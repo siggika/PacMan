@@ -954,7 +954,7 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			//console.log("colliding down");
 		}
 	
-		if (nextTile.type === "1") 
+		if (nextTile.type == "1") 
 		{
 			var nextTileX = nextTile.cx + (nextTile.width/2);
 			var nextTileY = nextTile.cy + (nextTile.height/2);
@@ -989,19 +989,19 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			}
 		}
 		//if tile has a cake, change it to a normal lane
-		else if (nextTile.hasCake && this.type === "pacman")
+		else if (nextTile.hasCake && this.type == "pacman")
 		{
 			nextTile.hasCake = false;
 			this.score += 10;
 			this.cakesEaten++;
 		}
-		else if (nextTile.hasFruit && this.type === "pacman")
+		else if (nextTile.hasFruit && this.type == "pacman")
 		{
 			if (nextTile.Fruit === "cherry") this.score += 100;
 			if (nextTile.Fruit === "strawberry") this.score += 300;
 			nextTile.hasFruit = false;
 		}
-		else if (nextTile.hasPill && this.type === "pacman") {
+		else if (nextTile.hasPill && this.type == "pacman") {
 			nextTile.hasPill = false;
 			var lastMode = this.mode;
 			
@@ -1082,8 +1082,7 @@ Guy.prototype.setScatterMode = function () {
 
 Guy.prototype.setFrightenedMode = function () {
 	this.mode = "frightened";
-	if (this.type === "ghost") 
-		this.speedDown();
+	if (this.type === "ghost") this.speedDown();
 };
 
 Guy.prototype.setCagedMode = function () {
@@ -1106,8 +1105,7 @@ Guy.prototype.setMode = function (mode) {
 };
 
 Guy.prototype.switchDirection = function () {
-
-	if(this.type === "ghost"){
+	if(this.type == "ghost"){
 		if (this.directions.right) {
 			this.setDirectionLeft();
 		}
