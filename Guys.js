@@ -353,10 +353,8 @@ Guy.prototype.setTargetForRed = function () {
 	{
 		targetTile = false; 
 	}
-	if(targetTile) 
-	{ //done
-		this.targetTile = targetTile;
-	}
+
+	this.targetTile = targetTile;
 	//console.log("mode: " + this.mode);
 };
 
@@ -388,11 +386,8 @@ Guy.prototype.setTargetForPink = function () {
 			var targetTile = entityManager.getTile(pacman.cx+(pacman.radius*4), pacman.cy, pacman.radius);
 		}
 	}
-	
-	if (targetTile) 
-	{
-		this.targetTile = targetTile;
-	}
+
+	this.targetTile = targetTile;
 };
 
 Guy.prototype.setTargetForOrange = function () { 
@@ -414,10 +409,7 @@ Guy.prototype.setTargetForOrange = function () {
 
 	}
 	
-	if (targetTile) 
-	{
-		this.targetTile = targetTile;
-	}
+	this.targetTile = targetTile;
 };
 
 Guy.prototype.setTargetForBlue = function () { 
@@ -434,10 +426,7 @@ Guy.prototype.setTargetForBlue = function () {
 		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 	}
 	
-	if (targetTile) 
-	{
-		this.targetTile = targetTile;
-	}
+	this.targetTile = targetTile;
 };
 
 Guy.prototype.updateDirections = function(du){
