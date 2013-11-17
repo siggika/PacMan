@@ -189,15 +189,37 @@ Maze.prototype._clearUpMaze = function() {
     this._tiles[12][12].draw = "HL"
     this._tiles[12][15].draw = "HL"    
     this._tiles[12][13].hasCake = false; 
-    this._tiles[12][14].hasCake = false; 
+    this._tiles[12][14].hasCake = false;
+	
+	// pills
+	this._tiles[3][26].hasCake = false;
+	this._tiles[3][1].hasCake = false;
+	this._tiles[23][1].hasCake = false;
+	this._tiles[23][26].hasCake = false;
+	
+	this._tiles[3][26].hasPill = true;
+	this._tiles[3][1].hasPill = true;
+	this._tiles[23][1].hasPill = true;
+	this._tiles[23][26].hasPill = true;
+	
     
-    for(var x = 13; x < 16; x++)
+    for(var x = 9; x < 20; x++)
     {
-        for(var y = 11; y < 17; y++)
+        for(var y = 7; y < 21; y++)
         {
             this._tiles[x][y].hasCake = false; 
         }
     }
+	
+	for(var y = 0; y < 6; y++)
+    {
+          this._tiles[14][y].hasCake = false; 
+    }
+	for(var y = 22; y < 28; y++)
+    {
+          this._tiles[14][y].hasCake = false; 
+    }
+	
     
     for(var j = 0; j < 3; j++)
     {        

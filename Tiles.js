@@ -53,8 +53,9 @@ Tile.prototype.debug = false;
 Tile.prototype.debug2 = false; 
 Tile.prototype.draw = false; 
 Tile.prototype.hasFruit = false; 
-Tile.prototype.Fruit = "none"; 
-Tile.prototype.timeout = "none"; 
+Tile.prototype.Fruit; 
+Tile.prototype.timeout; 
+Tile.prototype.hasPill = false; 
 
 Tile.prototype.height = 16; 
 Tile.prototype.width = 16; 
@@ -157,6 +158,12 @@ Tile.prototype.render = function (ctx) {
 				var cel = g_fruit_sprites[1];
 				cel.drawAt(ctx, this.cx, this.cy+10, this.radius);
 			}
+		}
+		if (this.hasPill) {
+			ctx.fillStyle= "yellow";    
+            ctx.beginPath();
+            ctx.arc(this.cx + this.width/2, this.cy+this.height/2, 6, 0, Math.PI * 2);
+            ctx.fill();
 		}
     }	
     if(this.debug){    

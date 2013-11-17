@@ -337,19 +337,22 @@ Guy.prototype.setTargetTile = function () {
 };
 
 Guy.prototype.setTargetForRed = function () {
+	var targetTile = false;
 	
 	if (this.mode === "scatter") {
-		var targetTile = entityManager.getTile(430,17,5);	// upper right corner
+		targetTile = entityManager.getTile(430,17,5);	// upper right corner
 	}
 	
 	else if (this.mode === "chase") {
 		var pacman = entityManager.getPacman();
-		var targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+	}
+	else if (this.mode === "frightened") {
+		targetTile = false;
 	}
 	
-	if (targetTile) {
-		this.targetTile = targetTile;
-	}
+	this.targetTile = targetTile;
+	//console.log("mode: " + this.mode);
 };
 
 Guy.prototype.setTargetForPink = function () {
@@ -876,17 +879,36 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			}
 		}
 		//if tile has a cake, change it to a normal lane
-		else if (nextTile && nextTile.hasCake && this.type == "pacman")
+		else if (nextTile.hasCake && this.type == "pacman")
 		{
 			nextTile.hasCake = false;
 			this.score += 10;
 			this.cakesEaten++;
 		}
-		else if (nextTile && nextTile.hasFruit && this.type == "pacman")
+		else if (nextTile.hasFruit && this.type == "pacman")
 		{
 			if (nextTile.Fruit === "cherry") this.score += 100;
 			if (nextTile.Fruit === "strawberry") this.score += 300;
 			nextTile.hasFruit = false;
+		}
+		else if (nextTile.hasPill && this.type == "pacman") {
+			nextTile.hasPill = false;
+			var lastMode = this.mode;
+			
+			entityManager.setMode("frightened");
+			
+			//console.log("changing mode to frightened");
+			//console.log("mode : " + this.mode);
+			
+			entityManager.timeout.pause();
+			
+			function resumeTime() {
+				entityManager.setMode(lastMode);
+				entityManager.timeout.resume();
+			}
+			
+			//set frightened mode for 10 seconds
+			var timer = setTimeout(resumeTime, 10000);
 		}
 		
 	}
@@ -946,4 +968,21 @@ Guy.prototype.setChaseMode = function () {
 Guy.prototype.setScatterMode = function () {
 	this.mode = "scatter";
 };
+
+Guy.prototype.setFrightenedMode = function () {
+	this.mode = "frightened";
+};
+
+Guy.prototype.setMode = function (mode) {
+	if (mode === "scatter") {
+		this.setScatterMode();
+	}
+	if (mode === "chase") {
+		this.setChaseMode();
+	}
+	if (mode === "frightened") {
+		this.setFrightenedMode();
+	}
+};
+
 

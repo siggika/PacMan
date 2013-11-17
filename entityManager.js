@@ -12,6 +12,7 @@ var entityManager = {
 _pacman   : [],
 _maze : [],
 
+
 // "PRIVATE" METHODS
 
 _forEachOf: function(aCategory, fn) {
@@ -28,6 +29,9 @@ _forEachOf: function(aCategory, fn) {
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
+
+// 
+timeout : false,
 
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
@@ -92,49 +96,51 @@ setTarget : function(x,y){
 },
 
 initTimeouts : function () {
+	
+	
 	// set first chase after 7 seconds
-	var timeout = setTimeout(setFirstChase, 7000);
+	this.timeout = new Timer(setFirstChase, 7000);
 	
 	function setFirstChase() {
-		console.log("setting first timeout");
+		console.log("setting first chase");
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
-		timeout = setTimeout(setSecondScatter, 20000);
+		entityManager.timeout = new Timer(setSecondScatter, 20000);
 	}
 	
 	function setSecondScatter() {
 		console.log("setting second scatter");
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
-		timeout = setTimeout(setSecondChase, 7000);
+		entityManager.timeout = new Timer(setSecondChase, 7000);
 	}
 	
 	function setSecondChase() {
 		console.log("setting second chase");
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
-		timeout = setTimeout(setThirdScatter, 20000);
+		entityManager.timeout = new Timer(setThirdScatter, 20000);
 	}
 	
 	function setThirdScatter() {
 		console.log("setting third scatter");
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
-		timeout = setTimeout(setThirdChase, 5000);
+		entityManager.timeout = new Timer(setThirdChase, 5000);
 	}
 	
 	function setThirdChase() {
 		console.log("setting third chase");
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
-		timeout = setTimeout(setFourthScatter, 20000);
+		entityManager.timeout = new Timer(setFourthScatter, 20000);
 	}
 	
 	function setFourthScatter() {
 		console.log("setting fourth scatter");
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
-		timeout = setTimeout(setLastChase, 5000);
+		entityManager.timeout = new Timer(setLastChase, 5000);
 	}
 	
 	function setLastChase() {
@@ -142,6 +148,13 @@ initTimeouts : function () {
 		
 		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
 	}
+},
+
+setMode : function(mode) {
+	 for (var i = 0; i < this._pacman.length; ++i) 
+    {
+		this._pacman[i].setMode(mode);
+    }
 },
 
 generateMaze : function(descr) {
@@ -179,8 +192,9 @@ initTargetTiles: function(){
     var tile4 = this.getTile(17,470,5);    //bottom left corner
 	var tile5 = this.getTile(230,190,3);	//starting tile
 	var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
+	
     //Hentugt til að sjá flísina sem verið er að vinna með:
-    //tilePacman.debug = true; 
+    //tile6.debug = true; 
     this._pacman[4].targetTile = tilePacman;
 },
 
