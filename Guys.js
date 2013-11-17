@@ -1105,16 +1105,16 @@ Guy.prototype.setMode = function (mode) {
 };
 
 Guy.prototype.switchDirection = function () {
-	if (this.directions.right) {
+	if (this.directions.right && this.type == "ghost") {
 		this.setDirectionLeft();
 	}
-	else if (this.directions.left) {
+	else if (this.directions.left && this.type == "ghost") {
 		this.setDirectionRight();
 	}
-	else if (this.directions.up) {
+	else if (this.directions.up && this.type == "ghost") {
 		this.setDirectionDown();
 	}
-	else if (this.directions.down) {
+	else if (this.directions.down && this.type == "ghost") {
 		this.setDirectionUp();
 	}
 };
