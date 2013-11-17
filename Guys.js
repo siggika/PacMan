@@ -441,7 +441,8 @@ Guy.prototype.updateDirections = function(du){
     	else
 		{
     		this.setDirectionLeft();
-		}       
+		}   
+		
     }
     if(this.nextTurn === "right")
 	{
@@ -830,6 +831,7 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
 	var startingGhostTile = entityManager.getTile(230,200,3);
 	var startingGhostTile2 = entityManager.getTile(220,200,3);	
+	var left, right, up, down = false;
 	
 	if (nextTile)
 	{	
@@ -841,7 +843,6 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
 		if (nextTile.type == "1") 
 		{
-			var left, right, up, down = false;
 			var nextTileX = nextTile.cx + (nextTile.width/2);
 			var nextTileY = nextTile.cy + (nextTile.height/2);
 			var limit = this.radius + (nextTile.width/2);
@@ -887,14 +888,14 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			if (nextTile.Fruit === "strawberry") this.score += 300;
 			nextTile.hasFruit = false;
 		}
-		return {
+		
+	}
+	return {
 			left: left, 
 			right: right,
 			up: up,
 			down: down
-		};
-	}
-
+			};
 };
 
 Guy.prototype.updateScore = function (score) {
