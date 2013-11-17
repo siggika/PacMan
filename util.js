@@ -45,6 +45,19 @@ randRange: function(min, max) {
     return (min + Math.random() * (max - min));
 },
 
+randTwo: function(opt1, opt2) {
+	var random = Math.random();
+	if (random < 0.5) { return opt1; }
+	else { return opt2;}
+},
+
+randThree: function(opt1, opt2, opt3) {
+	var random = Math.random();
+	if (random <= 0.33) { return opt1; }
+	else if (random > 0.333 && random <= 0.666) { return opt2; }
+	else { return opt3;}
+},
+
 
 // MISC
 // ====

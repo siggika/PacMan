@@ -167,131 +167,186 @@ Guy.prototype.getAIDirection = function(du)
 
 			if (this.directions.right) 
 			{
-				var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
-				
-				//so they won't go in the box
-				if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
-					tileCloser = tileRight;
+				if (this.mode === "frightened") {
+					var randTile;
+					
+					for (var i = 0; i < 100; i++) {
+						randTile = util.randThree(tileAbove, tileBelow, tileRight);
+						if (randTile.type === 0 && randTile != startingGhostTile 
+							&& randTile != startingGhostTile2) 
+								break;
+					}
+					if (randTile === tileAbove) this.setDirectionUp();
+					if (randTile === tileBelow) this.setDirectionDown();
+					if (randTile === tileRight) this.setDirectionRight();
 				}
-				
-				if (tileCloser.type === 0 && tileCloser != tileRight) {
-					if (tileCloser === tileAbove) this.setDirectionUp();
-					else this.setDirectionDown();
-				}
-				else if (tileCloser.type === 1) {
-					if (tileCloser === tileRight) {
-						if (tileCloserUD === tileAbove) {
-							this.setDirectionUp();
-						}
+				else {
+					var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
+					
+					//so they won't go in the box
+					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
+						tileCloser = tileRight;
+					}
+					
+					if (tileCloser.type === 0 && tileCloser != tileRight) {
+						if (tileCloser === tileAbove) this.setDirectionUp();
 						else this.setDirectionDown();
 					}
-					else if (tileCloser === tileAbove) {
-						var tileSecondClosest = this.targetTile.isCloser(tileBelow, tileRight);
-						if (tileSecondClosest === tileBelow) {
-							this.setDirectionDown();
+					else if (tileCloser.type === 1) {
+						if (tileCloser === tileRight) {
+							if (tileCloserUD === tileAbove) {
+								this.setDirectionUp();
+							}
+							else this.setDirectionDown();
 						}
-					}
-					else if (tileCloser === tileBelow) {
-						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileRight);
-						if (tileSecondClosest === tileAbove) {
-							this.setDirectionUp();
+						else if (tileCloser === tileAbove) {
+							var tileSecondClosest = this.targetTile.isCloser(tileBelow, tileRight);
+							if (tileSecondClosest === tileBelow) {
+								this.setDirectionDown();
+							}
 						}
-					}
-				}				
+						else if (tileCloser === tileBelow) {
+							var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileRight);
+							if (tileSecondClosest === tileAbove) {
+								this.setDirectionUp();
+							}
+						}
+					}	
+				}
 			}
 			else if (this.directions.left) 
 			{
-				var tileCloser = this.targetTile.isCloser(tileLeft, tileCloserUD);
-				
-				//so they won't go in the box
-				if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2) {
-					tileCloser = tileLeft;
+				if (this.mode === "frightened") {
+					var randTile;
+					
+					for (var i = 0; i < 100; i++) {
+						randTile = util.randThree(tileAbove, tileLeft, tileBelow);
+						if (randTile.type === 0 && randTile != startingGhostTile 
+							&& randTile != startingGhostTile2) 
+								break;
+					}
+					if (randTile === tileAbove) this.setDirectionUp();
+					if (randTile === tileBelow) this.setDirectionDown();
+					if (randTile === tileLeft) this.setDirectionLeft();
 				}
-				
-				if (tileCloser.type === 0 && tileCloser != tileLeft) {
-					if (tileCloser === tileAbove) this.setDirectionUp();
-					else this.setDirectionDown();
-				}
-				else if (tileCloser.type === 1) {
-					if (tileCloser === tileLeft) {
-						if (tileCloserUD === tileAbove) {
-							this.setDirectionUp();
-						}
+				else {
+					var tileCloser = this.targetTile.isCloser(tileLeft, tileCloserUD);
+					
+					//so they won't go in the box
+					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2) {
+						tileCloser = tileLeft;
+					}
+					
+					if (tileCloser.type === 0 && tileCloser != tileLeft) {
+						if (tileCloser === tileAbove) this.setDirectionUp();
 						else this.setDirectionDown();
 					}
-					else if (tileCloser === tileAbove) {
-						var tileSecondClosest = this.targetTile.isCloser(tileLeft, tileBelow);
-						if (tileSecondClosest === tileBelow) {
-							this.setDirectionDown();
+					else if (tileCloser.type === 1) {
+						if (tileCloser === tileLeft) {
+							if (tileCloserUD === tileAbove) {
+								this.setDirectionUp();
+							}
+							else this.setDirectionDown();
+						}
+						else if (tileCloser === tileAbove) {
+							var tileSecondClosest = this.targetTile.isCloser(tileLeft, tileBelow);
+							if (tileSecondClosest === tileBelow) {
+								this.setDirectionDown();
+							}
+						}
+						else if (tileCloser === tileBelow) {
+							var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileLeft);
+							if (tileSecondClosest === tileAbove) {
+								this.setDirectionUp();
+							}
 						}
 					}
-					else if (tileCloser === tileBelow) {
-						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileLeft);
-						if (tileSecondClosest === tileAbove) {
-							this.setDirectionUp();
-						}
-					}
-				}	
+				}
 			}
 			else if (this.directions.down) 
 			{
-				var tileCloser = this.targetTile.isCloser(tileBelow, tileCloserLR);
-				
-				if (tileCloser.type === 0 && tileCloser != tileBelow) {
-					if (tileCloser === tileLeft) this.setDirectionLeft();
-					else this.setDirectionRight();
+				if (this.mode === "frightened") {
+					var randTile;
+					
+					for (var i = 0; i < 100; i++) {
+						randTile = util.randThree(tileRight, tileLeft, tileBelow);
+						if (randTile.type === 0) break;
+					}
+					if (randTile === tileRight) this.setDirectionRight();
+					if (randTile === tileBelow) this.setDirectionDown();
+					if (randTile === tileLeft) this.setDirectionLeft();
 				}
-				else if (tileCloser.type === 1) {
-					if (tileCloser === tileBelow) {
-						if (tileCloserLR === tileLeft) {
-							this.setDirectionLeft();
-						}
+				else {
+					var tileCloser = this.targetTile.isCloser(tileBelow, tileCloserLR);
+					
+					if (tileCloser.type === 0 && tileCloser != tileBelow) {
+						if (tileCloser === tileLeft) this.setDirectionLeft();
 						else this.setDirectionRight();
 					}
-					else if (tileCloser === tileLeft) {
-						var tileSecondClosest = this.targetTile.isCloser(tileBelow, tileRight);
-						if (tileSecondClosest === tileRight) {
-							this.setDirectionRight();
+					else if (tileCloser.type === 1) {
+						if (tileCloser === tileBelow) {
+							if (tileCloserLR === tileLeft) {
+								this.setDirectionLeft();
+							}
+							else this.setDirectionRight();
+						}
+						else if (tileCloser === tileLeft) {
+							var tileSecondClosest = this.targetTile.isCloser(tileBelow, tileRight);
+							if (tileSecondClosest === tileRight) {
+								this.setDirectionRight();
+							}
+						}
+						else if (tileCloser === tileRight) {
+							var tileSecondClosest = this.targetTile.isCloser(tileLeft, tileBelow);
+							if (tileSecondClosest === tileLeft) {
+								this.setDirectionLeft();
+							}
 						}
 					}
-					else if (tileCloser === tileRight) {
-						var tileSecondClosest = this.targetTile.isCloser(tileLeft, tileBelow);
-						if (tileSecondClosest === tileLeft) {
-							this.setDirectionLeft();
-						}
-					}
-				}	
+				}
 				
 			}
 			else if (this.directions.up) 
 			{
-				var tileCloser = this.targetTile.isCloser(tileAbove, tileCloserLR);
-				
-				if (tileCloser.type === 0 && tileCloser != tileAbove) {
-					if (tileCloser === tileLeft) this.setDirectionLeft();
-					else this.setDirectionRight();
+				if (this.mode === "frightened") {
+					var randTile;
+					
+					for (var i = 0; i < 100; i++) {
+						randTile = util.randThree(tileAbove, tileLeft, tileRight);
+						if (randTile.type === 0) break;
+					}
+					if (randTile === tileAbove) this.setDirectionUp();
+					if (randTile === tileRight) this.setDirectionRight();
+					if (randTile === tileLeft) this.setDirectionLeft();
 				}
-				else if (tileCloser.type === 1) {
-					if (tileCloser === tileAbove) {
-						if (tileCloserLR === tileLeft) {
-							this.setDirectionLeft();
-						}
+				else {
+					var tileCloser = this.targetTile.isCloser(tileAbove, tileCloserLR);
+					
+					if (tileCloser.type === 0 && tileCloser != tileAbove) {
+						if (tileCloser === tileLeft) this.setDirectionLeft();
 						else this.setDirectionRight();
 					}
-					else if (tileCloser === tileLeft) {
-						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileRight);
-						if (tileSecondClosest === tileRight) {
-							this.setDirectionRight();
+					else if (tileCloser.type === 1) {
+						if (tileCloser === tileAbove) {
+							if (tileCloserLR === tileLeft) {
+								this.setDirectionLeft();
+							}
+							else this.setDirectionRight();
+						}
+						else if (tileCloser === tileLeft) {
+							var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileRight);
+							if (tileSecondClosest === tileRight) {
+								this.setDirectionRight();
+							}
+						}
+						else if (tileCloser === tileRight) {
+							var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileLeft);
+							if (tileSecondClosest === tileLeft) {
+								this.setDirectionLeft();
+							}
 						}
 					}
-					else if (tileCloser === tileRight) {
-						var tileSecondClosest = this.targetTile.isCloser(tileAbove, tileLeft);
-						if (tileSecondClosest === tileLeft) {
-							this.setDirectionLeft();
-						}
-					}
-				}
-				
+				}	
 			}
 			//tileCloser.debug2 = true;
 		}
@@ -307,7 +362,6 @@ Guy.prototype.getAIDirection = function(du)
 				}
 			}
 			else if (this.directions.down || this.directions.up) {
-				
 				if (tileRight.type === 0) {
 					this.setDirectionRight();
 				}
@@ -351,7 +405,8 @@ Guy.prototype.setTargetForRed = function () {
 	}
 	else if (this.mode === "frightened") 
 	{
-		targetTile = false; 
+		//targetTile = false; 
+		targetTile = entityManager.getTile(430,17,5);	// upper right corner
 	}
 
 	this.targetTile = targetTile;
@@ -386,6 +441,11 @@ Guy.prototype.setTargetForPink = function () {
 			var targetTile = entityManager.getTile(pacman.cx+(pacman.radius*4), pacman.cy, pacman.radius);
 		}
 	}
+	else if (this.mode === "frightened") 
+	{
+		//targetTile = false; 
+		targetTile = entityManager.getTile(430,17,5);	// upper right corner
+	}
 
 	this.targetTile = targetTile;
 };
@@ -408,6 +468,11 @@ Guy.prototype.setTargetForOrange = function () {
 		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 
 	}
+	else if (this.mode === "frightened") 
+	{
+		//targetTile = false; 
+		targetTile = entityManager.getTile(430,17,5);	// upper right corner
+	}
 	
 	this.targetTile = targetTile;
 };
@@ -424,6 +489,11 @@ Guy.prototype.setTargetForBlue = function () {
 	{
 		var pacman = entityManager.getPacman();
 		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+	}
+	else if (this.mode === "frightened") 
+	{
+		//targetTile = false; 
+		targetTile = entityManager.getTile(430,17,5);	// upper right corner
 	}
 	
 	this.targetTile = targetTile;
@@ -927,9 +997,6 @@ Guy.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			
 			entityManager.setMode("frightened");
 			
-			//console.log("changing mode to frightened");
-			//console.log("mode : " + this.mode);
-			
 			entityManager.timeout.pause();
 			
 			function resumeTime() {
@@ -993,14 +1060,19 @@ Guy.prototype.setDirectionDown = function () {
 
 Guy.prototype.setChaseMode = function () {
 	this.mode = "chase";
+	this.speedUp();
+	this.switchDirection();
 };
 
 Guy.prototype.setScatterMode = function () {
 	this.mode = "scatter";
+	this.speedUp();
+	this.switchDirection();
 };
 
 Guy.prototype.setFrightenedMode = function () {
 	this.mode = "frightened";
+	if (this.type === "ghost") this.speedDown();
 };
 
 Guy.prototype.setMode = function (mode) {
@@ -1015,4 +1087,27 @@ Guy.prototype.setMode = function (mode) {
 	}
 };
 
+Guy.prototype.switchDirection = function () {
+	if (this.directions.right) {
+		this.setDirectionLeft();
+	}
+	else if (this.directions.left) {
+		this.setDirectionRight();
+	}
+	else if (this.directions.up) {
+		this.setDirectionDown();
+	}
+	else if (this.directions.down) {
+		this.setDirectionUp();
+	}
+};
 
+Guy.prototype.speedUp = function () {
+	this.velX = 2;
+	this.velY = 2;
+};
+
+Guy.prototype.speedDown = function () {
+	this.velX = 1;
+	this.velY = 1;
+};
