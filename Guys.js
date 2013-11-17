@@ -662,6 +662,12 @@ var red_up = 4;
 var red_down = 38;
 var red_right = 21;
 
+//frightened mode
+var frightened_ghost = 13;
+var frightened_ghost_2 = 30;
+var frightened_ghost_3 = 47;
+var frightened_ghost_4 = 64;
+
 Guy.prototype.render = function (ctx) {
 	var cel;
 
@@ -704,156 +710,179 @@ Guy.prototype.render = function (ctx) {
 	
 	if(this.type === "ghost") 
 	{
-		if(this.color === "blue") 
-		{
-			if(!this.directions.left && !this.directions.right && 
-				!this.directions.up && !this.directions.down) 
+		if(this.mode === "frightened") {
+			if(this.color === "blue") {
+				this.renderSprite(frightened_ghost);
+				++frightened_ghost;
+		 		if (frightened_ghost === 17) frightened_ghost = 13;
+			}
+			if(this.color === "pink") {
+				this.renderSprite(frightened_ghost_2);
+				++frightened_ghost_2;
+		 		if (frightened_ghost_2 === 34) frightened_ghost_2 = 30;
+			}
+			if(this.color === "orange") {
+				this.renderSprite(frightened_ghost_3);
+				++frightened_ghost_3;
+		 		if (frightened_ghost_3 === 51) frightened_ghost_3 = 47;
+			}
+			if(this.color === "red") {
+				this.renderSprite(frightened_ghost_4);
+				++frightened_ghost_4;
+		 		if (frightened_ghost_4 === 68) frightened_ghost_4 = 64;
+			}
+		} else {
+			if(this.color === "blue") 
 			{
+				if(!this.directions.left && !this.directions.right && 
+				!this.directions.up && !this.directions.down) 
+				{
     				cel = g_sprites[6];
-				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
-			if(this.directions.left) 
-			{
-				this.renderSprite(blue_left);
-				++blue_left;
-		 		if (blue_left === 59) 
+					cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    			}
+				if(this.directions.left) 
+				{
+					this.renderSprite(blue_left);
+					++blue_left;
+		 			if (blue_left === 59) 
 		 			blue_left = 57;
-			}
-			if(this.directions.up) 
-			{
-				this.renderSprite(blue_up);
-				++blue_up;
-		 		if (blue_up === 8) 
+				}
+				if(this.directions.up) 
+				{
+					this.renderSprite(blue_up);
+					++blue_up;
+		 			if (blue_up === 8) 
 		 			blue_up = 6;
-			}
-			if(this.directions.down) 
-			{
-				this.renderSprite(blue_down);
-				++blue_down;
-		 		if (blue_down === 42) 
+				}
+				if(this.directions.down) 
+				{
+					this.renderSprite(blue_down);
+					++blue_down;
+		 			if (blue_down === 42) 
 		 			blue_down = 40;
-			}
-			if(this.directions.right) 
-			{
-				this.renderSprite(blue_right);
-				++blue_right;
-		 		if (blue_right === 25) 
+				}
+				if(this.directions.right) 
+				{
+					this.renderSprite(blue_right);
+					++blue_right;
+		 			if (blue_right === 25) 
 		 			blue_right = 23;
+				}
 			}
-		}
-		if(this.color === "pink") 
-		{
-			if(!this.directions.left && !this.directions.right && 
+			if(this.color === "pink") 
+			{
+				if(!this.directions.left && !this.directions.right && 
 				!this.directions.up && !this.directions.down) 
-			{
-    			cel = g_sprites[8];
-				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
-			if(this.directions.left) 
-			{
-				this.renderSprite(pink_left);
-				++pink_left;
-		 		if (pink_left === 61) 
+				{
+    				cel = g_sprites[8];
+					cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    			}
+				if(this.directions.left) 
+				{
+					this.renderSprite(pink_left);
+					++pink_left;
+		 			if (pink_left === 61) 
 		 			pink_left = 59;
-			}
-			if(this.directions.up) 
-			{
-				this.renderSprite(pink_up);
-				++pink_up;
-		 		if (pink_up === 10) 
+				}
+				if(this.directions.up) 
+				{
+					this.renderSprite(pink_up);
+					++pink_up;
+		 			if (pink_up === 10) 
 		 			pink_up = 8;
-			}
-			if(this.directions.down) 
-			{
-				this.renderSprite(pink_down);
-				++pink_down;
-		 		if (pink_down === 44) 
+				}
+				if(this.directions.down) 
+				{
+					this.renderSprite(pink_down);
+					++pink_down;
+		 			if (pink_down === 44) 
 		 			pink_down = 42;
-			}
-			if(this.directions.right) 
-			{
-				this.renderSprite(pink_right);
-				++pink_right;
-		 		if (pink_right === 27) 
+				}
+				if(this.directions.right) 
+				{
+					this.renderSprite(pink_right);
+					++pink_right;
+		 			if (pink_right === 27) 
 		 			pink_right = 25;
+				}
 			}
-		}
-		if(this.color === "orange") 
-		{
-			if(!this.directions.left && !this.directions.right && 
+			if(this.color === "orange") 
+			{
+				if(!this.directions.left && !this.directions.right && 
 				!this.directions.up && !this.directions.down) 
-			{
-    			cel = g_sprites[10];
-				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
-			if(this.directions.left) 
-			{
-				this.renderSprite(orange_left);
-				++orange_left;
-		 		if (orange_left === 63) 
+				{
+    				cel = g_sprites[10];
+					cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    			}
+				if(this.directions.left) 
+				{
+					this.renderSprite(orange_left);
+					++orange_left;
+		 			if (orange_left === 63) 
 		 			orange_left = 61;
-			}
-			if(this.directions.up) 
-			{
-				this.renderSprite(orange_up);
-				++orange_up;
-		 		if (orange_up === 12) 
+				}
+				if(this.directions.up) 
+				{
+					this.renderSprite(orange_up);
+					++orange_up;
+		 			if (orange_up === 12) 
 		 			orange_up = 10;
-			}
-			if(this.directions.down) 
-			{
-				this.renderSprite(orange_down);
-				++orange_down;
-		 		if (orange_down === 46) 
+				}
+				if(this.directions.down) 
+				{
+					this.renderSprite(orange_down);
+					++orange_down;
+		 			if (orange_down === 46) 
 		 			orange_down = 44;
-			}
-			if(this.directions.right) 
-			{
-				this.renderSprite(orange_right);
-				++orange_right;
-		 		if (orange_right === 29) 
+				}
+				if(this.directions.right) 
+				{
+					this.renderSprite(orange_right);
+					++orange_right;
+		 			if (orange_right === 29) 
 		 			orange_right = 27;
+				}
 			}
-		}
-		if(this.color === "red")
-		{
-			if(!this.directions.left && !this.directions.right && 
+			if(this.color === "red")
+			{
+				if(!this.directions.left && !this.directions.right && 
 				!this.directions.up && !this.directions.down) 
-			{
-    			cel = g_sprites[4];
-				cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    		}
-			if(this.directions.left)
-			{
-				this.renderSprite(red_left);
-				++red_left;
-		 		if (red_left === 57) 
+				{
+    				cel = g_sprites[4];
+					cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    			}
+				if(this.directions.left)
+				{
+					this.renderSprite(red_left);
+					++red_left;
+		 			if (red_left === 57) 
 		 			red_left = 55;
-			}
-			if(this.directions.up)
-			{
-				this.renderSprite(red_up);
-				++red_up;
-		 		if (red_up === 6) 
+				}
+				if(this.directions.up)
+				{
+					this.renderSprite(red_up);
+					++red_up;
+		 			if (red_up === 6) 
 		 			red_up = 4;
-			}
-			if(this.directions.down)
-			{
-				this.renderSprite(red_down);
-				++red_down;
-		 		if (red_down === 40) 
+				}
+				if(this.directions.down)
+				{
+					this.renderSprite(red_down);
+					++red_down;
+		 			if (red_down === 40) 
 		 			red_down = 38;
-			}
-			if(this.directions.right)
-			{
-				this.renderSprite(red_right);
-				++red_right;
-		 		if (red_right === 23) 
+				}
+				if(this.directions.right)
+				{
+					this.renderSprite(red_right);
+					++red_right;
+		 			if (red_right === 23) 
 		 			red_right = 21;
+				}
 			}
 		}
 	}
-};	
+};		
 
     //util.strokeCircle(ctx, this.cx, this.cy, this.radius);
     /*ctx.fillStyle= this.color;    
