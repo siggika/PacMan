@@ -643,8 +643,8 @@ Guy.prototype.render = function (ctx) {
 			{
 				this.renderSprite(pink_left);
 				++pink_left;
-		 		if (pink_left === 59) 
-		 			pink_left = 57;
+		 		if (pink_left === 61) 
+		 			pink_left = 59;
 			}
 			if(this.directions.up) 
 			{
