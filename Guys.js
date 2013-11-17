@@ -554,6 +554,7 @@ var red_down = 38;
 var red_right = 21;
 
 Guy.prototype.render = function (ctx) {
+	var cel;
 
 	if(this.type === "pacman") {
     		if(!this.directions.left && !this.directions.right && 
@@ -599,7 +600,7 @@ Guy.prototype.render = function (ctx) {
 			if(!this.directions.left && !this.directions.right && 
 				!this.directions.up && !this.directions.down) 
 			{
-    			cel = g_sprites[6];
+    				cel = g_sprites[6];
 				cel.drawAt(ctx, this.cx, this.cy, this.radius);
     		}
 			if(this.directions.left) 
