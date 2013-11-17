@@ -194,19 +194,19 @@ initTargetTiles: function(){
     var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
     //Hentugt til að sjá flísina sem verið er að vinna með:
     //tilePacman.debug = true; 
-    this._pacman[1].targetTile = tile;
-    this._pacman[1].cx = 250;
-    this._pacman[1].cy = 175;
+    this._pacman[1].targetTile = tile3;
+    //this._pacman[1].cx = 250;
+    //this._pacman[1].cy = 175;
     console.log(this._pacman[1].color);
 
-    this._pacman[2].targetTile = tile;
-    this._pacman[2].cx = 180;
-    this._pacman[2].cy = 175;
+    this._pacman[2].targetTile = tile2;
+    //this._pacman[2].cx = 180;
+    //this._pacman[2].cy = 175;
     console.log(this._pacman[2].color);
     
-    this._pacman[3].targetTile = tile;
-    this._pacman[3].cx = 200;
-    this._pacman[3].cy = 175;
+    this._pacman[3].targetTile = tile4;
+    //this._pacman[3].cx = 200;
+    //this._pacman[3].cy = 175;
     console.log(this._pacman[3].color);
     
     this._pacman[4].targetTile = tile;

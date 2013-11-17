@@ -56,7 +56,7 @@ Guy.prototype.directions;
 Guy.prototype.init = function() {
 
 	this.directions = {
-		left : false,
+		left : true,
 		right : false,
 		up : false, 
 		down : false
@@ -408,6 +408,10 @@ Guy.prototype.setTargetForRed = function () {
 		//targetTile = false; 
 		targetTile = entityManager.getTile(430,17,5);	// upper right corner
 	}
+	else if (this.mode === "caged")
+	{
+		targetTile = entityManager.tile5;
+	}
 
 	this.targetTile = targetTile;
 	//console.log("mode: " + this.mode);
@@ -418,27 +422,27 @@ Guy.prototype.setTargetForPink = function () {
 
 	if (this.mode === "scatter") 
 	{ //done
-		var targetTile = entityManager.getTile(17,17,5);    // upper left corner
+		targetTile = entityManager.getTile(17,17,5);    // upper left corner
 	}
 	
 	else if (this.mode === "chase") 
-	{
+	{ //done
 		var pacman = entityManager.getPacman();
-		if(this.directions.up)
+		if(pacman.directions.up)
 		{
-			var targetTile = entityManager.getTile(pacman.cx, pacman.cy-(pacman.radius*4), pacman.radius);
+			targetTile = entityManager.getTile(pacman.cx, pacman.cy-(4*pacman.radius), pacman.radius);
 		}
-		else if(this.directions.down)
+		else if(pacman.directions.down)
 		{
-			var targetTile = entityManager.getTile(pacman.cx, pacman.cy+(pacman.radius*4), pacman.radius);
+			targetTile = entityManager.getTile(pacman.cx, pacman.cy+(4*pacman.radius), pacman.radius);
 		}
-		else if(this.directions.left)
+		else if(pacman.directions.left)
 		{
-			var targetTile = entityManager.getTile(pacman.cx-(pacman.radius*4), pacman.cy, pacman.radius);
+			targetTile = entityManager.getTile(pacman.cx-(4*pacman.radius), pacman.cy, pacman.radius);
 		}
-		else if(this.directions.right)
+		else if(pacman.directions.right)
 		{
-			var targetTile = entityManager.getTile(pacman.cx+(pacman.radius*4), pacman.cy, pacman.radius);
+			targetTile = entityManager.getTile(pacman.cx+(4*pacman.radius), pacman.cy, pacman.radius);
 		}
 	}
 	else if (this.mode === "frightened") 
@@ -452,21 +456,27 @@ Guy.prototype.setTargetForPink = function () {
 
 Guy.prototype.setTargetForOrange = function () { 
 	var targetTile = false;
+	var pacman = entityManager.getPacman();
 
 	if (this.mode === "scatter") 
 	{ // done
-		var targetTile = entityManager.getTile(17,470,5);		// bottom left corner
+		targetTile = entityManager.getTile(17,470,5);		// bottom left corner
 	}
 	
 	else if (this.mode === "chase") 
-	{
-		//calculate distance from pacman
-		//if(distance from pacman is less than 8)
-		//	this.mode = "scatter";
-		//else 
-		var pacman = entityManager.getPacman();
-		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+	{ //done
+		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy)/2000);
 
+		if(distanceFromPacman < 8) 
+		{
+			targetTile = entityManager.getTile(17,470,5);
+			//console.log("orange Scatter");
+		}
+		else if (distanceFromPacman >= 8) 
+		{
+			targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+			//console.log("orange Chase");
+		}
 	}
 	else if (this.mode === "frightened") 
 	{
@@ -482,7 +492,7 @@ Guy.prototype.setTargetForBlue = function () {
 
 	if (this.mode === "scatter") 
 	{ //done
-		var targetTile = entityManager.getTile(430,470,5);    //bottom right corner
+		targetTile = entityManager.getTile(430,470,5);    //bottom right corner
 	}
 	
 	else if (this.mode === "chase") 
@@ -1075,6 +1085,10 @@ Guy.prototype.setFrightenedMode = function () {
 	if (this.type === "ghost") this.speedDown();
 };
 
+Guy.prototype.setCagedMode = function () {
+	this.mode = "caged";
+};
+
 Guy.prototype.setMode = function (mode) {
 	if (mode === "scatter") {
 		this.setScatterMode();
@@ -1084,6 +1098,9 @@ Guy.prototype.setMode = function (mode) {
 	}
 	if (mode === "frightened") {
 		this.setFrightenedMode();
+	}
+	if (mode === "caged") {
+		this.setCagedMode();
 	}
 };
 
