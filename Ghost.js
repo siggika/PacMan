@@ -25,8 +25,6 @@ Ghost.prototype = new Entity();
 // Initial, inheritable, default values
 //Movement and positions
 Ghost.prototype.radius = 12;
-//Ghost.prototype.cx = 25;
-//Ghost.prototype.cy = 25;
 Ghost.prototype.velX = 2;
 Ghost.prototype.velY = 2;
 
@@ -60,7 +58,8 @@ Ghost.prototype.init = function() {
 
 //Functions
 Ghost.prototype.update = function (du) {
-              
+	
+	
     spatialManager.unregister(this);
 
 	if(this._isDeadNow) 
@@ -80,7 +79,7 @@ Ghost.prototype.update = function (du) {
 		this.Move(dStep);
 	}
 	
-	spatialManager.register(this);
+	if (this.mode != "dead") spatialManager.register(this);
 	
 };
 
@@ -107,6 +106,11 @@ Ghost.prototype.getAIDirection = function(du)
 	var nextTile = entityManager.getTile(nextPos.nextX, nextPos.nextY, this.radius, this.directions);
 	
 	if (nextTile) {
+		
+		if (this.mode === "dead" && nextTile === this.targetTile) {
+			console.log("here");
+			this.mode = this.lastMode;
+		}
 		
 		var nextTileX = nextTile.cx + nextTile.width/2;
 		var nextTileY = nextTile.cy + nextTile.height/2;
@@ -145,7 +149,7 @@ Ghost.prototype.getAIDirection = function(du)
 					var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
 					
 					//so they won't go in the box
-					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
+					if (this.mode != "dead" && (tileCloser === startingGhostTile || tileCloser === startingGhostTile2)){
 						tileCloser = tileRight;
 					}
 					
@@ -194,7 +198,10 @@ Ghost.prototype.getAIDirection = function(du)
 					var tileCloser = this.targetTile.isCloser(tileLeft, tileCloserUD);
 					
 					//so they won't go in the box
-					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2) {
+					if (this.mode != "dead" && (tileCloser === startingGhostTile || tileCloser === startingGhostTile2)){
+						console.log("here");
+						console.log(this.color);
+						console.log(this.mode);
 						tileCloser = tileLeft;
 					}
 					
@@ -372,11 +379,13 @@ Ghost.prototype.setTargetForRed = function () {
 	}
 	else if (this.mode === "caged")
 	{
-		targetTile = entityManager.tile5;
+		targetTile = entityManager.getTile(230,190,3);;    // outside box
+	}
+	else if (this.mode === "dead") {
+		targetTile = entityManager.getTile(230,200,3);    //inside box
 	}
 
 	this.targetTile = targetTile;
-	//console.log("mode: " + this.mode);
 };
 
 Ghost.prototype.setTargetForPink = function () { 
@@ -390,49 +399,22 @@ Ghost.prototype.setTargetForPink = function () {
 	else if (this.mode === "chase") 
 	{ //done
 		var pacman = entityManager.getPacman();
-		var upperRange = 15;
-		var lowerRange = 485;
-		var rightRange = 435;
-		var leftRange = 15;
-
-		if(pacman.directions.up) {
-			var nextCY = pacman.cy-(4*pacman.radius);
-			if(nextCY > upperRange) {
-				targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-			}
-			else {
-				targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
-			}
+		if(pacman.directions.up)
+		{
+			targetTile = entityManager.getTile(pacman.cx, pacman.cy-(4*pacman.radius), pacman.radius);
 		}
-		else if(pacman.directions.down) {
-			var nextCY = pacman.cy+(4*pacman.radius);
-			if(nextCY < lowerRange) {
-				targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-			}
-			else {
-				targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
-			}
+		else if(pacman.directions.down)
+		{
+			targetTile = entityManager.getTile(pacman.cx, pacman.cy+(4*pacman.radius), pacman.radius);
 		}
-		else if(pacman.directions.left) {
-			var nextCX = pacman.cx-(4*pacman.radius);
-			if(nextCX > leftRange) {
-				targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-			}
-			else {
-				targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
-			}
+		else if(pacman.directions.left)
+		{
+			targetTile = entityManager.getTile(pacman.cx-(4*pacman.radius), pacman.cy, pacman.radius);
 		}
 		else if(pacman.directions.right)
 		{
-			var nextCX = pacman.cx+(4*pacman.radius);
-			if(nextCX < rightRange) {
-				targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-			}
-			else {
-				targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
-			}
+			targetTile = entityManager.getTile(pacman.cx+(4*pacman.radius), pacman.cy, pacman.radius);
 		}
-		//console.log("targetTile = ("+targetTile.cx+","+targetTile.cy+")");
 	}
 	else if (this.mode === "frightened") 
 	{
@@ -441,7 +423,10 @@ Ghost.prototype.setTargetForPink = function () {
 	}
 	else if (this.mode === "caged")
 	{
-		targetTile = entityManager.tile5;
+		targetTile = entityManager.getTile(230,190,3);;    // outside box		
+	}
+	else if (this.mode === "dead") {
+		targetTile = entityManager.getTile(220,200,3);    //inside box
 	}
 
 	this.targetTile = targetTile;
@@ -478,7 +463,10 @@ Ghost.prototype.setTargetForOrange = function () {
 	}
 	else if (this.mode === "caged")
 	{
-		targetTile = entityManager.tile5;
+		targetTile = entityManager.getTile(230,190,3);;    // outside box
+	}
+	else if (this.mode === "dead") {
+		targetTile = entityManager.getTile(230,200,3);    //inside box
 	}
 	
 	this.targetTile = targetTile;
@@ -504,7 +492,10 @@ Ghost.prototype.setTargetForBlue = function () {
 	}
 	else if (this.mode === "caged")
 	{
-		targetTile = entityManager.tile5;
+		targetTile = entityManager.getTile(230,190,3);;    // outside box
+	}
+	else if (this.mode === "dead") {
+		targetTile = entityManager.getTile(230,200,3);    //inside box
 	}
 	
 	this.targetTile = targetTile;
@@ -525,10 +516,10 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	if (nextTile)
 	{	
 		//the ghost box
-		if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
+		/*if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
 			down = true;
 			//console.log("colliding down");
-		}
+		}*/
 	
 		if (nextTile.type == "1") 
 		{
@@ -594,6 +585,11 @@ Ghost.prototype.setFrightenedMode = function () {
 
 Ghost.prototype.setCagedMode = function () {
 	this.mode = "caged";
+};
+
+Ghost.prototype.setDeadMode = function () {
+	this.mode = "dead";
+	this.speedUp();
 };
 
 Ghost.prototype.switchDirection = function () {

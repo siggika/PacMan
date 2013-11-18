@@ -537,6 +537,9 @@ Entity.prototype.setMode = function (mode) {
 	if (mode === "caged") {
 		this.setCagedMode();
 	}
+	if (mode === "dead") {
+		this.setDeadMode();
+	}
 };
 Entity.prototype.setLastMode = function () {
 	if (this.mode === "scatter") {

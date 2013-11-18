@@ -84,12 +84,22 @@ Pacman.prototype.update = function (du) {
 	this.updateScore();
 	this.updateLives();
 	
-	if (this.isColliding()) {
-		this.handleCollision();
+	//if (this.isColliding()) {
+	var ghost = this.findHitEntity();
+    if (ghost) {
+		this.handleCollision(ghost);
 	}
-	else {
-		//spatialManager.register(this);
-	}
+	
+	
+	/*var hitEntity = this.findHitEntity();
+    if (hitEntity) {
+        var canTakeHit = hitEntity.takeBulletHit;
+        if (canTakeHit) {
+			canTakeHit.call(hitEntity);
+		}	
+        return entityManager.KILL_ME_NOW;
+    }*/
+	
 	spatialManager.register(this);
 	
 };
@@ -216,8 +226,14 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 		else if (nextTile.hasFruit)
 		{
-			if (nextTile.Fruit === "cherry") this.score += 100;
-			if (nextTile.Fruit === "strawberry") this.score += 300;
+			if (nextTile.Fruit === "cherry") {
+				this.score += 100;
+				this.renderScore("100");
+			}
+			if (nextTile.Fruit === "strawberry") {
+				this.score += 300;
+				this.renderScore("300");
+			}
 			nextTile.hasFruit = false;
 		}
 		else if (nextTile.hasPill) {
@@ -248,6 +264,7 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 
 Pacman.prototype.updateScore = function (score) {
 	updateScoreText(this.score);
+	
 	if (this.cakesEaten === 70 || this.cakesEaten === 170) {
 		var tile = entityManager.getTile(215,280,3);
 		tile.putFruit(this.cakesEaten, tile);
@@ -282,17 +299,36 @@ Pacman.prototype.setCagedMode = function () {
 	this.mode = "caged";
 };
 
-
-Pacman.prototype.handleCollision = function () {
-	if (this.mode === "scatter" || this.mode === "chase") {
-		
-		entityManager.resetGuys();
-		//entityManager.resetTime();
-		if (this.type === "pacman") {
-			this.lives--;
-			console.log("lives: " + this.lives);
-		}
-		console.log("COLLIDING");
-	}
+Pacman.prototype.setDeadMode = function () {
 };
 
+
+Pacman.prototype.handleCollision = function (ghost) {
+	if (this.mode === "scatter" || this.mode === "chase") {		
+		this.loseLife();
+	}
+	else if (this.mode === "frightened") {
+		this.eatGhost(ghost);
+	}
+};
+Pacman.prototype.loseLife = function () {
+	entityManager.resetGuys();
+	this.resetDirections();
+	this.lives--;
+	//GameEnd.lifeLost = true;
+	GameEnd.loseLife();
+	
+	//var timeout = setTimeout (GameEnd.losingLife, 3000); // þetta var ekki að virka ??!?!
+	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
+};
+
+Pacman.prototype.eatGhost = function (ghost) {
+	this.score += 200;
+	this.renderScore("200");
+	ghost.setDeadMode();
+};
+
+Pacman.prototype.renderScore = function (points) {
+	GameEnd.doRenderScore(points);
+	var timeout = setTimeout (function() {GameEnd.renderScore = false;}, 1500);
+};

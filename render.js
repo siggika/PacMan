@@ -72,14 +72,28 @@ function render(ctx) {
         ctx.font="bolder 40px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
-        ctx.fillText("You win!!!",130+Math.random(),285 + Math.random());
+        ctx.fillText("You win!!!",130,285);
         ctx.fillStyle = OF; 
     }
 	if (GameEnd.gameOver) {
 		ctx.font="bolder 40px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
-        ctx.fillText("You loose :(",130+Math.random(),285 + Math.random());
+        ctx.fillText("You loose :(",130,285);
+        ctx.fillStyle = OF; 
+	}
+	if (GameEnd.lifeLost) {		
+		ctx.font="bolder 35px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("You lost a life",130,340);
+        ctx.fillStyle = OF; 
+	}
+	if (GameEnd.renderScore) {
+		ctx.font="bolder 20px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("+ " + GameEnd.scoreUp + " points",345,190);
         ctx.fillStyle = OF; 
 	}
     ++g_frameCounter;
