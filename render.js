@@ -68,13 +68,19 @@ function render(ctx) {
     // to illustrate flicker-proof double-buffering
     //
     if (g_undoBox) ctx.clearRect(200, 200, 50, 50);
-    if(gameWon){
-
+    if(GameEnd.gameWon){
         ctx.font="bolder 40px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
         ctx.fillText("You win!!!",130+Math.random(),285 + Math.random());
         ctx.fillStyle = OF; 
     }
+	if (GameEnd.gameOver) {
+		ctx.font="bolder 40px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("You loose :(",130+Math.random(),285 + Math.random());
+        ctx.fillStyle = OF; 
+	}
     ++g_frameCounter;
 }

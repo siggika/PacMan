@@ -67,8 +67,7 @@ Pacman.prototype.init = function() {
 
 
 //Functions
-Pacman.prototype.update = function (du) {     
-      
+Pacman.prototype.update = function (du) {    
     spatialManager.unregister(this);
 	
 	if(this._isDeadNow) 
@@ -83,6 +82,7 @@ Pacman.prototype.update = function (du) {
 		this.Move(dStep);
 	}
 	this.updateScore();
+	this.updateLives();
 	
 	if (this.isColliding()) {
 		this.handleCollision();
@@ -247,10 +247,21 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 };
 
 Pacman.prototype.updateScore = function (score) {
-	updateSideText(this.score);
+	updateScoreText(this.score);
 	if (this.cakesEaten === 70 || this.cakesEaten === 170) {
 		var tile = entityManager.getTile(215,280,3);
 		tile.putFruit(this.cakesEaten, tile);
+	}
+	if (this.cakesEaten >= 242) {
+	//if (this.cakesEaten >= 20) {	//for testing
+		GameEnd.gameIsWon();
+	}
+};
+
+Pacman.prototype.updateLives = function (score) {
+	updateLivesText(this.lives);
+	if (this.lives <= 0) {
+		GameEnd.gameIsOver();
 	}
 };
 
@@ -274,12 +285,13 @@ Pacman.prototype.setCagedMode = function () {
 
 Pacman.prototype.handleCollision = function () {
 	if (this.mode === "scatter" || this.mode === "chase") {
-		/*
-		entityManager.resetPacmans();
+		
+		entityManager.resetGuys();
+		//entityManager.resetTime();
 		if (this.type === "pacman") {
 			this.lives--;
 			console.log("lives: " + this.lives);
-		}*/
+		}
 		console.log("COLLIDING");
 	}
 };

@@ -367,17 +367,6 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
 
 
 Maze.prototype.update = function (du) {
-
-    for(var j = 0; j < this._tiles.length; j++) 
-    {
-        for(var i = 0; i < this._tiles[j].length; i++) 
-        {
-            var tile = this._tiles[j][i];
-            if (tile.hasCake) return;
-        }
-    }
-    entityManager.haltGuys();
-    gameWon = true;
 };
 
 Maze.prototype.getsEaten = function () {

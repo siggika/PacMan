@@ -7,7 +7,12 @@ var textNode = document.createTextNode(node);
 p1.appendChild(textNode);
 //output.appendChild(p1); 
 
-function updateSideText(score) {
+function updateScoreText(score) {
 	var scoreText = "Score: " + score;
 	$("#score").text(scoreText);
+}
+
+function updateLivesText(lives) {
+	var livesText = "Lives: " + lives;
+	$("#lives").text(livesText);
 }
