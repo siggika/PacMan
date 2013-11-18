@@ -39,6 +39,7 @@ Ghost.prototype.targetTile = false;
 Ghost.prototype.color;
 Ghost.prototype.type = "ghost";
 Ghost.prototype.mode = "scatter";
+Ghost.prototype.lastMode = "scatter";
 
 Ghost.prototype.init = function() {
 
@@ -49,7 +50,6 @@ Ghost.prototype.init = function() {
 		down : false
 	};
 	this.nextTurn = false;
-
 };
 
 // HACKED-IN AUDIO (no preloading)
@@ -80,12 +80,6 @@ Ghost.prototype.update = function (du) {
 		this.Move(dStep);
 	}
 	
-	if (this.isColliding()) {
-		this.handleCollision();
-	}
-	else {
-		//spatialManager.register(this);
-	}
 	spatialManager.register(this);
 	
 };
@@ -598,16 +592,4 @@ Ghost.prototype.speedUp = function () {
 Ghost.prototype.speedDown = function () {
 	this.velX = 1;
 	this.velY = 1;
-};
-
-Ghost.prototype.handleCollision = function () {
-	if (this.mode === "scatter" || this.mode === "chase") {
-		/*
-		entityManager.resetGhosts();
-		if (this.type === "pacman") {
-			this.lives--;
-			console.log("lives: " + this.lives);
-		}*/
-		console.log("COLLIDING");
-	}
 };

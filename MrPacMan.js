@@ -47,6 +47,7 @@ Pacman.prototype.directions;
 Pacman.prototype.color = "yellow";
 Pacman.prototype.type = "pacman";
 Pacman.prototype.mode = "scatter";
+Pacman.prototype.lastMode = "scatter";
 
 Pacman.prototype.init = function() {
 
@@ -57,7 +58,6 @@ Pacman.prototype.init = function() {
 		down : false
 	};
 	this.nextTurn = false;
-
 };
 
 // HACKED-IN AUDIO (no preloading)
@@ -222,7 +222,7 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 		else if (nextTile.hasPill) {
 			nextTile.hasPill = false;
-			var lastMode = this.mode;
+			var lastMode = this.lastMode;
 			
 			entityManager.setMode("frightened");
 			
@@ -283,7 +283,4 @@ Pacman.prototype.handleCollision = function () {
 		console.log("COLLIDING");
 	}
 };
-
-
-
 

@@ -538,4 +538,12 @@ Entity.prototype.setMode = function (mode) {
 		this.setCagedMode();
 	}
 };
+Entity.prototype.setLastMode = function () {
+	if (this.mode === "scatter") {
+		this.lastMode = "scatter";
+	}
+	if (this.mode === "chase") {
+		this.lastMode = "chase";
+	}
+};
 
