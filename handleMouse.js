@@ -23,7 +23,7 @@ function handleMouse(evt) {
     var button = evt.buttons === undefined ? evt.which : evt.buttons;
     if (!button) return;   
     else {
-    	if(evt.which === 1) entityManager.setPacMan(g_mouseX, g_mouseY); 
+    	if(evt.which === 1) entityManager.setGhost(g_mouseX, g_mouseY); 
     	if(evt.which === 3) entityManager.setTarget(g_mouseX, g_mouseY);    	
     }
     

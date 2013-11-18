@@ -10,6 +10,7 @@ var entityManager = {
 // "PRIVATE" DATA
 
 _pacman   : [],
+_ghosts : [],
 _maze : [],
 
 
@@ -38,30 +39,34 @@ timeout : false,
 //
 deferredSetup : function () {
 
-    this._categories = [this._maze,this._pacman];
+    this._categories = [this._maze,this._pacman, this._ghosts];
 },
 
 init: function() {
 
     this.generateMaze();
-    this.generateGuy();
+    this.generatePacman();
+    this.generateGhosts();
     this.initTargetTiles();
 	this.initTimeouts();
 },
 
-generateGuy : function(descr) {
+generatePacman : function(descr) {
 
     var tile = this._maze[0].getTile(215,280,3);
-    this._pacman.push(new Guy({
+    this._pacman.push(new Pacman({
         cx: tile.cx + tile.width,
         cy: tile.cy + tile.height/2
     }));
+},
+generateGhosts : function(descr) {
 
     var colors = ["","blue","pink","orange"]
+	var tile = this._maze[0].getTile(215,280,3);
     for(var i = 1; i < 4; i++)
     {
         tile = this._maze[0].getTile(170 + (i * tile.width*2),230,3);
-        this._pacman.push(new Guy({
+        this._ghosts.push(new Ghost({
             cx: tile.cx,           
             cy: tile.cy + tile.height/2,           
             ai: true,
@@ -72,7 +77,7 @@ generateGuy : function(descr) {
     
     tile = this._maze[0].getTile(230,190,3);
     //tile = this._maze[0].getTile(230,280,3);
-    this._pacman.push(new Guy({
+    this._ghosts.push(new Ghost({
         cx: tile.cx,        
         cy: tile.cy + tile.height/2,
         ai: true,
@@ -81,16 +86,16 @@ generateGuy : function(descr) {
     }));
 },
 
-setPacMan : function(x,y){
+setGhost : function(x,y){
 
     var tile = this._maze[0].getTile(x,y,5);
-    this._pacman[4].cx = tile.cx + tile.width/2;
-    this._pacman[4].cy = tile.cy + tile.height/2;
+    this._ghosts[3].cx = tile.cx + tile.width/2;
+    this._ghosts[3].cy = tile.cy + tile.height/2;
 },
 
 setTarget : function(x,y){
 
-    this._pacman[4].targetTile.debug = false;
+    this._ghosts[3].targetTile.debug = false;
     var tile = this._maze[0].getTile(x,y,5);
     //this._pacman[4].targetTile = tile;     
 },
@@ -104,56 +109,62 @@ initTimeouts : function () {
 	function setFirstChase() {
 		console.log("setting first chase");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setChaseMode);
 		entityManager.timeout = new Timer(setSecondScatter, 20000);
 	}
 	
 	function setSecondScatter() {
 		console.log("setting second scatter");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setScatterMode);
 		entityManager.timeout = new Timer(setSecondChase, 7000);
 	}
 	
 	function setSecondChase() {
 		console.log("setting second chase");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setChaseMode);
 		entityManager.timeout = new Timer(setThirdScatter, 20000);
 	}
 	
 	function setThirdScatter() {
 		console.log("setting third scatter");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setScatterMode);
 		entityManager.timeout = new Timer(setThirdChase, 5000);
 	}
 	
 	function setThirdChase() {
 		console.log("setting third chase");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setChaseMode);
 		entityManager.timeout = new Timer(setFourthScatter, 20000);
 	}
 	
 	function setFourthScatter() {
 		console.log("setting fourth scatter");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setScatterMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setScatterMode);
 		entityManager.timeout = new Timer(setLastChase, 5000);
 	}
 	
 	function setLastChase() {
 		console.log("setting last chase");
 		
-		entityManager._forEachOf(entityManager._pacman, Guy.prototype.setChaseMode);
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setChaseMode);
 	}
 },
 
 setMode : function(mode) {
-	 for (var i = 0; i < this._pacman.length; ++i) 
+	for (var i = 0; i < this._pacman.length; ++i) 
     {
 		this._pacman[i].setMode(mode);
+
+    }
+	for (var i = 0; i < this._ghosts.length; ++i) 
+    {
+		this._ghosts[i].setMode(mode);
+
     }
 },
 
@@ -164,12 +175,14 @@ generateMaze : function(descr) {
 
 resetGuys: function() {
 
-    this._forEachOf(this._pacman, Guy.prototype.reset);
+    this._forEachOf(this._pacman, Entity.prototype.reset);
+    this._forEachOf(this._ghosts, Entity.prototype.reset);
 },
 
 haltGuys: function() {
 
-    this._forEachOf(this._pacman, Guy.prototype.halt);
+    this._forEachOf(this._pacman, Entity.prototype.halt);
+    this._forEachOf(this._ghosts, Entity.prototype.halt);
 },	
 
 getTile: function(x,y,r,dir) {
@@ -194,23 +207,26 @@ initTargetTiles: function(){
     var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
     //Hentugt til að sjá flísina sem verið er að vinna með:
     //tilePacman.debug = true; 
-    this._pacman[1].targetTile = tile3;
+    
+	// 		Ef það á að fikta með þetta þá þarf að setja this._ghosts[i]
+	
+	//this._pacman[1].targetTile = tile3;
     //this._pacman[1].cx = 250;
     //this._pacman[1].cy = 175;
-    console.log(this._pacman[1].color);
+    //console.log(this._pacman[1].color);
 
-    this._pacman[2].targetTile = tile2;
+    //this._pacman[2].targetTile = tile2;
     //this._pacman[2].cx = 180;
     //this._pacman[2].cy = 175;
-    console.log(this._pacman[2].color);
+    //console.log(this._pacman[2].color);
     
-    this._pacman[3].targetTile = tile4;
+    //this._pacman[3].targetTile = tile4;
     //this._pacman[3].cx = 200;
     //this._pacman[3].cy = 175;
-    console.log(this._pacman[3].color);
+    //console.log(this._pacman[3].color);
     
-    this._pacman[4].targetTile = tile;
-    console.log(this._pacman[4].color);
+    //this._pacman[4].targetTile = tile;
+    //console.log(this._pacman[4].color);
 },
 
 update: function(du) {
