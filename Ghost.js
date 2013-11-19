@@ -51,14 +51,10 @@ Ghost.prototype.init = function() {
 };
 
 // HACKED-IN AUDIO (no preloading)
-/*Ghost.prototype.warpSound = new Audio(
-    "sounds/GhostWarp.ogg");
-*/
-
+Ghost.prototype.sirenSound = new Audio("sounds/pacmansiren.mp3");
 
 //Functions
 Ghost.prototype.update = function (du) {
-	
 	
     spatialManager.unregister(this);
 
@@ -80,6 +76,10 @@ Ghost.prototype.update = function (du) {
 	}
 	
 	if (this.mode != "dead") spatialManager.register(this);
+
+	if (this.mode === "frightened" && g_soundOn){
+		this.sirenSound.play();
+	}
 	
 };
 
@@ -580,6 +580,9 @@ Ghost.prototype.setScatterMode = function () {
 
 Ghost.prototype.setFrightenedMode = function () {
 	this.mode = "frightened";
+	if(g_soundOn){
+		this.sirenSound.play();
+	}
 	this.speedDown();
 };
 

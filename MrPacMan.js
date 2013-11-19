@@ -58,13 +58,17 @@ Pacman.prototype.init = function() {
 		down : false
 	};
 	this.nextTurn = false;
+	this.newGameSound.play();
 };
 
 // HACKED-IN AUDIO (no preloading)
-/*Pacman.prototype.warpSound = new Audio(
-    "sounds/PacmanWarp.ogg");
-*/
-
+Pacman.prototype.diesSound = new Audio("sounds/pacmandies.mp3");
+Pacman.prototype.cherrySound = new Audio("sounds/pacmaneatingcherry.mp3");
+Pacman.prototype.eatGhostSound = new Audio("sounds/pacmaneatingghost.mp3");
+Pacman.prototype.extraLiveSound = new Audio("sounds/pacmanextralive.mp3");
+Pacman.prototype.newGameSound = new Audio("sounds/pacmanopeningsong.mp3");
+Pacman.prototype.wakaSound = new Audio("sounds/pacmanwaka.mp3");
+Pacman.prototype.interSound = new Audio("sounds/pacmanintermission.mp3");
 
 //Functions
 Pacman.prototype.update = function (du) {    
@@ -220,12 +224,18 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		//if tile has a cake, change it to a normal lane
 		else if (nextTile.hasCake)
 		{
+			if(g_soundOn) {
+				this.wakaSound.play();
+			}
 			nextTile.hasCake = false;
 			this.score += 10;
 			this.cakesEaten++;
 		}
 		else if (nextTile.hasFruit)
 		{
+			if(g_soundOn) {
+				this.cherrySound.play();
+			}
 			if (nextTile.Fruit === "cherry") {
 				this.score += 100;
 				this.renderScore("100");
@@ -271,8 +281,25 @@ Pacman.prototype.updateScore = function (score) {
 	}
 	if (this.cakesEaten >= 242) {
 	//if (this.cakesEaten >= 20) {	//for testing
+		if(g_soundOn) {
+			this.interSound.play();
+		}
 		GameEnd.gameIsWon();
 	}
+	/*
+	// extra life if you get 10000 points!
+	// we need to implement a trigger so that 
+	// pacman gets only one extra life when score === 10000
+	// but leave this out while we haven't implemented 
+	// multiple levels...
+	if (this.score === 10000 && this.livesTrigger) {
+		if(g_soundOn) {
+			this.extraLiveSound.play();
+		}
+		this.livesTrigger = !this.livesTrigger;
+		this.lives++;
+	}
+	*/
 };
 
 Pacman.prototype.updateLives = function (score) {
@@ -300,14 +327,20 @@ Pacman.prototype.setCagedMode = function () {
 };
 
 Pacman.prototype.setDeadMode = function () {
+	this.mode = "dead";
 };
 
-
 Pacman.prototype.handleCollision = function (ghost) {
-	if (this.mode === "scatter" || this.mode === "chase") {		
+	if (this.mode === "scatter" || this.mode === "chase") {	
+		if(g_soundOn) {
+			this.diesSound.play();
+		}
 		this.loseLife();
 	}
 	else if (this.mode === "frightened") {
+		if(g_soundOn) {
+			this.eatGhostSound.play();
+		}
 		this.eatGhost(ghost);
 	}
 };

@@ -59,6 +59,9 @@ var KEY_2 = keyCode('2');
 
 var KEY_K = keyCode('K');
 
+var KEY_MUTE = keyCode('M');
+var g_soundOn = true;
+
 function processDiagnostics() {
 
     if (eatKey(KEY_SPATIAL)){ 
@@ -70,7 +73,7 @@ function processDiagnostics() {
 
     if (eatKey(KEY_RESET)) entityManager.resetGuys();
 
-    
+    if (eatKey(KEY_MUTE)) g_soundOn = !g_soundOn;
 
     if (eatKey(KEY_1)) entityManager.generateGuy({
         cx : g_mouseX,
