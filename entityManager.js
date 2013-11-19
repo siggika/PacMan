@@ -53,7 +53,7 @@ init: function() {
 
 generatePacman : function(descr) {
 
-    var tile = this._maze[0].getTile(215,280,3);
+    var tile = this._maze[0].getTile(215,380,3);
     this._pacman.push(new Pacman({
         cx: tile.cx + tile.width,
         cy: tile.cy + tile.height/2
