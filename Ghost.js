@@ -25,8 +25,8 @@ Ghost.prototype = new Entity();
 // Initial, inheritable, default values
 //Movement and positions
 Ghost.prototype.radius = 12;
-Ghost.prototype.velX = 2;
-Ghost.prototype.velY = 2;
+Ghost.prototype.velX = 1.5;
+Ghost.prototype.velY = 1.5;
 
 Ghost.prototype.numSubSteps = 2;
 //Ghost.prototype.start = true;
@@ -235,6 +235,7 @@ Ghost.prototype.setTargetForOrange = function () {
 
 Ghost.prototype.setTargetForBlue = function () { 
 	if (!this.free) return;
+	console.log("blue: " + this.mode);
 	
 	var targetTile = false;
 
@@ -251,6 +252,7 @@ Ghost.prototype.setTargetForBlue = function () {
 	else if (this.mode === "caged")
 	{	//done
 		targetTile = entityManager.getTile(220,170,3);;    // outside box to the right
+		console.log(targetTile);
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
 	{	//done
@@ -327,7 +329,7 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 
 
 Ghost.prototype.setChaseMode = function () {
-	if (!this.free || this.mode === "caged") return;
+	if (!this.free || this.mode === "caged" || this.mode === "dead") return;
 	
 	this.mode = "chase";
 	this.gameMode = "chase";
@@ -336,7 +338,7 @@ Ghost.prototype.setChaseMode = function () {
 };
 
 Ghost.prototype.setScatterMode = function () {
-	if (!this.free || this.mode === "caged") return;
+	if (!this.free || this.mode === "caged"  || this.mode === "dead") return;
 	
 	this.mode = "scatter";
 	this.gameMode = "scatter";
@@ -347,7 +349,7 @@ Ghost.prototype.setScatterMode = function () {
 Ghost.prototype.setFrightenedMode = function () {
 	this.gameMode = "frightened";
 	
-	if (!this.free) return;
+	if (!this.free || this.mode === "dead") return;
 	
 	this.mode = "frightened";
 	if(g_soundOn){
@@ -384,13 +386,13 @@ Ghost.prototype.switchDirection = function () {
 };
 
 Ghost.prototype.speedUp = function () {
-	this.velX = 2;
-	this.velY = 2;
+	this.velX = 1.5;
+	this.velY = 1.5;
 };
 
 Ghost.prototype.speedDown = function () {
-	this.velX = 1;
-	this.velY = 1;
+	this.velX = 0.7;
+	this.velY = 0.7;
 };
 
 Ghost.prototype.reset = function () {
@@ -398,6 +400,9 @@ Ghost.prototype.reset = function () {
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = "caged";
+	console.log("resetting");
+	console.log(this.lastMode);
+	this.gameMode = this.lastMode; 
 	this.speedUp();
     
     //this.halt();

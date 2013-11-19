@@ -31,8 +31,8 @@ Pacman.prototype.KEY_RIGHT = 'D'.charCodeAt(0);
 
 //Movement and positions
 Pacman.prototype.radius = 12;
-Pacman.prototype.velX = 2;
-Pacman.prototype.velY = 2;
+Pacman.prototype.velX = 1.5;
+Pacman.prototype.velY = 1.5;
 Pacman.prototype.nextTurn = false;
 
 Pacman.prototype.score = 0;
