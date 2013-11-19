@@ -31,8 +31,6 @@ Pacman.prototype.KEY_RIGHT = 'D'.charCodeAt(0);
 
 //Movement and positions
 Pacman.prototype.radius = 12;
-//Pacman.prototype.cx = 25;
-//Pacman.prototype.cy = 25;
 Pacman.prototype.velX = 2;
 Pacman.prototype.velY = 2;
 Pacman.prototype.nextTurn = false;
@@ -93,16 +91,6 @@ Pacman.prototype.update = function (du) {
     if (ghost) {
 		this.handleCollision(ghost);
 	}
-	
-	
-	/*var hitEntity = this.findHitEntity();
-    if (hitEntity) {
-        var canTakeHit = hitEntity.takeBulletHit;
-        if (canTakeHit) {
-			canTakeHit.call(hitEntity);
-		}	
-        return entityManager.KILL_ME_NOW;
-    }*/
 	
 	spatialManager.register(this);
 	
@@ -248,6 +236,9 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		}
 		else if (nextTile.hasPill) {
 			nextTile.hasPill = false;
+			this.score += 50;
+			this.renderScore("50");
+			
 			var lastMode = this.lastMode;
 			
 			entityManager.setMode("frightened");
@@ -327,24 +318,21 @@ Pacman.prototype.setCagedMode = function () {
 };
 
 Pacman.prototype.setDeadMode = function () {
-	this.mode = "dead";
+	//this.mode = "dead";
 };
 
 Pacman.prototype.handleCollision = function (ghost) {
 	if (this.mode === "scatter" || this.mode === "chase") {	
-		if(g_soundOn) {
-			this.diesSound.play();
-		}
 		this.loseLife();
 	}
 	else if (this.mode === "frightened") {
-		if(g_soundOn) {
-			this.eatGhostSound.play();
-		}
 		this.eatGhost(ghost);
 	}
 };
 Pacman.prototype.loseLife = function () {
+	if(g_soundOn) {
+		this.diesSound.play();
+	}
 	entityManager.resetGuys();
 	this.resetDirections();
 	this.lives--;
@@ -356,9 +344,16 @@ Pacman.prototype.loseLife = function () {
 };
 
 Pacman.prototype.eatGhost = function (ghost) {
+	if (ghost.mode != this.mode) {
+		this.loseLife();
+		return;
+	}
+	if(g_soundOn) {
+		this.eatGhostSound.play();
+	}
+	ghost.setDeadMode();
 	this.score += 200;
 	this.renderScore("200");
-	ghost.setDeadMode();
 };
 
 Pacman.prototype.renderScore = function (points) {
