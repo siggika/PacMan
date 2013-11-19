@@ -160,6 +160,51 @@ Pacman.prototype.getsEaten = function () {
     this.kill();
 };
 
+//pacman
+var g_cel_left = 51;
+var g_cel_up = 0;
+var g_cel_down = 34;
+var g_cel_right = 17;
+
+Pacman.prototype.render = function (ctx) {
+	var cel;
+
+    	if(!this.directions.left && !this.directions.right && 
+    		!this.directions.up && !this.directions.down)
+    	{
+    		cel = g_sprites[18];
+    		cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    	}
+		if(this.directions.left) 
+		{
+			this.renderSprite(g_cel_left);
+			++g_cel_left;
+			if (g_cel_left === 55) g_cel_left = 51;
+		}
+		if(this.directions.up) 
+		{
+			this.renderSprite(g_cel_up);
+			++g_cel_up;
+			if (g_cel_up === 4) g_cel_up = 0;
+		}
+		if(this.directions.down) 
+		{
+			this.renderSprite(g_cel_down);
+			++g_cel_down;
+			if (g_cel_down === 38) g_cel_down = 34;
+		}
+		if(this.directions.right) 
+		{
+			this.renderSprite(g_cel_right);
+			++g_cel_right;
+			if (g_cel_right === 21) g_cel_right = 17;
+		}
+};
+
+Pacman.prototype.renderSprite = function(sprite) {
+	var cel = g_sprites[sprite];
+	cel.drawAt(ctx, this.cx, this.cy, this.radius);
+};
 
 Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
@@ -242,11 +287,15 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			var lastMode = this.lastMode;
 			
 			entityManager.setMode("frightened");
+			var timeout = setTimeout (function() {
+					blink = true;
+					}, 7000);
 			
 			entityManager.timeout.pause();
 			
 			function resumeTime() {
 				entityManager.setMode(lastMode);
+				blink = false;
 				entityManager.timeout.resume();
 			}
 			
@@ -339,7 +388,7 @@ Pacman.prototype.loseLife = function () {
 	//GameEnd.lifeLost = true;
 	GameEnd.loseLife();
 	
-	//var timeout = setTimeout (GameEnd.losingLife, 3000); // þetta var ekki að virka ??!?!
+	//var timeout = setTimeout (GameEnd.losingLife, 3000); // ï¿½etta var ekki aï¿½ virka ??!?!
 	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
 };
 
