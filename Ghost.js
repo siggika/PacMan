@@ -397,25 +397,52 @@ Ghost.prototype.setTargetForPink = function () {
 	}
 	
 	else if (this.mode === "chase") 
-	{ //done
-		var pacman = entityManager.getPacman();
-		if(pacman.directions.up)
-		{
-			targetTile = entityManager.getTile(pacman.cx, pacman.cy-(4*pacman.radius), pacman.radius);
-		}
-		else if(pacman.directions.down)
-		{
-			targetTile = entityManager.getTile(pacman.cx, pacman.cy+(4*pacman.radius), pacman.radius);
-		}
-		else if(pacman.directions.left)
-		{
-			targetTile = entityManager.getTile(pacman.cx-(4*pacman.radius), pacman.cy, pacman.radius);
-		}
-		else if(pacman.directions.right)
-		{
-			targetTile = entityManager.getTile(pacman.cx+(4*pacman.radius), pacman.cy, pacman.radius);
-		}
-	}
+        { //done
+                var pacman = entityManager.getPacman();
+                var upperRange = 15;
+                var lowerRange = 485;
+                var rightRange = 435;
+                var leftRange = 15;
+
+                if(pacman.directions.up) {
+                        var nextCY = pacman.cy-(4*pacman.radius);
+                        if(nextCY > upperRange) {
+                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
+                        }
+                }
+                else if(pacman.directions.down) {
+                        var nextCY = pacman.cy+(4*pacman.radius);
+                        if(nextCY < lowerRange) {
+                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
+                        }
+                }
+                else if(pacman.directions.left) {
+                        var nextCX = pacman.cx-(4*pacman.radius);
+                        if(nextCX > leftRange) {
+                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
+                        }
+                }
+                else if(pacman.directions.right)
+                {
+                        var nextCX = pacman.cx+(4*pacman.radius);
+                        if(nextCX < rightRange) {
+                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
+                        }
+                }
+                //console.log("targetTile = ("+targetTile.cx+","+targetTile.cy+")");
+        }
 	else if (this.mode === "frightened") 
 	{
 		//targetTile = false; 
