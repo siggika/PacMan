@@ -114,9 +114,13 @@ Pacman.prototype.updateDirections = function(du){
 		nextTile = entityManager.getTile(nextPos.nextXup, nextPos.nextYup, this.radius, this.nextTurn);	
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
 		
-		if (wallColliding.up) return;
+		if (wallColliding.up) {
+			isColliding_up = true;
+			return;
+		}
 		else
 		{
+			isColliding_up = false;
 			this.setDirectionUp();	        
 		}
 	}
@@ -125,10 +129,14 @@ Pacman.prototype.updateDirections = function(du){
 		nextTile = entityManager.getTile(nextPos.nextXdown, nextPos.nextYdown, this.radius, this.nextTurn);		
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
 		
-		if (wallColliding.down) return;
+		if (wallColliding.down) {
+			isColliding_down = true;
+			return;
+		}
     	else
 		{
-    		this.setDirectionDown();       
+			isColliding_down = false;
+			this.setDirectionDown();       
 		}
 	}
     if(this.nextTurn === "left")
@@ -136,11 +144,15 @@ Pacman.prototype.updateDirections = function(du){
 		nextTile = entityManager.getTile(nextPos.nextXleft, nextPos.nextYleft, this.radius, this.nextTurn);
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
 		
-		if (wallColliding.left) return;
+		if (wallColliding.left) {
+			isColliding_left = true;
+			return;
+		}
     	else
 		{
+			isColliding_left = false;
     		this.setDirectionLeft();
-		}   
+		}    
 		
     }
     if(this.nextTurn === "right")
@@ -148,9 +160,13 @@ Pacman.prototype.updateDirections = function(du){
 		nextTile = entityManager.getTile(nextPos.nextXright, nextPos.nextYright, this.radius, this.nextTurn);
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
 		
-		if (wallColliding.right) return;
+		if (wallColliding.right) {
+			isColliding_right = true;
+			return;
+		}
     	else
 		{
+			isColliding_right = false;
     		this.setDirectionRight();	    
 		}
     }	   
@@ -166,6 +182,11 @@ var g_cel_up = 0;
 var g_cel_down = 34;
 var g_cel_right = 17;
 
+var isColliding_left;
+var isColliding_up;
+var isColliding_down;
+var isColliding_right;
+
 Pacman.prototype.render = function (ctx) {
 	var cel;
 
@@ -177,27 +198,43 @@ Pacman.prototype.render = function (ctx) {
     	}
 		if(this.directions.left) 
 		{
-			this.renderSprite(g_cel_left);
-			++g_cel_left;
-			if (g_cel_left === 55) g_cel_left = 51;
+			if(isColliding_left) {
+				this.renderSprite(52);
+			} else {
+				this.renderSprite(g_cel_left);
+				++g_cel_left;
+				if (g_cel_left === 55) g_cel_left = 51;
+			}
 		}
 		if(this.directions.up) 
 		{
-			this.renderSprite(g_cel_up);
-			++g_cel_up;
-			if (g_cel_up === 4) g_cel_up = 0;
+			if(isColliding_up) {
+				this.renderSprite(1);
+			} else {
+				this.renderSprite(g_cel_up);
+				++g_cel_up;
+				if (g_cel_up === 4) g_cel_up = 0;
+			}
 		}
 		if(this.directions.down) 
 		{
-			this.renderSprite(g_cel_down);
-			++g_cel_down;
-			if (g_cel_down === 38) g_cel_down = 34;
+			if(isColliding_down) {
+				this.renderSprite(35);
+			} else {
+				this.renderSprite(g_cel_down);
+				++g_cel_down;
+				if (g_cel_down === 38) g_cel_down = 34;
+			}
 		}
 		if(this.directions.right) 
 		{
-			this.renderSprite(g_cel_right);
-			++g_cel_right;
-			if (g_cel_right === 21) g_cel_right = 17;
+			if(isColliding_right) {
+				this.renderSprite(18);
+			} else {
+				this.renderSprite(g_cel_right);
+				++g_cel_right;
+				if (g_cel_right === 21) g_cel_right = 17;
+			}
 		}
 };
 
