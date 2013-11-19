@@ -40,7 +40,6 @@ Pacman.prototype.cakesEaten = 0;
 Pacman.prototype.lives = 3;
 
 Pacman.prototype.numSubSteps = 2;
-//Pacman.prototype.start = true;
 Pacman.prototype.directions;
 Pacman.prototype.color = "yellow";
 Pacman.prototype.type = "pacman";
@@ -176,72 +175,6 @@ Pacman.prototype.getsEaten = function () {
     this.kill();
 };
 
-//pacman
-var g_cel_left = 51;
-var g_cel_up = 0;
-var g_cel_down = 34;
-var g_cel_right = 17;
-
-var isColliding_left;
-var isColliding_up;
-var isColliding_down;
-var isColliding_right;
-
-Pacman.prototype.render = function (ctx) {
-	var cel;
-
-    	if(!this.directions.left && !this.directions.right && 
-    		!this.directions.up && !this.directions.down)
-    	{
-    		cel = g_sprites[18];
-    		cel.drawAt(ctx, this.cx, this.cy, this.radius);
-    	}
-		if(this.directions.left) 
-		{
-			if(isColliding_left) {
-				this.renderSprite(52);
-			} else {
-				this.renderSprite(g_cel_left);
-				++g_cel_left;
-				if (g_cel_left === 55) g_cel_left = 51;
-			}
-		}
-		if(this.directions.up) 
-		{
-			if(isColliding_up) {
-				this.renderSprite(1);
-			} else {
-				this.renderSprite(g_cel_up);
-				++g_cel_up;
-				if (g_cel_up === 4) g_cel_up = 0;
-			}
-		}
-		if(this.directions.down) 
-		{
-			if(isColliding_down) {
-				this.renderSprite(35);
-			} else {
-				this.renderSprite(g_cel_down);
-				++g_cel_down;
-				if (g_cel_down === 38) g_cel_down = 34;
-			}
-		}
-		if(this.directions.right) 
-		{
-			if(isColliding_right) {
-				this.renderSprite(18);
-			} else {
-				this.renderSprite(g_cel_right);
-				++g_cel_right;
-				if (g_cel_right === 21) g_cel_right = 17;
-			}
-		}
-};
-
-Pacman.prototype.renderSprite = function(sprite) {
-	var cel = g_sprites[sprite];
-	cel.drawAt(ctx, this.cx, this.cy, this.radius);
-};
 
 Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
@@ -363,6 +296,20 @@ Pacman.prototype.updateScore = function (score) {
 		}
 		GameEnd.gameIsWon();
 	}
+	if (this.cakesEaten === 0) {
+		entityManager.setFree("red");
+		entityManager.setFree("pink");
+	}
+	if (this.cakesEaten === 30) {
+	//if (this.cakesEaten === 10) {		// for testing
+		entityManager.setFree("blue");
+	}
+	
+	if (this.cakesEaten === 80) {
+	//if (this.cakesEaten === 30) {		// for testing
+		entityManager.setFree("orange");
+	}
+	
 	/*
 	// extra life if you get 10000 points!
 	// we need to implement a trigger so that 
@@ -400,7 +347,7 @@ Pacman.prototype.setFrightenedMode = function () {
 };
 
 Pacman.prototype.setCagedMode = function () {
-	this.mode = "caged";
+	//this.mode = "caged";
 };
 
 Pacman.prototype.setDeadMode = function () {
@@ -425,7 +372,7 @@ Pacman.prototype.loseLife = function () {
 	//GameEnd.lifeLost = true;
 	GameEnd.loseLife();
 	
-	//var timeout = setTimeout (GameEnd.losingLife, 3000); // �etta var ekki a� virka ??!?!
+	//var timeout = setTimeout (GameEnd.losingLife, 3000); // þetta var ekki að virka ??!?!
 	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
 };
 
@@ -438,6 +385,7 @@ Pacman.prototype.eatGhost = function (ghost) {
 		this.eatGhostSound.play();
 	}
 	ghost.setDeadMode();
+	ghost.setLastMode();
 	this.score += 200;
 	this.renderScore("200");
 };
@@ -445,4 +393,81 @@ Pacman.prototype.eatGhost = function (ghost) {
 Pacman.prototype.renderScore = function (points) {
 	GameEnd.doRenderScore(points);
 	var timeout = setTimeout (function() {GameEnd.renderScore = false;}, 1500);
+};
+
+Pacman.prototype.reset = function () {
+
+    this.setPos(this.reset_cx, this.reset_cy);
+    this.radius = this.reset_radius;
+	this.mode = this.lastMode;
+    
+    //this.halt();
+};
+
+
+//pacman
+var g_cel_left = 51;
+var g_cel_up = 0;
+var g_cel_down = 34;
+var g_cel_right = 17;
+
+var isColliding_left;
+var isColliding_up;
+var isColliding_down;
+var isColliding_right;
+
+Pacman.prototype.render = function (ctx) {
+	var cel;
+
+    	if(!this.directions.left && !this.directions.right && 
+    		!this.directions.up && !this.directions.down)
+    	{
+    		cel = g_sprites[18];
+    		cel.drawAt(ctx, this.cx, this.cy, this.radius);
+    	}
+		if(this.directions.left) 
+		{
+			if(isColliding_left) {
+				this.renderSprite(52);
+			} else {
+				this.renderSprite(g_cel_left);
+				++g_cel_left;
+				if (g_cel_left === 55) g_cel_left = 51;
+			}
+		}
+		if(this.directions.up) 
+		{
+			if(isColliding_up) {
+				this.renderSprite(1);
+			} else {
+				this.renderSprite(g_cel_up);
+				++g_cel_up;
+				if (g_cel_up === 4) g_cel_up = 0;
+			}
+		}
+		if(this.directions.down) 
+		{
+			if(isColliding_down) {
+				this.renderSprite(35);
+			} else {
+				this.renderSprite(g_cel_down);
+				++g_cel_down;
+				if (g_cel_down === 38) g_cel_down = 34;
+			}
+		}
+		if(this.directions.right) 
+		{
+			if(isColliding_right) {
+				this.renderSprite(18);
+			} else {
+				this.renderSprite(g_cel_right);
+				++g_cel_right;
+				if (g_cel_right === 21) g_cel_right = 17;
+			}
+		}
+};
+
+Pacman.prototype.renderSprite = function(sprite) {
+	var cel = g_sprites[sprite];
+	cel.drawAt(ctx, this.cx, this.cy, this.radius);
 };

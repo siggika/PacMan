@@ -14,7 +14,7 @@ function Ghost(descr) {
     // Default sprite, if not otherwise specified
     this.sprite = this.sprite || g_sprites.Ghost;
     
-    // Set normal drawing scale, and warp state off
+    // Set normal drawing scale
     this._scale = 1;
     this.init();
     
@@ -36,8 +36,10 @@ Ghost.prototype.directions;
 Ghost.prototype.targetTile = false; 
 Ghost.prototype.color;
 Ghost.prototype.type = "ghost";
-Ghost.prototype.mode = "scatter";
+Ghost.prototype.mode = "caged";
 Ghost.prototype.lastMode = "scatter";
+Ghost.prototype.gameMode = "scatter";
+Ghost.prototype.free = false;
 
 Ghost.prototype.init = function() {
 
@@ -83,24 +85,355 @@ Ghost.prototype.update = function (du) {
 	
 };
 
+
+Ghost.prototype.setTargetTile = function () {
+	
+	if (this.color === "red") {
+		this.setTargetForRed();	
+	}
+	if (this.color === "pink") {
+		this.setTargetForPink();	
+	}
+	if (this.color === "orange") {
+		this.setTargetForOrange();	
+	}
+	if (this.color === "blue") {
+		this.setTargetForBlue();	
+	}
+};
+
+Ghost.prototype.setTargetForRed = function () { 
+	var targetTile = false;
+	
+	if (this.mode === "scatter") 
+	{ //done
+		targetTile = entityManager.getTile(430,17,5);	// upper right corner
+	}
+	
+	else if (this.mode === "chase") 
+	{ //done
+		var pacman = entityManager.getPacman();
+		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+	}
+	else if (this.mode === "caged")		
+	{ //done
+		targetTile = entityManager.getTile(250,180,3);    // outside box to the right
+	}
+	else if (this.mode === "dead" || this.mode === "frightened") 
+	{ //done
+		targetTile = entityManager.getTile(240,190,3);	// above box
+	}
+
+	this.targetTile = targetTile;
+};
+
+Ghost.prototype.setTargetForPink = function () { 
+	var targetTile = false;
+
+	if (this.mode === "scatter") 
+	{ //done
+		targetTile = entityManager.getTile(17,17,5);    // upper left corner
+	}
+	
+	else if (this.mode === "chase") 
+        { //done
+                var pacman = entityManager.getPacman();
+                var upperRange = 15;
+                var lowerRange = 485;
+                var rightRange = 435;
+                var leftRange = 15;
+
+                if(pacman.directions.up) {
+                        var nextCY = pacman.cy-(4*pacman.radius);
+                        if(nextCY > upperRange) {
+                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
+                        }
+                }
+                else if(pacman.directions.down) {
+                        var nextCY = pacman.cy+(4*pacman.radius);
+                        if(nextCY < lowerRange) {
+                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
+                        }
+                }
+                else if(pacman.directions.left) {
+                        var nextCX = pacman.cx-(4*pacman.radius);
+                        if(nextCX > leftRange) {
+                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
+                        }
+                }
+                else if(pacman.directions.right)
+                {
+                        var nextCX = pacman.cx+(4*pacman.radius);
+                        if(nextCX < rightRange) {
+                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+                        }
+                        else {
+                                targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
+                        }
+                }
+                //console.log("targetTile = ("+targetTile.cx+","+targetTile.cy+")");
+        }
+	else if (this.mode === "caged")		
+	{	//done
+		targetTile = entityManager.getTile(190,180,3);;    // outside box to the left
+		
+	}
+	else if (this.mode === "dead" || this.mode === "frightened") 
+	{	//done
+		targetTile = entityManager.getTile(240,190,3);	// above box
+	}
+
+	this.targetTile = targetTile;
+};
+
+Ghost.prototype.setTargetForOrange = function () { 
+	if (!this.free) return;
+	
+	var targetTile = false;
+	var pacman = entityManager.getPacman();
+
+	if (this.mode === "scatter") 
+	{ // done
+		targetTile = entityManager.getTile(17,470,5);		// bottom left corner
+	}
+	
+	else if (this.mode === "chase") 
+	{ //done
+		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy)/2000);
+
+		if(distanceFromPacman < 8) 
+		{
+			targetTile = entityManager.getTile(17,470,5);
+			//console.log("orange Scatter");
+		}
+		else if (distanceFromPacman >= 8) 
+		{
+			targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+			//console.log("orange Chase");
+		}
+	}
+	else if (this.mode === "caged")
+	{	//done
+		targetTile = entityManager.getTile(190,180,3);;    // outside box to the left
+	}
+	else if (this.mode === "dead" || this.mode === "frightened") 
+	{	//done
+		targetTile = entityManager.getTile(240,190,3);	// above box
+	}
+	
+	this.targetTile = targetTile;
+};
+
+Ghost.prototype.setTargetForBlue = function () { 
+	if (!this.free) return;
+	
+	var targetTile = false;
+
+	if (this.mode === "scatter") 
+	{ //done
+		targetTile = entityManager.getTile(430,470,5);    //bottom right corner
+	}
+	
+	else if (this.mode === "chase") 
+	{
+		var pacman = entityManager.getPacman();
+		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+	}
+	else if (this.mode === "caged")
+	{	//done
+		targetTile = entityManager.getTile(220,170,3);;    // outside box to the right
+	}
+	else if (this.mode === "dead" || this.mode === "frightened") 
+	{	//done
+		targetTile = entityManager.getTile(240,190,3);	// rétt fyrir ofan box
+	}
+	
+	this.targetTile = targetTile;
+};
+
+// not using?
+Ghost.prototype.getsEaten = function () {
+    this.kill();
+};
+
+
+
+Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
+	
+	var startingGhostTile = entityManager.getTile(230,200,3);
+	var startingGhostTile2 = entityManager.getTile(220,200,3);	
+	var left, right, up, down = false;
+	
+	if (nextTile)
+	{	
+		//the ghost box
+		/*if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
+			down = true;
+			//console.log("colliding down");
+		}*/
+	
+		if (nextTile.type == "1") 
+		{
+			var nextTileX = nextTile.cx + (nextTile.width/2);
+			var nextTileY = nextTile.cy + (nextTile.height/2);
+			var limit = this.radius + (nextTile.width/2);
+			
+			//right
+			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
+			{
+				right = true;
+				//console.log("colliding right");
+			}
+			
+			//left
+			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
+			{
+				left = true;
+				//console.log("colliding left");
+			}
+			
+			//up
+			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
+			{
+				up = true;
+				//console.log("colliding up");
+			}
+			
+			//down
+			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
+			{
+				down = true;
+				//console.log("colliding down");
+			}
+		}
+		
+	}
+	return {
+			left: left, 
+			right: right,
+			up: up,
+			down: down
+			};
+};
+
+
+Ghost.prototype.setChaseMode = function () {
+	if (!this.free) return;
+	
+	this.mode = "chase";
+	this.gameMode = "chase";
+	this.speedUp();
+	this.switchDirection();
+};
+
+Ghost.prototype.setScatterMode = function () {
+	if (!this.free) return;
+	
+	this.mode = "scatter";
+	this.gameMode = "scatter";
+	this.speedUp();
+	this.switchDirection();
+};
+
+Ghost.prototype.setFrightenedMode = function () {
+	this.gameMode = "frightened";
+	
+	if (!this.free) return;
+	
+	this.mode = "frightened";
+	if(g_soundOn){
+		this.sirenSound.play();
+	}
+	this.speedDown();
+};
+
+Ghost.prototype.setCagedMode = function () {
+	this.mode = "caged";
+};
+
+Ghost.prototype.setDeadMode = function () {
+	if (!this.free) return;
+	
+	this.mode = "dead";
+	this.speedUp();
+};
+
+Ghost.prototype.switchDirection = function () {
+	if (this.directions.right) {
+		this.setDirectionLeft();
+	}
+	else if (this.directions.left) {
+		this.setDirectionRight();
+	}
+	else if (this.directions.up) {
+		this.setDirectionDown();
+	}
+	else if (this.directions.down) {
+		this.setDirectionUp();
+	}
+};
+
+Ghost.prototype.speedUp = function () {
+	this.velX = 2;
+	this.velY = 2;
+};
+
+Ghost.prototype.speedDown = function () {
+	this.velX = 1;
+	this.velY = 1;
+};
+
+Ghost.prototype.reset = function () {
+
+    this.setPos(this.reset_cx, this.reset_cy);
+    this.radius = this.reset_radius;
+	this.mode = "caged";
+	this.speedUp();
+    
+    //this.halt();
+};
+
+
+/* HHHMMMMMMMMMMM skoða
+Ghost.prototype.setLastMode = function () {
+	if (this.mode === "scatter") {
+		this.lastMode = "scatter";
+	}
+	if (this.mode === "chase") {
+		this.lastMode = "chase";
+	}
+	if (this.mode === "dead") {
+		this.lastMode = "dead";
+	}
+};*/
+
+
+Ghost.prototype.setFree = function () {
+    this.free = true;
+};
+
+Ghost.prototype.setGameModeScatter = function() {
+	this.gameMode = "scatter";
+};
+
+Ghost.prototype.setGameModeChase = function() {
+	this.gameMode = "chase";
+};
+
 Ghost.prototype.getAIDirection = function(du)
 {
-	//this.targetTile.debug = true;
 	var tileX = this.targetTile.cx + this.targetTile.width/2;
 	var tileY = this.targetTile.cy + this.targetTile.height/2;
 	var nextPos = this.getNextPos(du);
-	
-	// first move just to get red ghost moving
-	// needs better to get everybody out of the cage
-	/*if (this.start) {
-		if (tileX < this.cx) {
-			this.directions.left = true;
-		}
-		if (tileX > this.cx) {
-			this.directions.right = true;
-		}
-		this.start = false;
-	}	*/
 	
 	var thisTile = entityManager.getTile(this.cx, this.cy, this.radius, this.directions);
 	var nextTile = entityManager.getTile(nextPos.nextX, nextPos.nextY, this.radius, this.directions);
@@ -108,8 +441,10 @@ Ghost.prototype.getAIDirection = function(du)
 	if (nextTile) {
 		
 		if (this.mode === "dead" && nextTile === this.targetTile) {
-			console.log("here");
 			this.mode = this.lastMode;
+		}		
+		else if (this.mode === "caged" && nextTile === this.targetTile) {
+			this.mode = this.gameMode;
 		}
 		
 		var nextTileX = nextTile.cx + nextTile.width/2;
@@ -149,7 +484,7 @@ Ghost.prototype.getAIDirection = function(du)
 					var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
 					
 					//so they won't go in the box
-					if (this.mode != "dead" && (tileCloser === startingGhostTile || tileCloser === startingGhostTile2)){
+					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
 						tileCloser = tileRight;
 					}
 					
@@ -197,11 +532,12 @@ Ghost.prototype.getAIDirection = function(du)
 				else {
 					var tileCloser = this.targetTile.isCloser(tileLeft, tileCloserUD);
 					
+					if (this.color === "orange" && this.mode === "caged") {
+						tileCloser = tileLeft;
+					}
+					
 					//so they won't go in the box
-					if (this.mode != "dead" && (tileCloser === startingGhostTile || tileCloser === startingGhostTile2)){
-						console.log("here");
-						console.log(this.color);
-						console.log(this.mode);
+					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
 						tileCloser = tileLeft;
 					}
 					
@@ -578,310 +914,4 @@ Ghost.prototype.render = function (ctx) {
 Ghost.prototype.renderSprite = function(sprite) {
 	var cel = g_sprites[sprite];
 	cel.drawAt(ctx, this.cx, this.cy, this.radius);
-};
-
-
-
-Ghost.prototype.setTargetTile = function () {
-	
-	if (this.color === "red") {
-		this.setTargetForRed();	
-	}
-	if (this.color === "pink") {
-		this.setTargetForPink();	
-	}
-	if (this.color === "orange") {
-		//this.setTargetForOrange();	
-	}
-	if (this.color === "blue") {
-		//this.setTargetForBlue();	
-	}
-};
-
-Ghost.prototype.setTargetForRed = function () { 
-	var targetTile = false;
-	
-	if (this.mode === "scatter") 
-	{ //done
-		targetTile = entityManager.getTile(430,17,5);	// upper right corner
-	}
-	
-	else if (this.mode === "chase") 
-	{ //done
-		var pacman = entityManager.getPacman();
-		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-	}
-	else if (this.mode === "frightened") 
-	{
-		//targetTile = false; 
-		targetTile = entityManager.getTile(430,17,5);	// upper right corner
-	}
-	else if (this.mode === "caged")
-	{
-		targetTile = entityManager.getTile(230,190,3);;    // outside box
-	}
-	else if (this.mode === "dead") {
-		targetTile = entityManager.getTile(230,200,3);    //inside box
-	}
-
-	this.targetTile = targetTile;
-};
-
-Ghost.prototype.setTargetForPink = function () { 
-	var targetTile = false;
-
-	if (this.mode === "scatter") 
-	{ //done
-		targetTile = entityManager.getTile(17,17,5);    // upper left corner
-	}
-	
-	else if (this.mode === "chase") 
-        { //done
-                var pacman = entityManager.getPacman();
-                var upperRange = 15;
-                var lowerRange = 485;
-                var rightRange = 435;
-                var leftRange = 15;
-
-                if(pacman.directions.up) {
-                        var nextCY = pacman.cy-(4*pacman.radius);
-                        if(nextCY > upperRange) {
-                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
-                        }
-                }
-                else if(pacman.directions.down) {
-                        var nextCY = pacman.cy+(4*pacman.radius);
-                        if(nextCY < lowerRange) {
-                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
-                        }
-                }
-                else if(pacman.directions.left) {
-                        var nextCX = pacman.cx-(4*pacman.radius);
-                        if(nextCX > leftRange) {
-                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
-                        }
-                }
-                else if(pacman.directions.right)
-                {
-                        var nextCX = pacman.cx+(4*pacman.radius);
-                        if(nextCX < rightRange) {
-                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
-                        }
-                }
-                //console.log("targetTile = ("+targetTile.cx+","+targetTile.cy+")");
-        }
-	else if (this.mode === "frightened") 
-	{
-		//targetTile = false; 
-		targetTile = entityManager.getTile(430,17,5);	// upper right corner
-	}
-	else if (this.mode === "caged")
-	{
-		targetTile = entityManager.getTile(230,190,3);;    // outside box		
-	}
-	else if (this.mode === "dead") {
-		targetTile = entityManager.getTile(220,200,3);    //inside box
-	}
-
-	this.targetTile = targetTile;
-};
-
-Ghost.prototype.setTargetForOrange = function () { 
-	var targetTile = false;
-	var pacman = entityManager.getPacman();
-
-	if (this.mode === "scatter") 
-	{ // done
-		targetTile = entityManager.getTile(17,470,5);		// bottom left corner
-	}
-	
-	else if (this.mode === "chase") 
-	{ //done
-		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy)/2000);
-
-		if(distanceFromPacman < 8) 
-		{
-			targetTile = entityManager.getTile(17,470,5);
-			//console.log("orange Scatter");
-		}
-		else if (distanceFromPacman >= 8) 
-		{
-			targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-			//console.log("orange Chase");
-		}
-	}
-	else if (this.mode === "frightened") 
-	{
-		//targetTile = false; 
-		targetTile = entityManager.getTile(430,17,5);	// upper right corner
-	}
-	else if (this.mode === "caged")
-	{
-		targetTile = entityManager.getTile(230,190,3);;    // outside box
-	}
-	else if (this.mode === "dead") {
-		targetTile = entityManager.getTile(230,200,3);    //inside box
-	}
-	
-	this.targetTile = targetTile;
-};
-
-Ghost.prototype.setTargetForBlue = function () { 
-	var targetTile = false;
-
-	if (this.mode === "scatter") 
-	{ //done
-		targetTile = entityManager.getTile(430,470,5);    //bottom right corner
-	}
-	
-	else if (this.mode === "chase") 
-	{
-		var pacman = entityManager.getPacman();
-		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-	}
-	else if (this.mode === "frightened") 
-	{
-		//targetTile = false; 
-		targetTile = entityManager.getTile(430,17,5);	// upper right corner
-	}
-	else if (this.mode === "caged")
-	{
-		targetTile = entityManager.getTile(230,190,3);;    // outside box
-	}
-	else if (this.mode === "dead") {
-		targetTile = entityManager.getTile(230,200,3);    //inside box
-	}
-	
-	this.targetTile = targetTile;
-};
-
-Ghost.prototype.getsEaten = function () {
-    this.kill();
-};
-
-
-
-Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
-	
-	var startingGhostTile = entityManager.getTile(230,200,3);
-	var startingGhostTile2 = entityManager.getTile(220,200,3);	
-	var left, right, up, down = false;
-	
-	if (nextTile)
-	{	
-		//the ghost box
-		/*if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
-			down = true;
-			//console.log("colliding down");
-		}*/
-	
-		if (nextTile.type == "1") 
-		{
-			var nextTileX = nextTile.cx + (nextTile.width/2);
-			var nextTileY = nextTile.cy + (nextTile.height/2);
-			var limit = this.radius + (nextTile.width/2);
-			
-			//right
-			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
-			{
-				right = true;
-				//console.log("colliding right");
-			}
-			
-			//left
-			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
-			{
-				left = true;
-				//console.log("colliding left");
-			}
-			
-			//up
-			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
-			{
-				up = true;
-				//console.log("colliding up");
-			}
-			
-			//down
-			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
-			{
-				down = true;
-				//console.log("colliding down");
-			}
-		}
-		
-	}
-	return {
-			left: left, 
-			right: right,
-			up: up,
-			down: down
-			};
-};
-
-
-Ghost.prototype.setChaseMode = function () {
-	this.mode = "chase";
-	this.speedUp();
-	this.switchDirection();
-};
-
-Ghost.prototype.setScatterMode = function () {
-	this.mode = "scatter";
-	this.speedUp();
-	this.switchDirection();
-};
-
-Ghost.prototype.setFrightenedMode = function () {
-	this.mode = "frightened";
-	if(g_soundOn){
-		this.sirenSound.play();
-	}
-	this.speedDown();
-};
-
-Ghost.prototype.setCagedMode = function () {
-	this.mode = "caged";
-};
-
-Ghost.prototype.setDeadMode = function () {
-	this.mode = "dead";
-	this.speedUp();
-};
-
-Ghost.prototype.switchDirection = function () {
-	if (this.directions.right) {
-		this.setDirectionLeft();
-	}
-	else if (this.directions.left) {
-		this.setDirectionRight();
-	}
-	else if (this.directions.up) {
-		this.setDirectionDown();
-	}
-	else if (this.directions.down) {
-		this.setDirectionUp();
-	}
-};
-
-Ghost.prototype.speedUp = function () {
-	this.velX = 2;
-	this.velY = 2;
-};
-
-Ghost.prototype.speedDown = function () {
-	this.velX = 1;
-	this.velY = 1;
 };

@@ -220,6 +220,14 @@ Maze.prototype._clearUpMaze = function() {
           this._tiles[14][y].hasCake = false; 
     }
 	
+	// to direct orange out
+	this._tiles[14][11].type = 1;
+	this._tiles[14][11].debug2 = true;	// for you to see
+	
+	// to direct blue out
+	this._tiles[13][15].type = 1;
+	this._tiles[13][15].debug = true;	// for you to see
+	
     
     for(var j = 0; j < 3; j++)
     {        

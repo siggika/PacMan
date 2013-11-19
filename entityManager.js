@@ -100,6 +100,7 @@ setTarget : function(x,y){
     //this._pacman[4].targetTile = tile;     
 },
 
+
 initTimeouts : function () {
 	
 	
@@ -115,6 +116,8 @@ initTimeouts : function () {
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setLastMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setLastMode);
 		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeChase);
+		
 		entityManager.timeout = new Timer(setSecondScatter, 20000);
 	}
 	
@@ -126,6 +129,8 @@ initTimeouts : function () {
 		
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setLastMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setLastMode);
+		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeScatter);
 		
 		entityManager.timeout = new Timer(setSecondChase, 7000);
 	}
@@ -139,6 +144,8 @@ initTimeouts : function () {
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setLastMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setLastMode);
 		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeChase);
+		
 		entityManager.timeout = new Timer(setThirdScatter, 20000);
 	}
 	
@@ -150,6 +157,8 @@ initTimeouts : function () {
 		
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setLastMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setLastMode);
+		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeScatter);
 		
 		entityManager.timeout = new Timer(setThirdChase, 5000);
 	}
@@ -163,6 +172,8 @@ initTimeouts : function () {
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setLastMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setLastMode);
 		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeChase);
+		
 		entityManager.timeout = new Timer(setFourthScatter, 20000);
 	}
 	
@@ -175,6 +186,8 @@ initTimeouts : function () {
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setLastMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setLastMode);
 		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeScatter);
+		
 		entityManager.timeout = new Timer(setLastChase, 5000);
 	}
 	
@@ -183,6 +196,8 @@ initTimeouts : function () {
 		
 		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setChaseMode);
 		entityManager._forEachOf(entityManager._pacman, Pacman.prototype.setChaseMode);
+		
+		entityManager._forEachOf(entityManager._ghosts, Ghost.prototype.setGameModeChase);
 	}
 },
 
@@ -199,6 +214,15 @@ setMode : function(mode) {
     }
 },
 
+setFree : function(color) {
+	for (var i = 0; i < this._ghosts.length; ++i) 
+    {
+		if (this._ghosts[i].color === color) {
+			this._ghosts[i].setFree();
+		}
+    }
+},
+
 generateMaze : function(descr) {
 
     this._maze.push(new Maze(descr));    
@@ -206,8 +230,8 @@ generateMaze : function(descr) {
 
 resetGuys: function() {
 
-    this._forEachOf(this._pacman, Entity.prototype.reset);
-    this._forEachOf(this._ghosts, Entity.prototype.reset);
+    this._forEachOf(this._pacman, Pacman.prototype.reset);
+    this._forEachOf(this._ghosts, Ghost.prototype.reset);
 },
 
 haltGuys: function() {

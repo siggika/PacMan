@@ -144,14 +144,6 @@ Entity.prototype.Move = function (du) {
 	}
 };
 
-Entity.prototype.reset = function () {
-
-    this.setPos(this.reset_cx, this.reset_cy);
-    this.radius = this.reset_radius;
-    
-    //this.halt();
-};
-
 Entity.prototype.halt = function () {
 
     this.velX = 0;
@@ -251,6 +243,8 @@ Entity.prototype.setDirectionDown = function () {
 };
 
 Entity.prototype.setMode = function (mode) {
+	//this.setLastMode();
+	
 	if (mode === "scatter") {
 		this.setScatterMode();
 	}
