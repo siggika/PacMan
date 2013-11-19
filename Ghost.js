@@ -327,7 +327,7 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 
 
 Ghost.prototype.setChaseMode = function () {
-	if (!this.free) return;
+	if (!this.free || this.mode === "caged") return;
 	
 	this.mode = "chase";
 	this.gameMode = "chase";
@@ -336,7 +336,7 @@ Ghost.prototype.setChaseMode = function () {
 };
 
 Ghost.prototype.setScatterMode = function () {
-	if (!this.free) return;
+	if (!this.free || this.mode === "caged") return;
 	
 	this.mode = "scatter";
 	this.gameMode = "scatter";
@@ -357,6 +357,7 @@ Ghost.prototype.setFrightenedMode = function () {
 };
 
 Ghost.prototype.setCagedMode = function () {
+	console.log("setting : " + this.color + " to caged mode");
 	this.mode = "caged";
 };
 
@@ -393,7 +394,7 @@ Ghost.prototype.speedDown = function () {
 };
 
 Ghost.prototype.reset = function () {
-
+	console.log("reseting : " + this.color);
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = "caged";
@@ -441,9 +442,11 @@ Ghost.prototype.getAIDirection = function(du)
 	if (nextTile) {
 		
 		if (this.mode === "dead" && nextTile === this.targetTile) {
+			console.log("changing : " + this.color + " from dead to " + this.lastMode);
 			this.mode = this.lastMode;
 		}		
 		else if (this.mode === "caged" && nextTile === this.targetTile) {
+			console.log("changing : " + this.color + " from caged to " + this.gameMode);
 			this.mode = this.gameMode;
 		}
 		

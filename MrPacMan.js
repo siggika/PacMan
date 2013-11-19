@@ -300,13 +300,13 @@ Pacman.prototype.updateScore = function (score) {
 		entityManager.setFree("red");
 		entityManager.setFree("pink");
 	}
-	if (this.cakesEaten === 30) {
-	//if (this.cakesEaten === 10) {		// for testing
+	//if (this.cakesEaten === 30) {
+	if (this.cakesEaten === 10) {		// for testing
 		entityManager.setFree("blue");
 	}
 	
-	if (this.cakesEaten === 80) {
-	//if (this.cakesEaten === 30) {		// for testing
+	//if (this.cakesEaten === 80) {
+	if (this.cakesEaten === 30) {		// for testing
 		entityManager.setFree("orange");
 	}
 	
@@ -355,39 +355,46 @@ Pacman.prototype.setDeadMode = function () {
 };
 
 Pacman.prototype.handleCollision = function (ghost) {
-	if (this.mode === "scatter" || this.mode === "chase") {	
-		this.loseLife();
+	if ((ghost.mode === "scatter" || ghost.mode === "chase") && ghost.mode != "dead") {	
+		this.loseLife(ghost);
 	}
-	else if (this.mode === "frightened") {
+	else if (ghost.mode === "frightened") {
 		this.eatGhost(ghost);
 	}
 };
-Pacman.prototype.loseLife = function () {
+Pacman.prototype.loseLife = function (ghost) {
 	if(g_soundOn) {
 		this.diesSound.play();
 	}
+	console.log("1eaten by : " + ghost.color + " in " + ghost.mode + " mode");
 	entityManager.resetGuys();
 	this.resetDirections();
 	this.lives--;
 	//GameEnd.lifeLost = true;
 	GameEnd.loseLife();
 	
+	console.log("2eaten by : " + ghost.color + " in " + ghost.mode + " mode");
+	
 	//var timeout = setTimeout (GameEnd.losingLife, 3000); // þetta var ekki að virka ??!?!
 	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
 };
 
 Pacman.prototype.eatGhost = function (ghost) {
-	if (ghost.mode != this.mode) {
-		this.loseLife();
+	/*if (ghost.mode != "frightened") {
+		this.loseLife(ghost);
 		return;
-	}
+	}*/
 	if(g_soundOn) {
 		this.eatGhostSound.play();
 	}
+	console.log("eating : " + ghost.color);
+	console.log("in " + ghost.mode + " mode");
 	ghost.setDeadMode();
 	ghost.setLastMode();
 	this.score += 200;
 	this.renderScore("200");
+	console.log("now/still in " + ghost.mode + " mode");
+	
 };
 
 Pacman.prototype.renderScore = function (points) {
