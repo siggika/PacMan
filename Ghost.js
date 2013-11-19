@@ -369,6 +369,12 @@ var frightened_ghost_2 = 30;
 var frightened_ghost_3 = 47;
 var frightened_ghost_4 = 64;
 
+//dead mode
+var dead_left = 63;
+var dead_up = 12;
+var dead_down = 46;
+var dead_right = 29;
+
 var blink = false;
 
 Ghost.prototype.render = function (ctx) {
@@ -412,6 +418,11 @@ Ghost.prototype.render = function (ctx) {
 					if (frightened_ghost_4 === 68) frightened_ghost_4 = 64;
 				}
 			}
+		} else if(this.mode === "dead") {
+			if(this.directions.left) this.renderSprite(dead_left);
+			if(this.directions.right) this.renderSprite(dead_right);
+			if(this.directions.up) this.renderSprite(dead_up);
+			if(this.directions.down) this.renderSprite(dead_down);
 		} else {
 			if(this.color === "blue") 
 			{
