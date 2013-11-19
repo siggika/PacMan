@@ -45,6 +45,8 @@ Pacman.prototype.color = "yellow";
 Pacman.prototype.type = "pacman";
 Pacman.prototype.mode = "scatter";
 Pacman.prototype.lastMode = "scatter";
+Pacman.prototype.timer;
+Pacman.prototype.blinkTimer;
 
 Pacman.prototype.init = function() {
 
@@ -256,8 +258,13 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			
 			var lastMode = this.lastMode;
 			
+			// renew frightened mode
+			if (this.mode === "frightened") {
+				timer.pause();
+				blinkTimer.pause();
+			}
 			entityManager.setMode("frightened");
-			var timeout = setTimeout (function() {
+			blinkTimer = new Timer (function() {
 					blink = true;
 					}, 7000);
 			
@@ -270,7 +277,8 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			}
 			
 			//set frightened mode for 10 seconds
-			var timer = setTimeout(resumeTime, 10000);
+			timer = new Timer(resumeTime, 10000);
+				
 		}
 		
 	}
