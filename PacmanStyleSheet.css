@@ -1,5 +1,6 @@
 body{
 	font-family: sans-serif, Arial;
+	background-color: black;
 }
 #output {
 	float: left;
