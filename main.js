@@ -1,17 +1,7 @@
 // ========
 // MAINLOOP
 // ========
-/*
 
-The mainloop is one big object with a fairly small public interface
-(e.g. init, iter, gameOver), and a bunch of private internal helper methods.
-
-The "private" members are identified as such purely by the naming convention
-of having them begin with a leading underscore. A more robust form of privacy,
-with genuine name-hiding *is* possible in JavaScript (via closures), but I 
-haven't adopted it here.
-
-*/
 
 "use strict";
 
@@ -119,11 +109,6 @@ main._debugRender = function (ctx) {
 };
 
 main.init = function () {
-    
-    // Grabbing focus is good, but it sometimes screws up jsfiddle,
-    // so it's a risky option during "development"
-    //
-    //window.focus(true);
 
     // We'll be working on a black background here,
     // so let's use a fillStyle which works against that...

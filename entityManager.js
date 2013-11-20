@@ -47,7 +47,6 @@ init: function() {
     this.generateMaze();
     this.generatePacman();
     this.generateGhosts();
-    this.initTargetTiles();
 	this.initTimeouts();
 },
 
@@ -76,7 +75,6 @@ generateGhosts : function(descr) {
     }
     
     tile = this._maze[0].getTile(230,190,3);
-    //tile = this._maze[0].getTile(230,280,3);
     this._ghosts.push(new Ghost({
         cx: tile.cx,        
         cy: tile.cy + tile.height/2,
@@ -84,20 +82,6 @@ generateGhosts : function(descr) {
         type: "ghost",
         color: "red"
     }));
-},
-
-setGhost : function(x,y){
-
-    var tile = this._maze[0].getTile(x,y,5);
-    this._ghosts[3].cx = tile.cx + tile.width/2;
-    this._ghosts[3].cy = tile.cy + tile.height/2;
-},
-
-setTarget : function(x,y){
-
-    this._ghosts[3].targetTile.debug = false;
-    var tile = this._maze[0].getTile(x,y,5);
-    //this._pacman[4].targetTile = tile;     
 },
 
 
@@ -273,38 +257,6 @@ getPacman: function () {
 	return this._pacman[0];
 },
 
-initTargetTiles: function(){
-
-    var tile = this.getTile(430,17,5);  //upper right corner (red)
-    var tile2 = this.getTile(17,17,5);    //upper left corner (pink)
-    var tile3 = this.getTile(430,470,5);    //bottom right corner (blue)
-    var tile4 = this.getTile(17,470,5);    //bottom left corner (orange)
-    var tile5 = this.getTile(230,190,3);    //starting tile
-    var tilePacman = this.getTile(this._pacman[0].cx, this._pacman[0].cy, this._pacman[0].radius); //pacman 
-    //Hentugt til að sjá flísina sem verið er að vinna með:
-    //tilePacman.debug = true; 
-    
-	// 		Ef það á að fikta með þetta þá þarf að setja this._ghosts[i]
-	
-	//this._pacman[1].targetTile = tile3;
-    //this._pacman[1].cx = 250;
-    //this._pacman[1].cy = 175;
-    //console.log(this._pacman[1].color);
-
-    //this._pacman[2].targetTile = tile2;
-    //this._pacman[2].cx = 180;
-    //this._pacman[2].cy = 175;
-    //console.log(this._pacman[2].color);
-    
-    //this._pacman[3].targetTile = tile4;
-    //this._pacman[3].cx = 200;
-    //this._pacman[3].cy = 175;
-    //console.log(this._pacman[3].color);
-    
-    //this._pacman[4].targetTile = tile;
-    //console.log(this._pacman[4].color);
-},
-
 update: function(du) {
 
     for (var c = 0; c < this._categories.length; ++c) 
@@ -330,9 +282,6 @@ update: function(du) {
     }
 },
 
-clear: function(ctx){
-
-},
 
 render: function(ctx) {
 

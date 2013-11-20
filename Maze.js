@@ -243,7 +243,6 @@ Maze.prototype.drawHorrLane = function(level, startX, len){
 
     for(var i = startX; i <= len; i++)
     {
-        //if(!this._tiles[level]) this._tiles[level] = new Array();
         this._tiles[level][i] = new Tile({
             cx : i * this.width,
             cy : level * this.height,   
@@ -251,8 +250,7 @@ Maze.prototype.drawHorrLane = function(level, startX, len){
             height : this.height,
             type : 1,
             draw : "HL"
-        });
-        //if(!this._tiles[i]) this._tiles[i] = new Array();     
+        });    
     }
 };
 
@@ -260,7 +258,6 @@ Maze.prototype.drawVertLane = function(x, startY, len){
 
     for(var i = startY; i <= len; i++)
     {
-        //if(!this._tiles[i]) this._tiles[i] = new Array();
         
         this._tiles[i][x] = new Tile({
             cx : x * this.width,
@@ -277,7 +274,6 @@ Maze.prototype.drawBlankLane = function(level, startX, len){
 
     for(var i = startX; i <= len; i++){
 
-        //if(!this._tiles[level]) this._tiles[level] = new Array();
         this._tiles[level][i] = new Tile({
             cx : i * this.width,
             cy : level * this.height,
@@ -377,11 +373,6 @@ Maze.prototype.getTile = function(guyX, guyY, guyR, dir){
 Maze.prototype.update = function (du) {
 };
 
-Maze.prototype.getsEaten = function () {
-
-    this.kill();
-};
-
 Maze.prototype.render = function (ctx) {
 
     var j = 0; 
@@ -398,7 +389,4 @@ Maze.prototype.render = function (ctx) {
             tile.number = j + "-" + i    			
         }                
     }    	
-    /*this.sprite.drawWrappedCentredAt(
-        ctx, this.cx, this.cy, this.rotation
-    );*/
 };

@@ -14,8 +14,6 @@ function Ghost(descr) {
     // Default sprite, if not otherwise specified
     this.sprite = this.sprite || g_sprites.Ghost;
     
-    // Set normal drawing scale
-    this._scale = 1;
     this.init();
     
 };
@@ -29,13 +27,10 @@ Ghost.prototype.velX = 1.5;
 Ghost.prototype.velY = 1.5;
 
 Ghost.prototype.numSubSteps = 2;
-//Ghost.prototype.start = true;
 Ghost.prototype.directions;
 
-//AI and individual Attributes
 Ghost.prototype.targetTile = false; 
 Ghost.prototype.color;
-Ghost.prototype.type = "ghost";
 Ghost.prototype.mode = "caged";
 Ghost.prototype.lastMode = "scatter";
 Ghost.prototype.gameMode = "scatter";
@@ -59,9 +54,6 @@ Ghost.prototype.sirenSound = new Audio("sounds/pacmansiren.mp3");
 Ghost.prototype.update = function (du) {
 	
     spatialManager.unregister(this);
-
-	if(this._isDeadNow) 
-		return entityManager.KILL_ME_NOW;  
 		
 	this.setTargetTile();
 	
@@ -106,21 +98,21 @@ Ghost.prototype.setTargetForRed = function () {
 	var targetTile = false;
 	
 	if (this.mode === "scatter") 
-	{ //done
+	{
 		targetTile = entityManager.getTile(430,17,5);	// upper right corner
 	}
 	
 	else if (this.mode === "chase") 
-	{ //done
+	{
 		var pacman = entityManager.getPacman();
 		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 	}
 	else if (this.mode === "caged")		
-	{ //done
+	{
 		targetTile = entityManager.getTile(250,180,3);    // outside box to the right
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
-	{ //done
+	{
 		targetTile = entityManager.getTile(240,190,3);	// above box
 	}
 
@@ -131,64 +123,64 @@ Ghost.prototype.setTargetForPink = function () {
 	var targetTile = false;
 
 	if (this.mode === "scatter") 
-	{ //done
+	{
 		targetTile = entityManager.getTile(17,17,5);    // upper left corner
 	}
 	
 	else if (this.mode === "chase") 
-        { //done
-                var pacman = entityManager.getPacman();
-				var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-                var upperRange = 15;
-                var lowerRange = 485;
-                var rightRange = 435;
-                var leftRange = 15;
+	{ 
+		var pacman = entityManager.getPacman();
+		var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+		var upperRange = 15;
+		var lowerRange = 485;
+		var rightRange = 435;
+		var leftRange = 15;
 
-                if (pacman.directions.up) {
-					var nextCY = pacman.cy-(4*pacTile.height);
-					if(nextCY > upperRange) {
-							targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-					}
-					else {
-							targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
-					}
-                }
-                else if (pacman.directions.down) {
-					var nextCY = pacman.cy+(4*pacTile.height);
-					if(nextCY < lowerRange) {
-							targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-					}
-					else {
-							targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
-					}
-                }
-                else if (pacman.directions.left) {
-					var nextCX = pacman.cx-(4*pacTile.width);
-					if(nextCX > leftRange) {
-							targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-					}
-					else {
-							targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
-					}
-                }
-                else if (pacman.directions.right)
-                {
-					var nextCX = pacman.cx+(4*pacTile.width);
-					if(nextCX < rightRange) {
-							targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-					}
-					else {
-							targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
-					}
-                }
-        }
+		if (pacman.directions.up) {
+			var nextCY = pacman.cy-(4*pacTile.height);
+			if(nextCY > upperRange) {
+					targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+			}
+			else {
+					targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
+			}
+		}
+		else if (pacman.directions.down) {
+			var nextCY = pacman.cy+(4*pacTile.height);
+			if(nextCY < lowerRange) {
+					targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+			}
+			else {
+					targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
+			}
+		}
+		else if (pacman.directions.left) {
+			var nextCX = pacman.cx-(4*pacTile.width);
+			if(nextCX > leftRange) {
+					targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+			}
+			else {
+					targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
+			}
+		}
+		else if (pacman.directions.right)
+		{
+			var nextCX = pacman.cx+(4*pacTile.width);
+			if(nextCX < rightRange) {
+					targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+			}
+			else {
+					targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
+			}
+		}
+	}
 	else if (this.mode === "caged")		
-	{	//done
+	{
 		targetTile = entityManager.getTile(190,180,3);;    // outside box to the left
 		
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
-	{	//done
+	{
 		targetTile = entityManager.getTile(240,190,3);	// above box
 	}
 
@@ -203,12 +195,12 @@ Ghost.prototype.setTargetForOrange = function () {
 	var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 
 	if (this.mode === "scatter") 
-	{ // done
+	{
 		targetTile = entityManager.getTile(17,470,5);		// bottom left corner
 	}
 	
 	else if (this.mode === "chase") 
-	{ //done
+	{
 		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy));
 		if(distanceFromPacman < util.square(8*pacTile.width)) 
 		{
@@ -221,11 +213,11 @@ Ghost.prototype.setTargetForOrange = function () {
 		
 	}
 	else if (this.mode === "caged")
-	{	//done
+	{
 		targetTile = entityManager.getTile(190,180,3);;    // outside box to the left
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
-	{	//done
+	{	
 		targetTile = entityManager.getTile(240,190,3);	// above box
 	}
 	this.targetTile = targetTile;
@@ -237,7 +229,7 @@ Ghost.prototype.setTargetForBlue = function () {
 	var targetTile = false;
 
 	if (this.mode === "scatter") 
-	{ //done
+	{ 
 		targetTile = entityManager.getTile(430,470,5);    //bottom right corner
 	}
 	
@@ -328,29 +320,20 @@ Ghost.prototype.setTargetForBlue = function () {
 		if(blueY < 15) blueY = 15;
 		if(blueX > 435) blueX = 435;
 		if(blueY > 485) blueY = 485;
-		//console.log("Blues targetTile = ("+targetTile.cx+","+targetTile.cy+")");
 
 		targetTile = entityManager.getTile(blueX, blueY, this.radius);
 	}
 	else if (this.mode === "caged")
-	{	//done
+	{
 		targetTile = entityManager.getTile(220,170,3);;    // outside box to the right
-		//console.log(targetTile);
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
-	{	//done
+	{	
 		targetTile = entityManager.getTile(240,190,3);	// r�tt fyrir ofan box
 	}
 	
 	this.targetTile = targetTile;
 };
-
-// not using?
-Ghost.prototype.getsEaten = function () {
-    this.kill();
-};
-
-
 
 Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
@@ -360,12 +343,6 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
 	if (nextTile)
 	{	
-		//the ghost box
-		/*if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
-			down = true;
-			//console.log("colliding down");
-		}*/
-	
 		if (nextTile.type == "1") 
 		{
 			var nextTileX = nextTile.cx + (nextTile.width/2);
@@ -376,28 +353,24 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
 			{
 				right = true;
-				//console.log("colliding right");
 			}
 			
 			//left
 			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
 			{
 				left = true;
-				//console.log("colliding left");
 			}
 			
 			//up
 			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
 			{
 				up = true;
-				//console.log("colliding up");
 			}
 			
 			//down
 			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
 			{
 				down = true;
-				//console.log("colliding down");
 			}
 		}
 		
@@ -442,7 +415,6 @@ Ghost.prototype.setFrightenedMode = function () {
 };
 
 Ghost.prototype.setCagedMode = function () {
-	console.log("setting : " + this.color + " to caged mode");
 	this.mode = "caged";
 };
 
@@ -479,32 +451,12 @@ Ghost.prototype.speedDown = function () {
 };
 
 Ghost.prototype.reset = function () {
-	console.log("reseting : " + this.color);
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = "caged";
-	console.log("resetting");
-	console.log(this.lastMode);
 	this.gameMode = this.lastMode; 
 	this.speedUp();
-    
-    //this.halt();
 };
-
-
-/* HHHMMMMMMMMMMM sko�a
-Ghost.prototype.setLastMode = function () {
-	if (this.mode === "scatter") {
-		this.lastMode = "scatter";
-	}
-	if (this.mode === "chase") {
-		this.lastMode = "chase";
-	}
-	if (this.mode === "dead") {
-		this.lastMode = "dead";
-	}
-};*/
-
 
 Ghost.prototype.setFree = function () {
     this.free = true;
@@ -530,11 +482,9 @@ Ghost.prototype.getAIDirection = function(du)
 	if (nextTile) {
 		
 		if (this.mode === "dead" && nextTile === this.targetTile) {
-			console.log("changing : " + this.color + " from dead to " + this.lastMode);
 			this.mode = this.lastMode;
 		}		
 		else if (this.mode === "caged" && nextTile === this.targetTile) {
-			console.log("changing : " + this.color + " from caged to " + this.gameMode);
 			this.mode = this.gameMode;
 		}
 		
@@ -573,6 +523,10 @@ Ghost.prototype.getAIDirection = function(du)
 				}
 				else {
 					var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
+					
+					if (this.color === "blue" && this.mode === "caged") {
+						tileCloser = tileAbove;
+					}
 					
 					//so they won't go in the box
 					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
@@ -626,6 +580,9 @@ Ghost.prototype.getAIDirection = function(du)
 					if (this.color === "orange" && this.mode === "caged") {
 						tileCloser = tileLeft;
 					}
+					if (this.color === "blue" && this.mode === "caged") {
+						tileCloser = tileAbove;
+					}
 					
 					//so they won't go in the box
 					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
@@ -674,6 +631,10 @@ Ghost.prototype.getAIDirection = function(du)
 				else {
 					var tileCloser = this.targetTile.isCloser(tileBelow, tileCloserLR);
 					
+					if (this.color === "blue" && this.mode === "caged") {
+						tileCloser = tileAbove;
+					}
+					
 					if (tileCloser.type === 0 && tileCloser != tileBelow) {
 						if (tileCloser === tileLeft) this.setDirectionLeft();
 						else this.setDirectionRight();
@@ -717,6 +678,10 @@ Ghost.prototype.getAIDirection = function(du)
 				else {
 					var tileCloser = this.targetTile.isCloser(tileAbove, tileCloserLR);
 					
+					if (this.color === "blue" && this.mode === "caged") {
+						tileCloser = tileAbove;
+					}
+					
 					if (tileCloser.type === 0 && tileCloser != tileAbove) {
 						if (tileCloser === tileLeft) this.setDirectionLeft();
 						else this.setDirectionRight();
@@ -743,9 +708,8 @@ Ghost.prototype.getAIDirection = function(du)
 					}
 				}	
 			}
-			//tileCloser.debug2 = true;
 		}
-		// if ghosts hit walls
+		// if ghost hits walls
 		else if (nextTile.type === 1) {
 			
 			if (this.directions.right || this.directions.left) {
@@ -769,7 +733,7 @@ Ghost.prototype.getAIDirection = function(du)
 	
 };
 
-//ghosts
+//rendering
 var blue_left = 57;
 var blue_up = 6;
 var blue_down = 40;

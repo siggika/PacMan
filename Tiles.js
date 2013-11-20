@@ -3,44 +3,24 @@
 // ====
 
 
-/// A generic contructor which accepts an arbitrary descriptor object
+// A generic contructor which accepts an arbitrary descriptor object
 function Tile(descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
-    this.init(this.type);
-    
-    // Default sprite and scale, if not otherwise specified
-//    this.sprite = this.sprite || g_sprites.rock;    
+    this.init(this.type); 
 };
 
-//Needs to be rendered or not:
-//Tile.prototype.shouldRender = false; 
-
-Tile.prototype.left = true; 
-Tile.prototype.right = true; 
-Tile.prototype.top = true; 
-Tile.prototype.bottom = true; 
 
 Tile.prototype.init = function(type){						
 	switch(type)
 	{		
 		//0:  Lane	
 		case 0:
-	  		this.left = true; 
-	  		this.right = true;
-	  		this.top = true; 
-	  		this.bottom = true;
-	  		//this.shouldRender = false;
 			this.hasCake = true;
 	  		break;	  		
 		//1:  Brick 
 		case 1:
-	  		this.left = false; 
-	  		this.right = false;
-	  		this.top = false; 
-	  		this.bottom = false; 
-	  		//this.shouldRender = true; 
 			this.hasCake = false;
 	  		break;	  		
 	}	
@@ -60,11 +40,6 @@ Tile.prototype.hasPill = false;
 Tile.prototype.height = 16; 
 Tile.prototype.width = 16; 
 
-Tile.prototype.getsEaten = function () {
-    this.kill();    
-};
-
-
 Tile.prototype.render = function (ctx) {
 	var offset = this.width/2; 
     if(g_renderTilesDebug){    	
@@ -76,8 +51,6 @@ Tile.prototype.render = function (ctx) {
 	var endX =  this.cx + this.width; 
 	var startY = this.cy + offset; 
 	var endY = this.height - offset;
-	/*ctx.strokeStyle = "white";
-    ctx.strokeText(this.number, this.cx + 10, this.cy + 10);*/
         
     if(this.type ===1){                        
         ctx.strokeStyle = "blue";
@@ -199,8 +172,6 @@ Tile.prototype.isCloser = function (tile1, tile2) {
 	
 	var dist1 =  util.distSq(tile1X, tile1Y, centerX, centerY);
 	var dist2 =  util.distSq(tile2X, tile2Y, centerX, centerY);
-	
-	//if (dist1 === dist2) console.log("EVEN DISTANCE");
 	
 	//the first parameter get's priority
 	if (dist1 <= dist2) return tile1;

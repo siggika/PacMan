@@ -27,10 +27,6 @@ gameIsOver : function() {
 	entityManager.haltGuys();
 },
 
-losingLife : function() {	//þetta virkaði inní fallinu en svo fyrir utan var ennþá this.lifeLost = true, DON'T KNOW
-	this.lifeLost = false;
-},
-
 loseLife : function () {
 	this.lifeLost = true;
 },

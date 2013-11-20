@@ -9,41 +9,9 @@
 var util = {
 
 
-// RANGES
-// ======
-
-clampRange: function(value, lowBound, highBound) {
-    if (value < lowBound) {
-	value = lowBound;
-    } else if (value > highBound) {
-	value = highBound;
-    }
-    return value;
-},
-
-wrapRange: function(value, lowBound, highBound) {
-    while (value < lowBound) {
-	value += (highBound - lowBound);
-    }
-    while (value > highBound) {
-	value -= (highBound - lowBound);
-    }
-    return value;
-},
-
-isBetween: function(value, lowBound, highBound) {
-    if (value < lowBound) { return false; }
-    if (value > highBound) { return false; }
-    return true;
-},
-
-
 // RANDOMNESS
 // ==========
 
-randRange: function(min, max) {
-    return (min + Math.random() * (max - min));
-},
 
 randTwo: function(opt1, opt2) {
 	var random = Math.random();

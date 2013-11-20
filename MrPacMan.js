@@ -14,8 +14,6 @@ function Pacman(descr) {
     // Default sprite, if not otherwise specified
     this.sprite = this.sprite || g_sprites.Pacman;
     
-    // Set normal drawing scale, and warp state off
-    this._scale = 1;
     this.init();
     
 };
@@ -42,7 +40,6 @@ Pacman.prototype.lives = 3;
 Pacman.prototype.numSubSteps = 2;
 Pacman.prototype.directions;
 Pacman.prototype.color = "yellow";
-Pacman.prototype.type = "pacman";
 Pacman.prototype.mode = "scatter";
 Pacman.prototype.lastMode = "scatter";
 Pacman.prototype.timer;
@@ -71,10 +68,8 @@ Pacman.prototype.interSound = new Audio("sounds/pacmanintermission.mp3");
 
 //Functions
 Pacman.prototype.update = function (du) {    
-    spatialManager.unregister(this);
-	
-	if(this._isDeadNow) 
-		return entityManager.KILL_ME_NOW;            
+    
+	spatialManager.unregister(this);          
 	
 	this.updateDirections(du);
 	
@@ -87,7 +82,6 @@ Pacman.prototype.update = function (du) {
 	this.updateScore();
 	this.updateLives();
 	
-	//if (this.isColliding()) {
 	var ghost = this.findHitEntity();
     if (ghost) {
 		this.handleCollision(ghost);
@@ -189,7 +183,6 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 		//the ghost box
 		if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
 			down = true;
-			//console.log("colliding down");
 		}
 	
 		if (nextTile.type == "1") 
@@ -202,31 +195,26 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
 			{
 				right = true;
-				//console.log("colliding right");
 			}
 			
 			//left
 			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
 			{
 				left = true;
-				//console.log("colliding left");
 			}
 			
 			//up
 			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
 			{
 				up = true;
-				//console.log("colliding up");
 			}
 			
 			//down
 			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
 			{
 				down = true;
-				//console.log("colliding down");
 			}
 		}
-		//if tile has a cake, change it to a normal lane
 		else if (nextTile.hasCake)
 		{
 			if(g_soundOn) {
@@ -267,15 +255,12 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			this.blinkTimer = new Timer (setBlink, 7000);
 			
 			function setBlink() {
-				//if (g_isUpdatePaused) return;
 				blink = true;
 			}
 			
 			entityManager.timeout.pause();
 			
 			function resumeTime() {
-				//if (g_isUpdatePaused ) return;
-				console.log("RESUMING");
 				entityManager.setMode(lastMode);
 				blink = false;
 				entityManager.timeout.resume();
@@ -296,14 +281,13 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 };
 
 Pacman.prototype.updateScore = function (score) {
-	updateScoreText(this.score);
+	sideText.updateScoreText(this.score);
 	
 	if (this.cakesEaten === 70 || this.cakesEaten === 170) {
 		var tile = entityManager.getTile(215,280,3);
 		tile.putFruit(this.cakesEaten, tile);
 	}
 	if (this.cakesEaten >= 242) {
-	//if (this.cakesEaten >= 20) {	//for testing
 		if(g_soundOn) {
 			this.interSound.play();
 		}
@@ -313,39 +297,21 @@ Pacman.prototype.updateScore = function (score) {
 		entityManager.setFree("red");
 		entityManager.setFree("pink");
 	}
-	//if (this.cakesEaten === 30) {
-	if (this.cakesEaten === 10) {		// for testing
+	if (this.cakesEaten === 30) {
 		entityManager.setFree("blue");
 	}
 	
-	//if (this.cakesEaten === 80) {
-	if (this.cakesEaten === 30) {		// for testing
+	if (this.cakesEaten === 80) {
 		entityManager.setFree("orange");
 	}
-	
-	/*
-	// extra life if you get 10000 points!
-	// we need to implement a trigger so that 
-	// pacman gets only one extra life when score === 10000
-	// but leave this out while we haven't implemented 
-	// multiple levels...
-	if (this.score === 10000 && this.livesTrigger) {
-		if(g_soundOn) {
-			this.extraLiveSound.play();
-		}
-		this.livesTrigger = !this.livesTrigger;
-		this.lives++;
-	}
-	*/
 };
 
 Pacman.prototype.updateLives = function (score) {
-	updateLivesText(this.lives);
+	sideText.updateLivesText(this.lives);
 	if (this.lives <= 0) {
 		GameEnd.gameIsOver();
 	}
 };
-
 
 Pacman.prototype.setChaseMode = function () {
 	this.mode = "chase";
@@ -360,11 +326,9 @@ Pacman.prototype.setFrightenedMode = function () {
 };
 
 Pacman.prototype.setCagedMode = function () {
-	//this.mode = "caged";
 };
 
 Pacman.prototype.setDeadMode = function () {
-	//this.mode = "dead";
 };
 
 Pacman.prototype.handleCollision = function (ghost) {
@@ -379,34 +343,23 @@ Pacman.prototype.loseLife = function (ghost) {
 	if(g_soundOn) {
 		this.diesSound.play();
 	}
-	console.log("1eaten by : " + ghost.color + " in " + ghost.mode + " mode");
 	entityManager.resetGuys();
 	this.resetDirections();
 	this.lives--;
-	//GameEnd.lifeLost = true;
 	GameEnd.loseLife();
-	
-	console.log("2eaten by : " + ghost.color + " in " + ghost.mode + " mode");
-	
-	//var timeout = setTimeout (GameEnd.losingLife, 3000); // þetta var ekki að virka ??!?!
+
 	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
 };
 
 Pacman.prototype.eatGhost = function (ghost) {
-	/*if (ghost.mode != "frightened") {
-		this.loseLife(ghost);
-		return;
-	}*/
 	if(g_soundOn) {
 		this.eatGhostSound.play();
 	}
-	console.log("eating : " + ghost.color);
-	console.log("in " + ghost.mode + " mode");
+
 	ghost.setDeadMode();
 	ghost.setLastMode();
 	this.score += 200;
 	this.renderScore("200");
-	console.log("now/still in " + ghost.mode + " mode");
 	
 };
 
@@ -420,12 +373,10 @@ Pacman.prototype.reset = function () {
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = this.lastMode;
-    
-    //this.halt();
 };
 
 
-//pacman
+//rendering
 var g_cel_left = 51;
 var g_cel_up = 0;
 var g_cel_down = 34;

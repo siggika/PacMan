@@ -47,7 +47,7 @@ function update(dt) {
     
     g_isUpdateOdd = !g_isUpdateOdd;
 	
-	updateSideText();
+	sideText.updateSideText();
 }
 
 // Togglable Pause Mode

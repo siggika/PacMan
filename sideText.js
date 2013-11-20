@@ -1,24 +1,25 @@
-var output = document.getElementById('output');
+// ========
+// GAME END
+// ========
 
-//ef við viljum setja texta úr js
-var p1 = document.createElement("p");
-var node = "text";
-var textNode = document.createTextNode(node);
-p1.appendChild(textNode);
-//output.appendChild(p1); 
+//updates sideText on screen
 
-function updateScoreText(score) {
+var sideText = {
+
+updateScoreText : function (score) {
 	var scoreText = "Score: " + score;
 	$("#score").text(scoreText);
-}
+},
 
-function updateLivesText(lives) {
+updateLivesText : function (lives) {
 	var livesText = "Lives: " + lives;
 	$("#lives").text(livesText);
-}
+},
 
-function updateSideText() {
+updateSideText : function (){
 	var areSoundsOn = g_soundOn ? "on" : "off";
 	var soundText = "Sound effects are " + areSoundsOn + ".";
 	$("#sounds").text(soundText);
 }
+
+};
