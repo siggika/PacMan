@@ -46,6 +46,8 @@ function update(dt) {
     g_prevUpdateDu = du;
     
     g_isUpdateOdd = !g_isUpdateOdd;
+	
+	updateSideText();
 }
 
 // Togglable Pause Mode

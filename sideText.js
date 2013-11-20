@@ -16,3 +16,9 @@ function updateLivesText(lives) {
 	var livesText = "Lives: " + lives;
 	$("#lives").text(livesText);
 }
+
+function updateSideText() {
+	var areSoundsOn = g_soundOn ? "on" : "off";
+	var soundText = "Sound effects are " + areSoundsOn + ".";
+	$("#sounds").text(soundText);
+}

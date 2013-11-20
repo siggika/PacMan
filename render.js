@@ -80,13 +80,15 @@ function render(ctx) {
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
         ctx.fillText("You loose :(",130,285);
+		ctx.font="bolder 30px Console";
+        ctx.fillText("Refresh for another game",90,330);	
         ctx.fillStyle = OF; 
 	}
 	if (GameEnd.lifeLost) {		
 		ctx.font="bolder 35px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
-        ctx.fillText("You lost a life",130,340);
+        ctx.fillText("You lost a life",130,370);
         ctx.fillStyle = OF; 
 	}
 	if (GameEnd.renderScore) {
@@ -94,6 +96,13 @@ function render(ctx) {
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
         ctx.fillText("+ " + GameEnd.scoreUp + " points",345,190);
+        ctx.fillStyle = OF; 
+	}
+	if (g_isUpdatePaused) {
+		ctx.font="bolder 40px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("Game Paused", 130,285);
         ctx.fillStyle = OF; 
 	}
     ++g_frameCounter;
