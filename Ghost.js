@@ -138,49 +138,49 @@ Ghost.prototype.setTargetForPink = function () {
 	else if (this.mode === "chase") 
         { //done
                 var pacman = entityManager.getPacman();
+				var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
                 var upperRange = 15;
                 var lowerRange = 485;
                 var rightRange = 435;
                 var leftRange = 15;
 
-                if(pacman.directions.up) {
-                        var nextCY = pacman.cy-(4*pacman.radius);
-                        if(nextCY > upperRange) {
-                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
-                        }
+                if (pacman.directions.up) {
+					var nextCY = pacman.cy-(4*pacTile.height);
+					if(nextCY > upperRange) {
+							targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+					}
+					else {
+							targetTile = entityManager.getTile(pacman.cx, upperRange, pacman.radius);
+					}
                 }
-                else if(pacman.directions.down) {
-                        var nextCY = pacman.cy+(4*pacman.radius);
-                        if(nextCY < lowerRange) {
-                                targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
-                        }
+                else if (pacman.directions.down) {
+					var nextCY = pacman.cy+(4*pacTile.height);
+					if(nextCY < lowerRange) {
+							targetTile = entityManager.getTile(pacman.cx, nextCY, pacman.radius);
+					}
+					else {
+							targetTile = entityManager.getTile(pacman.cx, lowerRange, pacman.radius);
+					}
                 }
-                else if(pacman.directions.left) {
-                        var nextCX = pacman.cx-(4*pacman.radius);
-                        if(nextCX > leftRange) {
-                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
-                        }
+                else if (pacman.directions.left) {
+					var nextCX = pacman.cx-(4*pacTile.width);
+					if(nextCX > leftRange) {
+							targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+					}
+					else {
+							targetTile = entityManager.getTile(leftRange, pacman.cy, pacman.radius);
+					}
                 }
-                else if(pacman.directions.right)
+                else if (pacman.directions.right)
                 {
-                        var nextCX = pacman.cx+(4*pacman.radius);
-                        if(nextCX < rightRange) {
-                                targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
-                        }
-                        else {
-                                targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
-                        }
+					var nextCX = pacman.cx+(4*pacTile.width);
+					if(nextCX < rightRange) {
+							targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
+					}
+					else {
+							targetTile = entityManager.getTile(rightRange, pacman.cy, pacman.radius);
+					}
                 }
-                //console.log("targetTile = ("+targetTile.cx+","+targetTile.cy+")");
         }
 	else if (this.mode === "caged")		
 	{	//done
@@ -200,6 +200,7 @@ Ghost.prototype.setTargetForOrange = function () {
 	
 	var targetTile = false;
 	var pacman = entityManager.getPacman();
+	var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 
 	if (this.mode === "scatter") 
 	{ // done
@@ -208,18 +209,16 @@ Ghost.prototype.setTargetForOrange = function () {
 	
 	else if (this.mode === "chase") 
 	{ //done
-		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy)/2000);
-
-		if(distanceFromPacman < 8) 
+		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy));
+		if(distanceFromPacman < util.square(8*pacTile.width)) 
 		{
-			targetTile = entityManager.getTile(17,470,5);
-			//console.log("orange Scatter");
+			targetTile = entityManager.getTile(17,470,5);	// bottom left corner
 		}
-		else if (distanceFromPacman >= 8) 
+		else if (distanceFromPacman >= util.square(8*pacTile.width)) 
 		{
 			targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-			//console.log("orange Chase");
 		}
+		
 	}
 	else if (this.mode === "caged")
 	{	//done
@@ -229,13 +228,11 @@ Ghost.prototype.setTargetForOrange = function () {
 	{	//done
 		targetTile = entityManager.getTile(240,190,3);	// above box
 	}
-	
 	this.targetTile = targetTile;
 };
 
 Ghost.prototype.setTargetForBlue = function () { 
 	if (!this.free) return;
-	console.log("blue: " + this.mode);
 	
 	var targetTile = false;
 
@@ -247,12 +244,64 @@ Ghost.prototype.setTargetForBlue = function () {
 	else if (this.mode === "chase") 
 	{
 		var pacman = entityManager.getPacman();
+		var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+		var redPos = entityManager.getRedPos();
+		
+		var cx = pacman.cx;
+		var cy = pacman.cy;
+		var blueX;
+		var blueY;
+		
+		if (pacman.directions.up) {
+			cy = cy - (2*pacTile.height);
+			if (pacman.cy > redPos.posY) {
+				blueX = (cy - redPos.posY)*2;
+			}
+			else {
+				blueX = (redPos.posY - cy)*2;
+			}
+        }
+		else if (pacman.directions.down) {
+			cy = cy + (2*pacTile.height);
+			if (pacman.cy > redPos.posY) {
+				blueX = (cy - redPos.posY)*2;
+			}
+			else {
+				blueX = (redPos.posY - cy)*2;
+			}
+		}
+		else if (pacman.directions.left) {
+			cx = cx - (2*pacTile.width);
+		}
+		else if (pacman.directions.right) {
+			cx = cx + (2*pacTile.width);
+		}
+		
+		
+		if (pacman.cx > redPos.posX) {
+			blueX = (cx - redPos.posX)*2;
+		}
+		else {
+			blueX = (redPos.posX - cx)*2;
+		}
+		
+		//blueX er þá x-fjarlægðin frá rauða í targetTile
+		//blueY er þá y-fjarlægðin frá rauða í targetTile
+		//datt í hug að það væri hægt að gera targetTile = entityManager.getTile af þessum hnitum
+		//eins og t.d. targetTile = entityManager.getTile(redPos.posX + blueX, redPos.posY + blueY, this.radius)
+		//væri rétt flís ef pacman er að fara upp og rauði er fyrir neðan hann og vinstra megin við hann
+		
+		
+		
+		var distRedFromPacman = Math.round(util.distSq(cx, cy, redPos.posX, redPos.posY));
+		var distVector = Math.sqrt(distRedFromPacman*2);
+		
 	}
 	else if (this.mode === "caged")
 	{	//done
 		targetTile = entityManager.getTile(220,170,3);;    // outside box to the right
-		console.log(targetTile);
+		//console.log(targetTile);
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
 	{	//done

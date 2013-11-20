@@ -223,6 +223,18 @@ setFree : function(color) {
     }
 },
 
+getRedPos : function() {
+	var redPos;
+	for (var i = 0; i < this._ghosts.length; ++i) 
+    {
+		if (this._ghosts[i].color === "red") {
+			redPos = this._ghosts[i].getPos();
+			
+		}
+    }
+	return redPos;
+},
+
 generateMaze : function(descr) {
 
     this._maze.push(new Maze(descr));    
