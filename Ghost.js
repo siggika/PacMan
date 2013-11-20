@@ -244,8 +244,8 @@ Ghost.prototype.setTargetForBlue = function () {
 	else if (this.mode === "chase") 
 	{
 		var pacman = entityManager.getPacman();
-		var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-		targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+		var pacTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
+		
 		var redPos = entityManager.getRedPos();
 		
 		var cx = pacman.cx;
@@ -253,50 +253,84 @@ Ghost.prototype.setTargetForBlue = function () {
 		var blueX;
 		var blueY;
 		
-		/*if (pacman.directions.up) {
+		if (pacman.directions.up) { 
 			cy = cy - (2*pacTile.height);
-			if (pacman.cy > redPos.posY) {
-				blueX = (cy - redPos.posY)*2;
+
+			if (cx > redPos.posX) {
+				blueX = (cx-redPos.posX)+cx;
 			}
 			else {
-				blueX = (redPos.posY - cy)*2;
+				blueX = cx-(redPos.posX-cx);
+			}
+
+			if (cy > redPos.posY) { 
+				blueY = (cy-redPos.posY)+cy;
+			}
+			else {
+				blueY = cy-(redPos.posY-cy);
 			}
         }
-		else if (pacman.directions.down) {
+        
+		else if (pacman.directions.down) { 
 			cy = cy + (2*pacTile.height);
-			if (pacman.cy > redPos.posY) {
-				blueX = (cy - redPos.posY)*2;
+
+			if (cx > redPos.posX) {
+				blueX = (cx-redPos.posX)+cx;
 			}
 			else {
-				blueX = (redPos.posY - cy)*2;
+				blueX = cx-(redPos.posX-cx);
+			}
+
+			if (cy > redPos.posY) { 
+				blueY = (cy-redPos.posY)+cy;
+			}
+			else {
+				blueY = cy-(redPos.posY-cy);
 			}
 		}
-		else if (pacman.directions.left) {
+		
+		else if (pacman.directions.left) { 
 			cx = cx - (2*pacTile.width);
+			
+			if (cx > redPos.posX) { 
+				blueX = (cx-redPos.posX)+cx;
+			}
+			else { 
+				blueX = cx-(redPos.posX-cx);
+			}
+
+			if (cy > redPos.posY) { 
+				blueY = (cy-redPos.posY)+cy; 
+			}
+			else { 
+				blueY = cy-(redPos.posY-cy);
+			}
 		}
 		else if (pacman.directions.right) {
 			cx = cx + (2*pacTile.width);
+			if (cx > redPos.posX) { 
+				blueX = (cx-redPos.posX)+cx;
+			}
+			else { 
+				blueX = cx-(redPos.posX-cx);
+			}
+
+			if (cy > redPos.posY) { 
+				blueY = (cy-redPos.posY)+cy; 
+			}
+			else { 
+				blueY = cy-(redPos.posY-cy);
+			}
 		}
-		
-		
-		if (pacman.cx > redPos.posX) {
-			blueX = (cx - redPos.posX)*2;
-		}
-		else {
-			blueX = (redPos.posX - cx)*2;
-		}
-		
-		//blueX er þá x-fjarlægðin frá rauða í targetTile
-		//blueY er þá y-fjarlægðin frá rauða í targetTile
-		//datt í hug að það væri hægt að gera targetTile = entityManager.getTile af þessum hnitum
-		//eins og t.d. targetTile = entityManager.getTile(redPos.posX + blueX, redPos.posY + blueY, this.radius)
-		//væri rétt flís ef pacman er að fara upp og rauði er fyrir neðan hann og vinstra megin við hann
-		
-		
-		
-		var distRedFromPacman = Math.round(util.distSq(cx, cy, redPos.posX, redPos.posY));
-		var distVector = Math.sqrt(distRedFromPacman*2);*/
-		
+
+		//So that targetTiles won't get assigned outside the maze
+		if(blueX < 15) blueX = 15;
+		if(blueY < 15) blueY = 15;
+		if(blueX > 435) blueX = 435;
+		if(blueY > 485) blueY = 485;
+		//console.log("Blues targetTile = ("+targetTile.cx+","+targetTile.cy+")");
+
+		targetTile = entityManager.getTile(blueX, blueY, this.radius);
 	}
 	else if (this.mode === "caged")
 	{	//done
@@ -305,7 +339,7 @@ Ghost.prototype.setTargetForBlue = function () {
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
 	{	//done
-		targetTile = entityManager.getTile(240,190,3);	// rétt fyrir ofan box
+		targetTile = entityManager.getTile(240,190,3);	// rï¿½tt fyrir ofan box
 	}
 	
 	this.targetTile = targetTile;
@@ -458,7 +492,7 @@ Ghost.prototype.reset = function () {
 };
 
 
-/* HHHMMMMMMMMMMM skoða
+/* HHHMMMMMMMMMMM skoï¿½a
 Ghost.prototype.setLastMode = function () {
 	if (this.mode === "scatter") {
 		this.lastMode = "scatter";
