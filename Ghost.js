@@ -253,7 +253,7 @@ Ghost.prototype.setTargetForBlue = function () {
 		var blueX;
 		var blueY;
 		
-		if (pacman.directions.up) {
+		/*if (pacman.directions.up) {
 			cy = cy - (2*pacTile.height);
 			if (pacman.cy > redPos.posY) {
 				blueX = (cy - redPos.posY)*2;
@@ -295,7 +295,7 @@ Ghost.prototype.setTargetForBlue = function () {
 		
 		
 		var distRedFromPacman = Math.round(util.distSq(cx, cy, redPos.posX, redPos.posY));
-		var distVector = Math.sqrt(distRedFromPacman*2);
+		var distVector = Math.sqrt(distRedFromPacman*2);*/
 		
 	}
 	else if (this.mode === "caged")

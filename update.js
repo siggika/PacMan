@@ -60,6 +60,12 @@ var g_isUpdatePaused = false;
 function shouldSkipUpdate() {
     if (eatKey(KEY_PAUSE)) {
         g_isUpdatePaused = !g_isUpdatePaused;
+		if (g_isUpdatePaused) {
+			entityManager.pauseTimers();
+		}
+		if (!g_isUpdatePaused) { 
+			entityManager.resumeTimers();
+		}
     }
     return g_isUpdatePaused && !eatKey(KEY_STEP);    
 }

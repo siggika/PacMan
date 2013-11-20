@@ -201,6 +201,15 @@ initTimeouts : function () {
 	}
 },
 
+pauseTimers : function() {
+	this.timeout.pause();
+},
+
+resumeTimers : function() {
+	this.timeout.resume();
+},
+
+
 setMode : function(mode) {
 	for (var i = 0; i < this._pacman.length; ++i) 
     {

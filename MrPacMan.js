@@ -260,24 +260,29 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			
 			// renew frightened mode
 			if (this.mode === "frightened") {
-				timer.pause();
-				blinkTimer.pause();
+				this.timer.pause();
+				this.blinkTimer.pause();
 			}
 			entityManager.setMode("frightened");
-			blinkTimer = new Timer (function() {
-					blink = true;
-					}, 7000);
+			this.blinkTimer = new Timer (setBlink, 7000);
+			
+			function setBlink() {
+				//if (g_isUpdatePaused) return;
+				blink = true;
+			}
 			
 			entityManager.timeout.pause();
 			
 			function resumeTime() {
+				//if (g_isUpdatePaused ) return;
+				console.log("RESUMING");
 				entityManager.setMode(lastMode);
 				blink = false;
 				entityManager.timeout.resume();
 			}
 			
 			//set frightened mode for 10 seconds
-			timer = new Timer(resumeTime, 10000);
+			this.timer = new Timer(resumeTime, 10000);
 				
 		}
 		
