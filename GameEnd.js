@@ -17,6 +17,8 @@ scoreUp : false,
 
 renderScore : false,
 
+renderHighScore : true,
+
 resetDone : false,
 
 level : 1,
@@ -32,6 +34,9 @@ gameIsWon : function() {
 
 gameIsOver : function() {
 	this.gameOver = true;
+	localStorage.setItem(highscore, score);
+	this.doRenderHighScore();
+	this.renderHighScore = false;
 	entityManager.haltGuys();
 	//this.newGame();
 },
@@ -39,6 +44,25 @@ gameIsOver : function() {
 loseLife : function () {
 	this.lifeLost = true;
 	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
+},
+
+doRenderHighScore : function() {
+	if(!this.renderHighScore) return;
+	if(this.gameOver) $("#highscore").text("");
+	var _highscores = [];
+	for(var i in localStorage) {
+		var item = localStorage.getItem(i);
+   		_highscores[i] = item;
+   	}
+   	_highscores.sort();
+   	_highscores.reverse();
+   	var highscores = [];
+   	for(var i = 0; i < _highscores.length; i++) {
+   		if(_highscores[i] !== undefined) highscores.push(_highscores[i]);
+   	}
+   	for(var i = 0; i < 5; i++) {
+   		$("#highscore").append('<li type="1">'+highscores[i]+'</li>');
+   	}
 },
 
 doRenderScore : function(points) {
