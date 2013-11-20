@@ -156,10 +156,10 @@ Tile.prototype.putFruit = function (cakesEaten, tile) {
 	//make fruit last for 10 seconds
 	this.timeout = setTimeout(function(){tile.hasFruit = false;}, 10000);
 	
-	if (cakesEaten < 75) {		
+	if (GameEnd.level === 1) {
 		this.Fruit = "cherry";
 	}
-	else if (cakesEaten < 175) {
+	else if (GameEnd.level === 2) {
 		this.Fruit = "strawberry";
 	}
 };

@@ -105,5 +105,12 @@ function render(ctx) {
         ctx.fillText("Game Paused", 130,285);
         ctx.fillStyle = OF; 
 	}
+	if (GameEnd.level2) {
+		ctx.font="bolder 40px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("Level 2",160,285);
+        ctx.fillStyle = OF; 
+	}
     ++g_frameCounter;
 }

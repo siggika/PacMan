@@ -23,8 +23,8 @@ Ghost.prototype = new Entity();
 // Initial, inheritable, default values
 //Movement and positions
 Ghost.prototype.radius = 12;
-Ghost.prototype.velX = 1.5;
-Ghost.prototype.velY = 1.5;
+Ghost.prototype.velX = (0.75*2);
+Ghost.prototype.velY = (0.75*2);
 
 Ghost.prototype.numSubSteps = 2;
 Ghost.prototype.directions;
@@ -34,6 +34,7 @@ Ghost.prototype.color;
 Ghost.prototype.mode = "caged";
 Ghost.prototype.lastMode = "scatter";
 Ghost.prototype.gameMode = "scatter";
+Ghost.prototype.lastGameMode = "scatter";	// er ég að nota???
 Ghost.prototype.free = false;
 
 Ghost.prototype.init = function() {
@@ -73,6 +74,10 @@ Ghost.prototype.update = function (du) {
 
 	if (this.mode === "frightened" && g_soundOn){
 		this.sirenSound.play();
+	}
+	
+	if (this.color === "pink") {
+		console.log("pink mode: " + this.mode);
 	}
 	
 };
@@ -155,8 +160,7 @@ Ghost.prototype.setTargetForPink = function () {
 			}
 		}
 		else if (pacman.directions.left) {
-			if (pacTile) var nextCX = pacman.cx-(4*pacTile.width);
-			else var nextCX = pacman.cx-(4*this.targetTile.width);
+			var nextCX = pacman.cx-(4*tileWidth);
 			
 			if(nextCX > leftRange) {
 					targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
@@ -167,8 +171,7 @@ Ghost.prototype.setTargetForPink = function () {
 		}
 		else if (pacman.directions.right)
 		{
-			if (pacTile) var nextCX = pacman.cx+(4*pacTile.width);
-			else var nextCX = pacman.cx+(4*this.targetTile.width);
+			var nextCX = pacman.cx+(4*tileWidth);
 			
 			if(nextCX < rightRange) {
 					targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
@@ -197,7 +200,7 @@ Ghost.prototype.setTargetForOrange = function () {
 	var targetTile = false;
 	var pacman = entityManager.getPacman();
 	var pacTile = targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
-
+	
 	if (this.mode === "scatter") 
 	{
 		targetTile = entityManager.getTile(17,470,5);		// bottom left corner
@@ -206,11 +209,11 @@ Ghost.prototype.setTargetForOrange = function () {
 	else if (this.mode === "chase") 
 	{
 		var distanceFromPacman = Math.round(util.distSq(pacman.cx, pacman.cy, this.cx, this.cy));
-		if(distanceFromPacman < util.square(8*pacTile.width)) 
+		if(distanceFromPacman < util.square(8*tileWidth)) 
 		{
 			targetTile = entityManager.getTile(17,470,5);	// bottom left corner
 		}
-		else if (distanceFromPacman >= util.square(8*pacTile.width)) 
+		else if (distanceFromPacman >= util.square(8*tileWidth)) 
 		{
 			targetTile = entityManager.getTile(pacman.cx, pacman.cy, pacman.radius);
 		}
@@ -287,8 +290,7 @@ Ghost.prototype.setTargetForBlue = function () {
 		}
 		
 		else if (pacman.directions.left) { 
-			if (pacTile) cx = cx - (2*pacTile.width);
-			else cx = cx - (2*targetTile.width);
+			cx = cx - (2*tileWidth);
 			
 			if (cx > redPos.posX) { 
 				blueX = (cx-redPos.posX)+cx;
@@ -305,8 +307,7 @@ Ghost.prototype.setTargetForBlue = function () {
 			}
 		}
 		else if (pacman.directions.right) {
-			if (pacTile) cx = cx + (2*pacTile.width);
-			else cx = cx + (2*this.targetTile.width);
+			cx = cx + (2*tileWidth);
 			if (cx > redPos.posX) { 
 				blueX = (cx-redPos.posX)+cx;
 			}
@@ -390,22 +391,57 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 Ghost.prototype.setChaseMode = function () {
 	if (!this.free || this.mode === "caged" || this.mode === "dead") return;
 	
+	this.lastGameMode = this.gameMode;
 	this.mode = "chase";
 	this.gameMode = "chase";
 	this.speedUp();
 	this.switchDirection();
 };
 
+Ghost.prototype.cagedToChaseMode = function () {
+	if (!this.free || this.mode === "dead") return;
+	
+	this.lastGameMode = this.gameMode;
+	this.mode = "chase";
+	this.gameMode = "chase";
+	this.speedUp();
+};
+
 Ghost.prototype.setScatterMode = function () {
 	if (!this.free || this.mode === "caged"  || this.mode === "dead") return;
 	
+	this.lastGameMode = this.gameMode;
 	this.mode = "scatter";
 	this.gameMode = "scatter";
 	this.speedUp();
 	this.switchDirection();
 };
 
+Ghost.prototype.cagedToScatterMode = function () {
+	console.log(this.color + " set caged to scatter?????");
+	console.log("free: " + this.free);
+	if (!this.free || this.mode === "dead") return;
+	
+	this.lastGameMode = this.gameMode;
+	this.mode = "scatter";
+	this.gameMode = "scatter";
+	this.speedUp();
+	
+	console.log(this.color + " set caged to scatter");
+};
+
 Ghost.prototype.setFrightenedMode = function () {
+	this.gameMode = "frightened";
+	
+	if (!this.free || this.mode === "caged" || this.mode === "dead") return;
+	
+	this.mode = "frightened";
+	if(g_soundOn){
+		this.sirenSound.play();
+	}
+	this.speedDown();
+};
+Ghost.prototype.cagedToFrightenedMode = function () {
 	this.gameMode = "frightened";
 	
 	if (!this.free || this.mode === "dead") return;
@@ -444,21 +480,49 @@ Ghost.prototype.switchDirection = function () {
 };
 
 Ghost.prototype.speedUp = function () {
-	this.velX = 1.5;
-	this.velY = 1.5;
+	if (GameEnd.level === 1) {
+		this.velX = (0.75*2);
+		this.velY = (0.75*2);
+	}
+	else if (GameEnd.level === 2) {
+		this.velX = (0.85*2);
+		this.velY = (0.85*2);
+	}
 };
 
 Ghost.prototype.speedDown = function () {
-	this.velX = 0.7;
-	this.velY = 0.7;
+	if (GameEnd.level === 1) {
+		this.velX = (0.5*2);
+		this.velY = (0.5*2);
+	}
+	else if (GameEnd.level === 2) {
+		this.velX = (0.55*2);
+		this.velY = (0.55*2);
+	}
 };
 
 Ghost.prototype.reset = function () {
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = "caged";
-	this.gameMode = this.lastMode; 
+	if (this.gameMode === "frightened") this.gameMode = this.lastGameMode;
 	this.speedUp();
+};
+
+Ghost.prototype.restart = function () {
+    this.setPos(this.reset_cx, this.reset_cy);
+    this.radius = this.reset_radius;
+	this.mode = "caged";
+	this.gameMode = "scatter"; 
+	this.lastGameMode = "scatter"; 
+	this.targetTile = false;
+	this.speedUp();
+	this.trap();
+};
+
+Ghost.prototype.setNewLevel = function () {
+	this.restart();
+	this.trap();
 };
 
 Ghost.prototype.setFree = function () {
@@ -466,12 +530,32 @@ Ghost.prototype.setFree = function () {
 };
 
 Ghost.prototype.setGameModeScatter = function() {
+	this.lastGameMode = this.gameMode;
 	this.gameMode = "scatter";
 };
 
 Ghost.prototype.setGameModeChase = function() {
+	this.lastGameMode = this.gameMode;
 	this.gameMode = "chase";
 };
+
+Ghost.prototype.trap = function() {
+	if (this.color === "red" || this.color === "pink") this.free = true;
+	else this.free = false;
+};
+
+Ghost.prototype.releaseElroy = function() {
+	if (GameEnd.level === 1) {
+		this.velX = (0.8*2);
+		this.velY = (0.8*2);
+	}
+	else if (GameEnd.level === 2) {
+		this.velX = (0.9*2);
+		this.velY = (0.9*2);
+	}
+	console.log("releasing elroy, speed: " + this.velX);
+};
+
 
 Ghost.prototype.getAIDirection = function(du)
 {
@@ -488,7 +572,14 @@ Ghost.prototype.getAIDirection = function(du)
 			this.mode = this.lastMode;
 		}		
 		else if (this.mode === "caged" && nextTile === this.targetTile) {
-			this.mode = this.gameMode;
+			//this.mode = this.gameMode;
+			if (this.gameMode === "frightened") this.cagedToFrightenedMode();
+			else if (this.gameMode === "scatter") {
+				this.cagedToScatterMode();
+				console.log("here");
+			}
+			else if (this.gameMode === "chase") this.cagedToChaseMode();
+			console.log(this.color + " going from caged to " + this.gameMode);
 		}
 		
 		var nextTileX = nextTile.cx + nextTile.width/2;

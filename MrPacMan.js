@@ -29,8 +29,8 @@ Pacman.prototype.KEY_RIGHT = 'D'.charCodeAt(0);
 
 //Movement and positions
 Pacman.prototype.radius = 12;
-Pacman.prototype.velX = 1.5;
-Pacman.prototype.velY = 1.5;
+Pacman.prototype.velX = (0.8*2);
+Pacman.prototype.velY = (0.8*2);
 Pacman.prototype.nextTurn = false;
 
 Pacman.prototype.score = 0;
@@ -87,7 +87,6 @@ Pacman.prototype.update = function (du) {
 	}
 	
 	spatialManager.register(this);
-	
 };
 
 Pacman.prototype.updateDirections = function(du){
@@ -253,11 +252,13 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			}
 			
 			entityManager.timeout.pause();
+			console.log("pausing timer : " + entityManager.timeout);
 			
 			function resumeTime() {
 				entityManager.setMode(lastMode);
 				blink = false;
 				entityManager.timeout.resume();
+				console.log("resuming timer : " + entityManager.timeout);
 			}
 			
 			//set frightened mode for 10 seconds
@@ -274,18 +275,21 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			};
 };
 
+Pacman.prototype.pauseTimers = function () {
+	if (!this.timer || !this.blinkTimer) return;
+	
+	this.timer.pause();
+	this.blinkTimer.pause();
+	console.log("pausing pac timer : " + this.timer);
+	console.log("pausing blink timer : " + this.blinkTimer);
+};
+
 Pacman.prototype.updateScore = function (score) {
 	sideText.updateScoreText(this.score);
 	
 	if (this.cakesEaten === 70 || this.cakesEaten === 170) {
 		var tile = entityManager.getTile(215,280,3);
 		tile.putFruit(this.cakesEaten, tile);
-	}
-	if (this.cakesEaten >= 242) {
-		if(g_soundOn) {
-			this.interSound.play();
-		}
-		GameEnd.gameIsWon();
 	}
 	if (this.cakesEaten === 0) {
 		entityManager.setFree("red");
@@ -297,9 +301,18 @@ Pacman.prototype.updateScore = function (score) {
 	if (this.cakesEaten === 80) {
 		entityManager.setFree("orange");
 	}
+	if (this.cakesEaten === 222) {
+		entityManager.releaseElroy();
+	}
+	if (this.cakesEaten >= 242) {		// all cakes
+	//if (this.cakesEaten >= 150) {		// for testing
+		this.maybeWin();
+	}
+	
+	//if (this.cakesEaten === 10 && GameEnd.level === 1) GameEnd.nextLevel();
 };
 
-Pacman.prototype.updateLives = function (score) {
+Pacman.prototype.updateLives = function () {
 	sideText.updateLivesText(this.lives);
 	if (this.lives <= 0) {
 		GameEnd.gameIsOver();
@@ -308,14 +321,17 @@ Pacman.prototype.updateLives = function (score) {
 
 Pacman.prototype.setChaseMode = function () {
 	this.mode = "chase";
+	this.speedDown();
 };
 
 Pacman.prototype.setScatterMode = function () {
 	this.mode = "scatter";
+	this.speedDown();
 };
 
 Pacman.prototype.setFrightenedMode = function () {
 	this.mode = "frightened";
+	this.speedUp();
 };
 
 Pacman.prototype.setCagedMode = function () {
@@ -337,12 +353,8 @@ Pacman.prototype.loseLife = function (ghost) {
 		this.diesSound.play();
 	}
 	entityManager.resetGuys();
-	this.resetDirections();
 	this.lives--;
 	GameEnd.loseLife();
-	
-	//for rendering life lost
-	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
 };
 
 Pacman.prototype.eatGhost = function (ghost) {
@@ -365,7 +377,71 @@ Pacman.prototype.reset = function () {
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = this.lastMode;
+	this.resetDirections();
 };
+
+Pacman.prototype.restart = function () {
+    this.reset();
+	this.resetLives();
+	this.resetScore();
+	this.resetCakesEaten();
+};
+
+Pacman.prototype.setNewLevel = function () {
+	this.reset();
+	this.resetCakesEaten();
+	if (GameEnd.level === 2) {
+		this.velX = (0.9*2);
+		this.velY = (0.9*2);
+	}
+};
+
+Pacman.prototype.resetLives = function() {
+	this.lives = 3;
+};
+
+Pacman.prototype.resetScore = function() {
+	this.score = 0;
+};
+
+Pacman.prototype.resetCakesEaten = function() {
+	this.cakesEaten = 0;
+};
+
+Pacman.prototype.maybeWin = function() {
+	if (GameEnd.level === 1) {
+		GameEnd.nextLevel();
+	}
+	else if (GameEnd.level === 2) {
+		GameEnd.gameIsWon();
+		if(g_soundOn) {
+			this.interSound.play();
+		}
+	}
+};
+
+Pacman.prototype.speedUp = function () {
+	if (GameEnd.level === 1) {
+		this.velX = (0.9*2);
+		this.velY = (0.9*2);
+	}
+	else if (GameEnd.level === 2) {
+		this.velX = (0.95*2);
+		this.velY = (0.95*2);
+	}
+};
+
+Pacman.prototype.speedDown = function () {
+	if (GameEnd.level === 1) {
+		this.velX = (0.8*2);
+		this.velY = (0.8*2);
+	}
+	else if (GameEnd.level === 2) {
+		this.velX = (0.9*2);
+		this.velY = (0.9*2);
+	}
+};
+
 
 
 //rendering
