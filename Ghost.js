@@ -155,7 +155,9 @@ Ghost.prototype.setTargetForPink = function () {
 			}
 		}
 		else if (pacman.directions.left) {
-			var nextCX = pacman.cx-(4*pacTile.width);
+			if (pacTile) var nextCX = pacman.cx-(4*pacTile.width);
+			else var nextCX = pacman.cx-(4*this.targetTile.width);
+			
 			if(nextCX > leftRange) {
 					targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
 			}
@@ -165,7 +167,9 @@ Ghost.prototype.setTargetForPink = function () {
 		}
 		else if (pacman.directions.right)
 		{
-			var nextCX = pacman.cx+(4*pacTile.width);
+			if (pacTile) var nextCX = pacman.cx+(4*pacTile.width);
+			else var nextCX = pacman.cx+(4*this.targetTile.width);
+			
 			if(nextCX < rightRange) {
 					targetTile = entityManager.getTile(nextCX, pacman.cy, pacman.radius);
 			}
@@ -283,7 +287,8 @@ Ghost.prototype.setTargetForBlue = function () {
 		}
 		
 		else if (pacman.directions.left) { 
-			cx = cx - (2*pacTile.width);
+			if (pacTile) cx = cx - (2*pacTile.width);
+			else cx = cx - (2*targetTile.width);
 			
 			if (cx > redPos.posX) { 
 				blueX = (cx-redPos.posX)+cx;
@@ -300,7 +305,8 @@ Ghost.prototype.setTargetForBlue = function () {
 			}
 		}
 		else if (pacman.directions.right) {
-			cx = cx + (2*pacTile.width);
+			if (pacTile) cx = cx + (2*pacTile.width);
+			else cx = cx + (2*this.targetTile.width);
 			if (cx > redPos.posX) { 
 				blueX = (cx-redPos.posX)+cx;
 			}
