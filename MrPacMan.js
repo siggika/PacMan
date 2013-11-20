@@ -61,7 +61,6 @@ Pacman.prototype.init = function() {
 Pacman.prototype.diesSound = new Audio("sounds/pacmandies.mp3");
 Pacman.prototype.cherrySound = new Audio("sounds/pacmaneatingcherry.mp3");
 Pacman.prototype.eatGhostSound = new Audio("sounds/pacmaneatingghost.mp3");
-Pacman.prototype.extraLiveSound = new Audio("sounds/pacmanextralive.mp3");
 Pacman.prototype.newGameSound = new Audio("sounds/pacmanopeningsong.mp3");
 Pacman.prototype.wakaSound = new Audio("sounds/pacmanwaka.mp3");
 Pacman.prototype.interSound = new Audio("sounds/pacmanintermission.mp3");
@@ -75,10 +74,10 @@ Pacman.prototype.update = function (du) {
 	
 	var steps = this.numSubSteps;
 	var dStep = du / steps;	
-	for (var i = 0; i < steps; ++i) 
-	{
+	for (var i = 0; i < steps; ++i) {
 		this.Move(dStep);
 	}
+	
 	this.updateScore();
 	this.updateLives();
 	
@@ -166,11 +165,6 @@ Pacman.prototype.updateDirections = function(du){
 		}
     }	   
 };
-
-Pacman.prototype.getsEaten = function () {
-    this.kill();
-};
-
 
 Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
@@ -299,8 +293,7 @@ Pacman.prototype.updateScore = function (score) {
 	}
 	if (this.cakesEaten === 30) {
 		entityManager.setFree("blue");
-	}
-	
+	}	
 	if (this.cakesEaten === 80) {
 		entityManager.setFree("orange");
 	}
@@ -347,7 +340,8 @@ Pacman.prototype.loseLife = function (ghost) {
 	this.resetDirections();
 	this.lives--;
 	GameEnd.loseLife();
-
+	
+	//for rendering life lost
 	var timeout = setTimeout (function() {GameEnd.lifeLost = false;}, 1500);
 };
 
@@ -360,7 +354,6 @@ Pacman.prototype.eatGhost = function (ghost) {
 	ghost.setLastMode();
 	this.score += 200;
 	this.renderScore("200");
-	
 };
 
 Pacman.prototype.renderScore = function (points) {
@@ -369,7 +362,6 @@ Pacman.prototype.renderScore = function (points) {
 };
 
 Pacman.prototype.reset = function () {
-
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = this.lastMode;

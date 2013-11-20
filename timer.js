@@ -8,6 +8,7 @@ function Timer(callback, delay) {
 	
 	this.resume();
 };
+
 Timer.prototype.callback;
 Timer.prototype.timerId;
 Timer.prototype.start;

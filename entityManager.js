@@ -58,6 +58,7 @@ generatePacman : function(descr) {
         cy: tile.cy + tile.height/2
     }));
 },
+
 generateGhosts : function(descr) {
 
     var colors = ["","blue","pink","orange"]

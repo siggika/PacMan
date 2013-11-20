@@ -28,10 +28,12 @@ Tile.prototype.init = function(type){
 
 Tile.prototype.cx = 0;
 Tile.prototype.cy = 0;
+
 Tile.prototype.type = 0; 
 Tile.prototype.debug = false; 
 Tile.prototype.debug2 = false; 
 Tile.prototype.draw = false; 
+
 Tile.prototype.hasFruit = false; 
 Tile.prototype.Fruit; 
 Tile.prototype.timeout; 

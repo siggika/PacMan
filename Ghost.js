@@ -220,6 +220,7 @@ Ghost.prototype.setTargetForOrange = function () {
 	{	
 		targetTile = entityManager.getTile(240,190,3);	// above box
 	}
+	
 	this.targetTile = targetTile;
 };
 
@@ -329,7 +330,7 @@ Ghost.prototype.setTargetForBlue = function () {
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
 	{	
-		targetTile = entityManager.getTile(240,190,3);	// r�tt fyrir ofan box
+		targetTile = entityManager.getTile(240,190,3);	// above box
 	}
 	
 	this.targetTile = targetTile;
@@ -350,26 +351,22 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			var limit = this.radius + (nextTile.width/2);
 			
 			//right
-			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit)
-			{
+			if ((this.directions.right || this.nextTurn === "right") && (nextTileX - nextX) <= limit){
 				right = true;
 			}
 			
 			//left
-			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) 
-			{
+			if ((this.directions.left || this.nextTurn === "left") && (nextX - nextTileX) <= limit) {
 				left = true;
 			}
 			
 			//up
-			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) 
-			{
+			if ((this.directions.up || this.nextTurn === "up") && (nextY - nextTileY) <= limit) {
 				up = true;
 			}
 			
 			//down
-			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) 
-			{
+			if ((this.directions.down || this.nextTurn === "down") && (nextTileY - nextY) <= limit) {
 				down = true;
 			}
 		}
@@ -524,10 +521,6 @@ Ghost.prototype.getAIDirection = function(du)
 				else {
 					var tileCloser = this.targetTile.isCloser(tileCloserUD, tileRight);
 					
-					if (this.color === "blue" && this.mode === "caged") {
-						tileCloser = tileAbove;
-					}
-					
 					//so they won't go in the box
 					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
 						tileCloser = tileRight;
@@ -580,9 +573,6 @@ Ghost.prototype.getAIDirection = function(du)
 					if (this.color === "orange" && this.mode === "caged") {
 						tileCloser = tileLeft;
 					}
-					if (this.color === "blue" && this.mode === "caged") {
-						tileCloser = tileAbove;
-					}
 					
 					//so they won't go in the box
 					if (tileCloser === startingGhostTile || tileCloser === startingGhostTile2){
@@ -631,10 +621,6 @@ Ghost.prototype.getAIDirection = function(du)
 				else {
 					var tileCloser = this.targetTile.isCloser(tileBelow, tileCloserLR);
 					
-					if (this.color === "blue" && this.mode === "caged") {
-						tileCloser = tileAbove;
-					}
-					
 					if (tileCloser.type === 0 && tileCloser != tileBelow) {
 						if (tileCloser === tileLeft) this.setDirectionLeft();
 						else this.setDirectionRight();
@@ -677,10 +663,6 @@ Ghost.prototype.getAIDirection = function(du)
 				}
 				else {
 					var tileCloser = this.targetTile.isCloser(tileAbove, tileCloserLR);
-					
-					if (this.color === "blue" && this.mode === "caged") {
-						tileCloser = tileAbove;
-					}
 					
 					if (tileCloser.type === 0 && tileCloser != tileAbove) {
 						if (tileCloser === tileLeft) this.setDirectionLeft();

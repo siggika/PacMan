@@ -64,6 +64,7 @@ main._isGameOver = false;
 
 main.gameOver = function () {
     this._isGameOver = true;
+	entityManager.pauseTimers();
     console.log("gameOver: quitting...");
 };
 

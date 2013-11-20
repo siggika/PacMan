@@ -52,13 +52,6 @@ var KEY_SPATIAL = keyCode('X');
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 
-var KEY_0 = keyCode('0');
-
-var KEY_1 = keyCode('1');
-var KEY_2 = keyCode('2');
-
-var KEY_K = keyCode('K');
-
 var KEY_MUTE = keyCode('M');
 var g_soundOn = true;
 
@@ -74,22 +67,6 @@ function processDiagnostics() {
     if (eatKey(KEY_RESET)) entityManager.resetGuys();
 
     if (eatKey(KEY_MUTE)) g_soundOn = !g_soundOn;
-
-    if (eatKey(KEY_1)) entityManager.generateGuy({
-        cx : g_mouseX,
-        cy : g_mouseY,
-        
-        sprite : g_sprites.Guy});
-
-    if (eatKey(KEY_2)) entityManager.generateGuy({
-        cx : g_mouseX,
-        cy : g_mouseY,
-        
-        sprite : g_sprites.Guy2
-        });
-
-    if (eatKey(KEY_K)) entityManager.killNearestGuy(
-        g_mouseX, g_mouseY);
 }
 
 
@@ -138,7 +115,6 @@ function preloadDone() {
     var numRows = 4;
     var numCels = 68;
     
-    //g_sprites = [];
     var sprite;
     
     for (var row = 0; row < numRows; ++row) {

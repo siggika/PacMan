@@ -36,8 +36,4 @@ doRenderScore : function(points) {
 	this.scoreUp = points;
 },
 
-noRenderScore : function() {
-	this.renderScore = true;
-}
-
 };
