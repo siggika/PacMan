@@ -20,6 +20,10 @@ updateSideText : function (){
 	var areSoundsOn = g_soundOn ? "on" : "off";
 	var soundText = "Sound effects are " + areSoundsOn + ".";
 	$("#sounds").text(soundText);
+},
+
+initScoreBoard : function () {
+	GameEnd.doRenderHighScore();
 }
 
 };
