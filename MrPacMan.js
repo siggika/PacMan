@@ -447,7 +447,7 @@ Pacman.prototype.render = function (ctx) {
     	}
 		if(this.directions.left) 
 		{
-			if(isColliding_left || GameEnd.gameWon || g_isUpdatePaused) {
+			if(isColliding_left || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(52);
 			} else {
 				this.renderSprite(g_cel_left);
@@ -457,7 +457,7 @@ Pacman.prototype.render = function (ctx) {
 		}
 		if(this.directions.up) 
 		{
-			if(isColliding_up || GameEnd.gameWon || g_isUpdatePaused) {
+			if(isColliding_up || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(1);
 			} else {
 				this.renderSprite(g_cel_up);
@@ -467,7 +467,7 @@ Pacman.prototype.render = function (ctx) {
 		}
 		if(this.directions.down) 
 		{
-			if(isColliding_down || GameEnd.gameWon || g_isUpdatePaused) {
+			if(isColliding_down || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(35);
 			} else {
 				this.renderSprite(g_cel_down);
@@ -477,7 +477,7 @@ Pacman.prototype.render = function (ctx) {
 		}
 		if(this.directions.right) 
 		{
-			if(isColliding_right || GameEnd.gameWon || g_isUpdatePaused) {
+			if(isColliding_right || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(18);
 			} else {
 				this.renderSprite(g_cel_right);
