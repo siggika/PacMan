@@ -315,7 +315,7 @@ Pacman.prototype.updateScore = function (score) {
 Pacman.prototype.updateLives = function () {
 	sideText.updateLivesText(this.lives);
 	if (this.lives <= 0) {
-		GameEnd.gameIsOver();
+		GameEnd.gameIsOver(this.score);
 	}
 };
 
