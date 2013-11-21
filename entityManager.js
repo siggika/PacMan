@@ -34,6 +34,8 @@ KILL_ME_NOW : -1,
 // 
 timeout : false,
 
+blink : false,
+
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
 //
