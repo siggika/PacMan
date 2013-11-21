@@ -32,7 +32,7 @@ gameIsWon : function() {
 	entityManager.haltGuys();
 },
 
-gameIsOver : function() {
+gameIsOver : function(score) {
 	this.gameOver = true;
 	localStorage.setItem(highscore, score);
 	this.doRenderHighScore();
