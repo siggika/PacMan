@@ -108,12 +108,12 @@ Pacman.prototype.updateDirections = function(du){
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXup, nextPos.nextYup);
 		
 		if (wallColliding.up) {
-			isColliding_up = true;
+			this.isColliding_up = true;
 			return;
 		}
 		else
 		{
-			isColliding_up = false;
+			this.isColliding_up = false;
 			this.setDirectionUp();	        
 		}
 	}
@@ -123,12 +123,12 @@ Pacman.prototype.updateDirections = function(du){
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXdown, nextPos.nextYdown);
 		
 		if (wallColliding.down) {
-			isColliding_down = true;
+			this.isColliding_down = true;
 			return;
 		}
     	else
 		{
-			isColliding_down = false;
+			this.isColliding_down = false;
 			this.setDirectionDown();       
 		}
 	}
@@ -138,12 +138,12 @@ Pacman.prototype.updateDirections = function(du){
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXleft, nextPos.nextYleft);
 		
 		if (wallColliding.left) {
-			isColliding_left = true;
+			this.isColliding_left = true;
 			return;
 		}
     	else
 		{
-			isColliding_left = false;
+			this.isColliding_left = false;
     		this.setDirectionLeft();
 		}    
 		
@@ -154,12 +154,12 @@ Pacman.prototype.updateDirections = function(du){
 		wallColliding = this.isWallColliding (nextTile, nextPos.nextXright, nextPos.nextYright);
 		
 		if (wallColliding.right) {
-			isColliding_right = true;
+			this.isColliding_right = true;
 			return;
 		}
     	else
 		{
-			isColliding_right = false;
+			this.isColliding_right = false;
     		this.setDirectionRight();	    
 		}
     }	   
@@ -249,7 +249,7 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			this.blinkTimer = new Timer (setBlink, 7000);
 			
 			function setBlink() {
-				blink = true;
+				entityManager.blink = true;
 			}
 			
 			entityManager.timeout.pause();
@@ -257,7 +257,7 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			
 			function resumeTime() {
 				entityManager.setMode(lastMode);
-				blink = false;
+				entityManager.blink = false;
 				entityManager.timeout.resume();
 				console.log("resuming timer : " + entityManager.timeout);
 			}
@@ -380,6 +380,7 @@ Pacman.prototype.reset = function () {
     this.radius = this.reset_radius;
 	this.mode = this.lastMode;
 	this.resetDirections();
+	this.nextTurn = false;
 };
 
 Pacman.prototype.restart = function () {
@@ -449,15 +450,15 @@ Pacman.prototype.speedDown = function () {
 
 
 //rendering
-var g_cel_left = 51;
-var g_cel_up = 0;
-var g_cel_down = 34;
-var g_cel_right = 17;
+Pacman.prototype.g_cel_left = 51;
+Pacman.prototype.g_cel_up = 0;
+Pacman.prototype.g_cel_down = 34;
+Pacman.prototype.g_cel_right = 17;
 
-var isColliding_left;
-var isColliding_up;
-var isColliding_down;
-var isColliding_right;
+Pacman.prototype.isColliding_left;
+Pacman.prototype.isColliding_up;
+Pacman.prototype.isColliding_down;
+Pacman.prototype.isColliding_right;
 
 Pacman.prototype.render = function (ctx) {
 	var cel;
@@ -470,42 +471,42 @@ Pacman.prototype.render = function (ctx) {
     	}
 		if(this.directions.left) 
 		{
-			if(isColliding_left || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
+			if(this.isColliding_left || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(52);
 			} else {
-				this.renderSprite(g_cel_left);
-				++g_cel_left;
-				if (g_cel_left === 55) g_cel_left = 51;
+				this.renderSprite(this.g_cel_left);
+				++this.g_cel_left;
+				if (this.g_cel_left === 55) this.g_cel_left = 51;
 			}
 		}
 		if(this.directions.up) 
 		{
-			if(isColliding_up || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
+			if(this.isColliding_up || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(1);
 			} else {
-				this.renderSprite(g_cel_up);
-				++g_cel_up;
-				if (g_cel_up === 4) g_cel_up = 0;
+				this.renderSprite(this.g_cel_up);
+				++this.g_cel_up;
+				if (this.g_cel_up === 4) this.g_cel_up = 0;
 			}
 		}
 		if(this.directions.down) 
 		{
-			if(isColliding_down || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
+			if(this.isColliding_down || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(35);
 			} else {
-				this.renderSprite(g_cel_down);
-				++g_cel_down;
-				if (g_cel_down === 38) g_cel_down = 34;
+				this.renderSprite(this.g_cel_down);
+				++this.g_cel_down;
+				if (this.g_cel_down === 38) this.g_cel_down = 34;
 			}
 		}
 		if(this.directions.right) 
 		{
-			if(isColliding_right || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
+			if(this.isColliding_right || GameEnd.gameWon || g_isUpdatePaused || GameEnd.gameOver) {
 				this.renderSprite(18);
 			} else {
-				this.renderSprite(g_cel_right);
-				++g_cel_right;
-				if (g_cel_right === 21) g_cel_right = 17;
+				this.renderSprite(this.g_cel_right);
+				++this.g_cel_right;
+				if (this.g_cel_right === 21) this.g_cel_right = 17;
 			}
 		}
 };
