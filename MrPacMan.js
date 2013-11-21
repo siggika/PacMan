@@ -253,13 +253,11 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			}
 			
 			entityManager.timeout.pause();
-			console.log("pausing timer : " + entityManager.timeout);
 			
 			function resumeTime() {
 				entityManager.setMode(lastMode);
 				entityManager.blink = false;
 				entityManager.timeout.resume();
-				console.log("resuming timer : " + entityManager.timeout);
 			}
 			
 			//set frightened mode for 10 seconds
@@ -282,8 +280,6 @@ Pacman.prototype.pauseTimers = function () {
 	this.timer.pause();
 	this.blinkTimer.pause();
 	blink = false;
-	console.log("pausing pac timer : " + this.timer);
-	console.log("pausing blink timer : " + this.blinkTimer);
 };
 
 Pacman.prototype.updateScore = function (score) {
@@ -306,12 +302,9 @@ Pacman.prototype.updateScore = function (score) {
 	if (this.cakesEaten === 222) {
 		entityManager.releaseElroy();
 	}
-	/*if (this.cakesEaten >= 242) {		// all cakes
-	//if (this.cakesEaten >= 150) {		// for testing
+	if (this.cakesEaten >= 242) {		// all cakes
 		this.maybeWin();
-	}*/
-	
-	if (this.cakesEaten === 60 && GameEnd.level === 1) GameEnd.nextLevel();
+	}
 };
 
 Pacman.prototype.updateLives = function () {

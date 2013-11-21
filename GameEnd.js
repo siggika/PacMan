@@ -46,10 +46,6 @@ gameIsOver : function(score) {
 	
 	$("#newGame").show();
 	$("#quit").show();
-	
-
-	
-	//this.newGame();
 },
 
 loseLife : function () {
@@ -112,12 +108,13 @@ quitGame : function () {
 	$("#newGame").hide();
 	$("#quit").hide();
 	$("#backToStart").show();
-	//this.gameOver = false;
 	
 	main.gameOver();
 }
 
 };
+
+// buttons 
 
 $("#newGame").click(function() {
 	$("#newGame").hide();
@@ -176,12 +173,12 @@ $("#startGame").hover( function() {
 	});}	
 );
 
-$("#backToStart").click(function() {
-	$(this).hide();
-	$("#startPage").show();
+$("#info").click(function() {
+	$("#startPage").hide();
+	$("#infoPage").show();
 });
 
-$("#backToStart").hover( function() {
+$("#info").hover( function() {
 	$( this ).css({
 		"border-width" : "10px",
 		"margin-left" : "15.5%",
@@ -193,5 +190,21 @@ $("#backToStart").hover( function() {
 		"margin-top" : "35%"
 	});}	
 );
-	
 
+$("#back").click(function() {
+	$("#startPage").show();
+	$("#infoPage").hide();
+});
+
+$("#back").hover( function() {
+	$( this ).css({
+		"border-width" : "10px",
+		"margin-left" : "11.5%",
+		"margin-top" : "24.5%"
+	});} , function() {
+	$( this ).css({
+		"border-width" : "5px",
+		"margin-left" : "12%",
+		"margin-top" : "25%"
+	});}	
+);

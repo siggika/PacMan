@@ -59,7 +59,7 @@ h2 {
 	background-color: black;
 }
 
-#quit, #info, #backToStart  {
+#quit, #info, #back{
 	margin-left: 16%;
 	margin-top: 35%;
 	width: 200px;
@@ -72,7 +72,7 @@ h2 {
 	background-color: black;
 }
 
-#pNewGame, #pQuit, #pInfo, #pStartGame, #pBackToStart {
+#pNewGame, #pQuit, #pInfo, #pStartGame, #pBack {
 	text-align: center;
 	font-size: 1.3em;
 	font-family: Console;
@@ -97,4 +97,27 @@ h2 {
 	height: 70px;
 	position: fixed;
 	background-color: black;
+}
+
+#infoPage {
+	display: none;
+}
+
+#back {
+	margin-left: 12%;
+	margin-top: 25%;
+	display: block;
+}
+
+#infoText {
+	margin-left: 4%;
+	margin-top: 2%;
+	width: 400px;
+	height: 300px;
+	position: fixed;
+}
+
+#pInfo {
+	font-family: Console;
+	color: blue;
 }

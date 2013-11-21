@@ -329,7 +329,7 @@ Ghost.prototype.setTargetForBlue = function () {
 	}
 	else if (this.mode === "caged")
 	{
-		targetTile = entityManager.getTile(220,170,3);;    // outside box to the right
+		targetTile = entityManager.getTile(220,170,3);    // outside box to the right
 	}
 	else if (this.mode === "dead" || this.mode === "frightened") 
 	{	
@@ -414,16 +414,12 @@ Ghost.prototype.setScatterMode = function () {
 };
 
 Ghost.prototype.cagedToScatterMode = function () {
-	console.log(this.color + " set caged to scatter?????");
-	console.log("free: " + this.free);
 	if (!this.free || this.mode === "dead") return;
 	
 	this.lastGameMode = this.gameMode;
 	this.mode = "scatter";
 	this.gameMode = "scatter";
 	this.speedUp();
-	
-	console.log(this.color + " set caged to scatter");
 };
 
 Ghost.prototype.setFrightenedMode = function () {
@@ -549,7 +545,6 @@ Ghost.prototype.releaseElroy = function() {
 		this.velX = (0.9*2);
 		this.velY = (0.9*2);
 	}
-	console.log("releasing elroy, speed: " + this.velX);
 };
 
 
@@ -568,14 +563,11 @@ Ghost.prototype.getAIDirection = function(du)
 			this.mode = this.lastMode;
 		}		
 		else if (this.mode === "caged" && nextTile === this.targetTile) {
-			//this.mode = this.gameMode;
 			if (this.gameMode === "frightened") this.cagedToFrightenedMode();
 			else if (this.gameMode === "scatter") {
 				this.cagedToScatterMode();
-				console.log("here");
 			}
 			else if (this.gameMode === "chase") this.cagedToChaseMode();
-			console.log(this.color + " going from caged to " + this.gameMode);
 		}
 		
 		var nextTileX = nextTile.cx + nextTile.width/2;
