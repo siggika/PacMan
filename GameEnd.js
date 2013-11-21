@@ -34,6 +34,7 @@ gameIsWon : function() {
 
 gameIsOver : function(score) {
 	this.gameOver = true;
+	var highscore = "" + score;
 	localStorage.setItem(highscore, score);
 	this.doRenderHighScore();
 	this.renderHighScore = false;
