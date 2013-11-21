@@ -137,4 +137,4 @@ function preloadDone() {
 }
 
 // Kick it off
-requestPreloads();
+//requestPreloads();
