@@ -27,18 +27,28 @@ levelWon : 1,
 
 level2 : false,
 
+quit : false,
+
 gameIsWon : function() {
 	this.gameWon = true;
 	entityManager.haltGuys();
 },
 
 gameIsOver : function(score) {
+	if (this.gameOver) return;
+
 	this.gameOver = true;
 	var highscore = "" + score;
 	localStorage.setItem(highscore, score);
 	this.doRenderHighScore();
 	this.renderHighScore = false;
 	entityManager.haltGuys();
+	
+	$("#newGame").show();
+	$("#quit").show();
+	
+
+	
 	//this.newGame();
 },
 
@@ -93,6 +103,78 @@ nextLevel : function () {
 	entityManager.resetMaze();
 	this.resetDone = true;
 	console.log("FINISHED RESETTING");
+},
+
+quitGame : function () {
+	this.quit = true;
+	$("#newGame").hide();
+	$("#quit").hide();
+	//this.gameOver = false;
+	
+	main.gameOver();
 }
 
 };
+
+$("#newGame").click(function() {
+	console.log("clicking new game");
+	$("#newGame").hide();
+	$("#quit").hide();
+	GameEnd.newGame();
+});
+
+$("#quit").click(function() {
+	console.log("clicking quit");
+	$("#newGame").hide();
+	$("#quit").hide();
+	GameEnd.quitGame();
+});
+
+$("#newGame").hover( function() {
+	$( this ).css({
+		"border-width" : "10px",
+		"margin-left" : "15.5%",
+		"margin-top" : "19.5%"
+	});} , function() {
+	$( this ).css({
+		"border-width" : "5px",
+		"margin-left" : "16%",
+		"margin-top" : "20%"
+	});}	
+);
+
+$("#quit").hover( function() {
+	$( this ).css({
+		"border-width" : "10px",
+		"margin-left" : "15.5%",
+		"margin-top" : "34.5%"
+	});} , function() {
+	$( this ).css({
+		"border-width" : "5px",
+		"margin-left" : "16%",
+		"margin-top" : "35%"
+	});}	
+);
+	
+	
+$("#startGame").click(function() {
+	console.log("clicking start game");
+	//$("#startGame").hide();
+	//$("#info").hide();
+	$("#startPage").hide();
+	requestPreloads();
+});
+
+$("#startGame").hover( function() {
+	$( this ).css({
+		"border-width" : "10px",
+		"margin-left" : "15.5%",
+		"margin-top" : "19.5%"
+	});} , function() {
+	$( this ).css({
+		"border-width" : "5px",
+		"margin-left" : "16%",
+		"margin-top" : "20%"
+	});}	
+);
+

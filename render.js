@@ -76,15 +76,17 @@ function render(ctx) {
         ctx.fillStyle = OF; 
     }
 	if (GameEnd.gameOver) {
+		//util.fillBox(ctx, 0, 0, g_canvas.width, g_canvas.height, "black");
 		ctx.font="bolder 40px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
-        ctx.fillText("You loose :(",130,285);
-		ctx.font="bolder 30px Console";
-        ctx.fillText("Refresh for another game",90,330);	
+        ctx.fillText("You loose :(",130,70);
+		/*ctx.font="bolder 30px Console";
+        ctx.fillText("Refresh for another game",90,330);	*/
         ctx.fillStyle = OF; 
+		ctx.globalAlpha = 0.2;
 	}
-	if (GameEnd.lifeLost) {		
+	if (GameEnd.lifeLost && !GameEnd.gameOver) {		
 		ctx.font="bolder 35px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
@@ -104,6 +106,7 @@ function render(ctx) {
         ctx.fillStyle = "orange";
         ctx.fillText("Game Paused", 130,285);
         ctx.fillStyle = OF; 
+		ctx.globalAlpha = 0.2;
 	}
 	if (GameEnd.level2) {
 		ctx.font="bolder 40px Console";
@@ -111,6 +114,18 @@ function render(ctx) {
         ctx.fillStyle = "orange";
         ctx.fillText("Level 2",160,285);
         ctx.fillStyle = OF; 
+	}
+	if (GameEnd.quit) {
+		ctx.globalAlpha = 1;
+		util.fillBox(ctx, 0, 0, g_canvas.width, g_canvas.height, "black");
+		ctx.font="bolder 30px Console";
+        var OF = ctx.fillStyle;
+        ctx.fillStyle = "orange";
+        ctx.fillText("Thank you for playing",75,250);	
+        ctx.fillStyle = OF;
+	}
+	if (!GameEnd.gameOver && !g_isUpdatePaused) {
+		ctx.globalAlpha = 1;
 	}
     ++g_frameCounter;
 }

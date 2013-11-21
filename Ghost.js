@@ -76,10 +76,6 @@ Ghost.prototype.update = function (du) {
 		this.sirenSound.play();
 	}
 	
-	if (this.color === "pink") {
-		console.log("pink mode: " + this.mode);
-	}
-	
 };
 
 
