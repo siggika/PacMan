@@ -68,10 +68,18 @@ doRenderHighScore : function() {
    	_highscores.reverse();
    	var highscores = [];
    	for(var i = 0; i < _highscores.length; i++) {
-   		if(_highscores[i] !== undefined) highscores.push(_highscores[i]);
+   		if(_highscores[i] !== undefined && _highscores[i] !== "undefined" &&
+   			_highscores[i] !== true && _highscores[i] !== "true" && _highscores[i] !== false
+   			&& _highscores[i] !== "false") {
+   			highscores.push(_highscores[i]);
+   		}
    	}
    	for(var i = 0; i < 5; i++) {
-   		if(highscores[i] !== undefined) $("#highscore").append('<li type="1">'+highscores[i]+'</li>');
+   		if(highscores[i] !== undefined && highscores[i] !== "undefined" &&
+   			highscores[i] !== true && highscores[i] !== "true" && highscores[i] !== false
+   			&& highscores[i] !== "false") {
+   			$("#highscore").append('<li type="1">'+highscores[i]+'</li>');
+   		}
    	}
 },
 
