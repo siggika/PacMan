@@ -131,7 +131,8 @@ function preloadDone() {
     //strawberry
     g_fruit_sprites.push(new Sprite(g_spriteSheet2, 170, 185, 22, 20));
 
-    entityManager.init();    
+    entityManager.init();
+    sideText.initScoreBoard();
     main.init();
 }
 
