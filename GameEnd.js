@@ -62,7 +62,7 @@ doRenderHighScore : function() {
    		if(_highscores[i] !== undefined) highscores.push(_highscores[i]);
    	}
    	for(var i = 0; i < 5; i++) {
-   		$("#highscore").append('<li type="1">'+highscores[i]+'</li>');
+   		if(highscores[i] !== undefined) $("#highscore").append('<li type="1">'+highscores[i]+'</li>');
    	}
 },
 
