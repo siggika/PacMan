@@ -72,17 +72,14 @@ function render(ctx) {
         ctx.font="bolder 40px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
-        ctx.fillText("You win!!!",130,285);
+        ctx.fillText("You win!!!",130,220);
         ctx.fillStyle = OF; 
     }
 	if (GameEnd.gameOver) {
-		//util.fillBox(ctx, 0, 0, g_canvas.width, g_canvas.height, "black");
 		ctx.font="bolder 40px Console";
         var OF = ctx.fillStyle;
         ctx.fillStyle = "orange";
         ctx.fillText("You loose :(",130,70);
-		/*ctx.font="bolder 30px Console";
-        ctx.fillText("Refresh for another game",90,330);	*/
         ctx.fillStyle = OF; 
 		ctx.globalAlpha = 0.2;
 	}

@@ -302,9 +302,10 @@ Pacman.prototype.updateScore = function (score) {
 	if (this.cakesEaten === 222) {
 		entityManager.releaseElroy();
 	}
-	if (this.cakesEaten >= 242) {		// all cakes
+	/*if (this.cakesEaten >= 242) {		// all cakes
 		this.maybeWin();
-	}
+	}*/
+	if (this.cakesEaten > 10) GameEnd.gameIsWon();
 };
 
 Pacman.prototype.updateLives = function () {

@@ -32,6 +32,8 @@ quit : false,
 gameIsWon : function() {
 	this.gameWon = true;
 	entityManager.haltGuys();
+	
+	$("#newGame").show();
 },
 
 gameIsOver : function(score) {
@@ -89,6 +91,7 @@ doRenderScore : function(points) {
 },
 
 newGame : function () {
+	this.gameWon = false;
 	entityManager.restartGuys();
 	entityManager.resetTimers();
 	entityManager.initTimeouts();
