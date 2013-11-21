@@ -59,7 +59,7 @@ h2 {
 	background-color: black;
 }
 
-#quit, #info {
+#quit, #info, #backToStart  {
 	margin-left: 16%;
 	margin-top: 35%;
 	width: 200px;
@@ -72,7 +72,7 @@ h2 {
 	background-color: black;
 }
 
-#pNewGame, #pQuit, #pInfo, #pStartGame {
+#pNewGame, #pQuit, #pInfo, #pStartGame, #pBackToStart {
 	text-align: center;
 	font-size: 1.3em;
 	font-family: Console;

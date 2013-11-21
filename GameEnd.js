@@ -102,13 +102,13 @@ nextLevel : function () {
 	entityManager.initTimeouts();
 	entityManager.resetMaze();
 	this.resetDone = true;
-	console.log("FINISHED RESETTING");
 },
 
 quitGame : function () {
 	this.quit = true;
 	$("#newGame").hide();
 	$("#quit").hide();
+	$("#backToStart").show();
 	//this.gameOver = false;
 	
 	main.gameOver();
@@ -117,14 +117,12 @@ quitGame : function () {
 };
 
 $("#newGame").click(function() {
-	console.log("clicking new game");
 	$("#newGame").hide();
 	$("#quit").hide();
 	GameEnd.newGame();
 });
 
 $("#quit").click(function() {
-	console.log("clicking quit");
 	$("#newGame").hide();
 	$("#quit").hide();
 	GameEnd.quitGame();
@@ -158,9 +156,6 @@ $("#quit").hover( function() {
 	
 	
 $("#startGame").click(function() {
-	console.log("clicking start game");
-	//$("#startGame").hide();
-	//$("#info").hide();
 	$("#startPage").hide();
 	requestPreloads();
 });
@@ -177,4 +172,23 @@ $("#startGame").hover( function() {
 		"margin-top" : "20%"
 	});}	
 );
+
+$("#backToStart").click(function() {
+	$(this).hide();
+	$("#startPage").show();
+});
+
+$("#backToStart").hover( function() {
+	$( this ).css({
+		"border-width" : "10px",
+		"margin-left" : "15.5%",
+		"margin-top" : "34.5%"
+	});} , function() {
+	$( this ).css({
+		"border-width" : "5px",
+		"margin-left" : "16%",
+		"margin-top" : "35%"
+	});}	
+);
+	
 
