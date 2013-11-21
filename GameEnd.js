@@ -139,12 +139,12 @@ $("#quit").click(function() {
 $("#newGame").hover( function() {
 	$( this ).css({
 		"border-width" : "10px",
-		"margin-left" : "10.5%",
+		"margin-left" : "9.5%",
 		"margin-top" : "19.5%"
 	});} , function() {
 	$( this ).css({
 		"border-width" : "5px",
-		"margin-left" : "11%",
+		"margin-left" : "10%",
 		"margin-top" : "20%"
 	});}	
 );
@@ -152,12 +152,12 @@ $("#newGame").hover( function() {
 $("#quit").hover( function() {
 	$( this ).css({
 		"border-width" : "10px",
-		"margin-left" : "10.5%",
+		"margin-left" : "9.5%",
 		"margin-top" : "29.5%"
 	});} , function() {
 	$( this ).css({
 		"border-width" : "5px",
-		"margin-left" : "11%",
+		"margin-left" : "10%",
 		"margin-top" : "30%"
 	});}	
 );
@@ -171,12 +171,12 @@ $("#startGame").click(function() {
 $("#startGame").hover( function() {
 	$( this ).css({
 		"border-width" : "10px",
-		"margin-left" : "10.5%",
+		"margin-left" : "9.5%",
 		"margin-top" : "19.5%"
 	});} , function() {
 	$( this ).css({
 		"border-width" : "5px",
-		"margin-left" : "11%",
+		"margin-left" : "10%",
 		"margin-top" : "20%"
 	});}	
 );
@@ -189,12 +189,12 @@ $("#info").click(function() {
 $("#info").hover( function() {
 	$( this ).css({
 		"border-width" : "10px",
-		"margin-left" : "10.5%",
+		"margin-left" : "9.5%",
 		"margin-top" : "29.5%"
 	});} , function() {
 	$( this ).css({
 		"border-width" : "5px",
-		"margin-left" : "11%",
+		"margin-left" : "10%",
 		"margin-top" : "30%"
 	});}	
 );
@@ -207,12 +207,12 @@ $("#back").click(function() {
 $("#back").hover( function() {
 	$( this ).css({
 		"border-width" : "10px",
-		"margin-left" : "5.5%",
-		"margin-top" : "16.5%"
+		"margin-left" : "6.5%",
+		"margin-top" : "13.5%"
 	});} , function() {
 	$( this ).css({
 		"border-width" : "5px",
-		"margin-left" : "6%",
-		"margin-top" : "17%"
+		"margin-left" : "7%",
+		"margin-top" : "14%"
 	});}	
 );

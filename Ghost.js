@@ -76,6 +76,8 @@ Ghost.prototype.update = function (du) {
 		this.sirenSound.play();
 	}
 	
+	if (this.color === "red") console.log(this.mode);
+	
 };
 
 
@@ -347,6 +349,12 @@ Ghost.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 	
 	if (nextTile)
 	{	
+		//the ghost box
+		
+		if (nextTile === startingGhostTile || nextTile === startingGhostTile2) {
+			down = true;
+		}
+		
 		if (nextTile.type == "1") 
 		{
 			var nextTileX = nextTile.cx + (nextTile.width/2);
@@ -497,6 +505,8 @@ Ghost.prototype.reset = function () {
     this.setPos(this.reset_cx, this.reset_cy);
     this.radius = this.reset_radius;
 	this.mode = "caged";
+	console.log("game mode: " + this.gameMode);
+	console.log("lastGameMode: " + this.lastGameMode);
 	if (this.gameMode === "frightened") this.gameMode = this.lastGameMode;
 	this.speedUp();
 };

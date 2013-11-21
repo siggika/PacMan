@@ -243,7 +243,7 @@ Pacman.prototype.isWallColliding = function (nextTile, nextX, nextY) {
 			if (this.mode === "frightened") {
 				this.timer.pause();
 				this.blinkTimer.pause();
-				blink = false;
+				entityManager.blink = false;
 			}
 			entityManager.setMode("frightened");
 			this.blinkTimer = new Timer (setBlink, 7000);
@@ -279,7 +279,7 @@ Pacman.prototype.pauseTimers = function () {
 	
 	this.timer.pause();
 	this.blinkTimer.pause();
-	blink = false;
+	entityManager.blink = false;
 };
 
 Pacman.prototype.updateScore = function (score) {
