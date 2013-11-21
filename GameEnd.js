@@ -58,6 +58,9 @@ loseLife : function () {
 },
 
 doRenderHighScore : function() {
+	function sortNumber(a,b) {
+    		return a - b;
+	}
 	if(!this.renderHighScore) return;
 	if(this.gameOver) $("#highscore").text("");
 	var _highscores = [];
@@ -65,7 +68,7 @@ doRenderHighScore : function() {
 		var item = localStorage.getItem(i);
    		_highscores[i] = item;
    	}
-   	_highscores.sort();
+   	_highscores.sort(sortNumber);
    	_highscores.reverse();
    	var highscores = [];
    	for(var i = 0; i < _highscores.length; i++) {
