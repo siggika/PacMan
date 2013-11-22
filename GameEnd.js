@@ -29,8 +29,13 @@ level2 : false,
 
 quit : false,
 
-gameIsWon : function() {
+gameIsWon : function(score) {
+	if (this.gameOver) return;
 	this.gameWon = true;
+	var highscore = "" + score;
+	localStorage.setItem(highscore, score);
+	this.doRenderHighScore();
+	this.renderHighScore = false;
 	entityManager.haltGuys();
 	
 	$("#newGame").show();
@@ -60,7 +65,7 @@ doRenderHighScore : function() {
     		return a - b;
 	}
 	if(!this.renderHighScore) return;
-	if(this.gameOver) $("#highscore").text("");
+	if(this.gameOver || this.gameWon) $("#highscore").text("");
 	var _highscores = [];
 	for(var i in localStorage) {
 		var item = localStorage.getItem(i);
