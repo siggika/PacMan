@@ -411,7 +411,7 @@ Pacman.prototype.maybeWin = function() {
 		GameEnd.nextLevel();
 	}
 	else if (GameEnd.level === 2) {
-		GameEnd.gameIsWon();
+		GameEnd.gameIsWon(this.score);
 		if(g_soundOn) {
 			this.interSound.play();
 		}
