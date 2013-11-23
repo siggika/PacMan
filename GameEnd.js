@@ -81,6 +81,8 @@ doRenderHighScore : function() {
    			highscores.push(_highscores[i]);
    		}
    	}
+   	highscores.sort(sortNumber);
+   	highscores.reverse();
    	for(var i = 0; i < 5; i++) {
    		if(highscores[i] !== undefined && highscores[i] !== "undefined" &&
    			highscores[i] !== true && highscores[i] !== "true" && highscores[i] !== false
